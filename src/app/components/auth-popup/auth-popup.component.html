@@ -1,1 +1,26 @@
 <p>auth-popup works!</p>
+
+<mat-form-field appearance="fill">
+  <mat-label> Login </mat-label>
+  <input
+    [(ngModel)]="login"
+    matInput
+  >
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+  <mat-label> Password </mat-label>
+  <input
+    [(ngModel)]="password"
+    matInput
+    type="password"
+  >
+</mat-form-field>
+
+
+<button
+  mat-button
+  (click)="onClose()"
+>
+  CLOSE
+</button>

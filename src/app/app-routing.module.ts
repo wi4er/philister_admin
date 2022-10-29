@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { RootPageComponent } from "./pages/root-page/root-page.component";
 
-
+const routes: Routes = [
+  { path: 'dashboard', component: RootPageComponent },
+  { path: '', component: RootPageComponent },
+];
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
-  ]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
