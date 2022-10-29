@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeroesComponent } from './heroes.component';
+import { AuthPopupComponent } from './auth-popup.component';
 
-describe('HeroesComponent', () => {
-  let component: HeroesComponent;
-  let fixture: ComponentFixture<HeroesComponent>;
+describe('AuthPopupComponent', () => {
+  let component: AuthPopupComponent;
+  let fixture: ComponentFixture<AuthPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeroesComponent ]
+      declarations: [ AuthPopupComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HeroesComponent);
+    fixture = TestBed.createComponent(AuthPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

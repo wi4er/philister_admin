@@ -1,0 +1,37 @@
+version: "2.2"
+
+services:
+  postgres:
+    image: postgres
+    container_name: philister_admin_postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d/
+      - ./data/postgres:/var/lib/postgresql
+
+  element:
+    image: wi4er/philister:0.1.2
+    container_name: philister_admin_api
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: example
+      DB_NAME: postgres
+      SECRET: hello world!
+      CACHE_PATH: cache
+    links:
+      - postgres
+      - cache
+    ports:
+      - "8080:8080"
+
+  cache:
+    image: redis:alpine
+    container_name: philister_admin_cache
+    ports:
+      - "6379:6379"
