@@ -1,26 +1,41 @@
-<p>auth-popup works!</p>
+<h2 mat-dialog-title>
+  Authorization
+</h2>
 
-<mat-form-field appearance="fill">
-  <mat-label> Login </mat-label>
-  <input
-    [(ngModel)]="login"
-    matInput
-  >
-</mat-form-field>
+<form (submit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field
+      appearance="fill"
+      class="full-width"
+    >
+      <mat-label> Login</mat-label>
+      <input
+        [(ngModel)]="login"
+        matInput
+        name="login"
+      >
+    </mat-form-field>
 
-<mat-form-field appearance="fill">
-  <mat-label> Password </mat-label>
-  <input
-    [(ngModel)]="password"
-    matInput
-    type="password"
-  >
-</mat-form-field>
+    <mat-form-field
+      appearance="fill"
+      class="full-width"
+    >
+      <mat-label> Password</mat-label>
+      <input
+        [(ngModel)]="password"
+        matInput
+        type="password"
+        name="password"
+      >
+    </mat-form-field>
+  </mat-dialog-content>
 
-
-<button
-  mat-button
-  (click)="onClose()"
->
-  CLOSE
-</button>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="submit"
+    >
+      Log in
+    </button>
+  </mat-dialog-actions>
+</form>

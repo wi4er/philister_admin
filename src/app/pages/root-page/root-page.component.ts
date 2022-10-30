@@ -20,13 +20,9 @@ export class RootPageComponent implements OnInit {
 
   openPopup(): void {
     this.dialog.open(AuthPopupComponent, {
-      width: '250px',
+      width: '500px',
     });
     console.log("OPEN")
-  }
-
-  authUser(): void {
-    this.userService.fetchAuth();
   }
 
 }

@@ -1,41 +1,30 @@
 import { Injectable } from '@angular/core';
-import { Apollo, gql } from "apollo-angular";
-import { User } from "../model/User";
-
-const AUTH_BY_PASSWORD = gql`
-  mutation AuthByPassword($login: String!, $password: String!){
-    auth {
-      authByPassword(login: $login, password: $password) {
-        id
-        login
-      }
-    }
-  }
-`;
+import { AuthByPasswordGQL, AuthByPasswordMutation, User } from "../query/types";
+import { Observable, of, OperatorFunction } from "rxjs";
+import { MutationResult } from "apollo-angular";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  fetchAuth() {
-    console.log("CLICK")
+  private user?: User | null = null;
 
-    this.apollo.mutate<{
-      auth: {
-        authByPassword: User
-      }
-    }>({
-      mutation: AUTH_BY_PASSWORD,
-      variables: {
-        login: "admin",
-        password: "qwerty",
-      }
-    }).subscribe((res) => {
-      console.log(res.data?.auth.authByPassword)
+
+  fetchAuth(login: string, password: string): void {
+    this.authMutation.mutate({
+      login: login,
+      password: password,
     })
+      .subscribe(res => {
+        this.user = res.data?.auth?.authByPassword;
+
+        console.log(this.user)
+      })
   }
 
-  constructor(private apollo: Apollo) {
+  constructor(
+    private authMutation: AuthByPasswordGQL
+  ) {
   }
 }
