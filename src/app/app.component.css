@@ -1,0 +1,9 @@
+.tool-bar-title {
+  flex: 1;
+  padding-left: 24px;
+}
+
+.sidenav {
+  width: 200px;
+  height: 100%;
+}

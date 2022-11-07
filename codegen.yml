@@ -1,11 +1,11 @@
 schema:
-  - "http://localhost:8080/graphql"
+  - "http://localhost:3000/graphql"
 documents:
-  - "src/app/query/**/*.graphql"
+  - "src/graph/**/*.graphql"
 
 config: { }
 generates:
-  src/app/query/types.ts:
+  src/graph/types.ts:
     config: { }
     plugins:
       - "typescript"

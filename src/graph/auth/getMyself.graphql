@@ -1,0 +1,17 @@
+query GetMyself {
+  user {
+    myself {
+      id
+      login
+      group {
+        id
+      }
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}
