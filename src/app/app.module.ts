@@ -25,6 +25,11 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { UserPageComponent } from './pages/user-page/user-page.component';
 import { MatListModule } from "@angular/material/list";
 import { MatTableModule } from "@angular/material/table";
+import { PropertyPageComponent } from './pages/property-page/property-page.component';
+import { PropertyListComponent } from './components/property-list/property-list.component';
+import { PropertyFormComponent } from './components/property-form/property-form.component';
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -34,6 +39,9 @@ import { MatTableModule } from "@angular/material/table";
     MainMenuComponent,
     UserListComponent,
     UserPageComponent,
+    PropertyPageComponent,
+    PropertyListComponent,
+    PropertyFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +62,8 @@ import { MatTableModule } from "@angular/material/table";
     MatInputModule,
     MatTableModule,
     MatListModule,
+    MatGridListModule,
+    MatCheckboxModule,
     GraphQLModule,
     HttpClientModule,
   ],

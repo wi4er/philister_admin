@@ -1,0 +1,13 @@
+mutation AddPropertyItem($item: PropertyInput!) {
+  property {
+    add(item: $item) {
+      id
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}

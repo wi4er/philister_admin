@@ -1,0 +1,20 @@
+table {
+  width: 100%;
+}
+
+th span {
+  padding: 0 4px;
+}
+
+td span {
+  padding: 0 4px;
+}
+
+th:nth-child(2n), td:nth-child(2n) {
+  background-color: #EEE;
+}
+
+
+.example-spacer {
+  flex: 1 1 auto;
+}

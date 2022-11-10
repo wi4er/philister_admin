@@ -1,0 +1,13 @@
+query GetPropertyList {
+  property {
+    list {
+      id
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}
