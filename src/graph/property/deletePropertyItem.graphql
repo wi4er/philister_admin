@@ -1,0 +1,5 @@
+mutation DeletePropertyItem($id: [String!]!) {
+  property {
+    delete(id: $id)
+  }
+}

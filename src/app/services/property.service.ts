@@ -12,7 +12,8 @@ export class PropertyService {
   ) { }
 
   fetchPropertyList(): Promise<Property[]> {
-    return firstValueFrom(this.getPropertyListQuery.fetch())
+    return firstValueFrom(this.getPropertyListQuery.fetch({
+    }))
       .then(res => res.data.property.list as Property[]);
   }
 

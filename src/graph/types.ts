@@ -50,7 +50,7 @@ export type PropertyMutation = {
   /** Adding new property */
   add: Property;
   /** Deletion existent property */
-  delete: Property;
+  delete: Array<Scalars['String']>;
   /** Updating existent property */
   update: Property;
 };
@@ -58,6 +58,11 @@ export type PropertyMutation = {
 
 export type PropertyMutationAddArgs = {
   item: PropertyInput;
+};
+
+
+export type PropertyMutationDeleteArgs = {
+  id: Array<Scalars['String']>;
 };
 
 export type PropertyProperty = {
@@ -74,13 +79,26 @@ export type PropertyPropertyInput = {
 
 export type PropertyQuery = {
   __typename?: 'PropertyQuery';
+  count: Scalars['Int'];
   item?: Maybe<Property>;
   list: Array<Property>;
 };
 
 
+export type PropertyQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type PropertyQueryItemArgs = {
   id: Scalars['String'];
+};
+
+
+export type PropertyQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 export type Query = {
@@ -119,6 +137,17 @@ export type UserGroupQuery = {
   list: Array<UserGroup>;
 };
 
+
+export type UserGroupQueryItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type UserGroupQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type UserMutation = {
   __typename?: 'UserMutation';
   /** Adding new user */
@@ -148,6 +177,12 @@ export type UserQueryItemArgs = {
   id: Scalars['Int'];
 };
 
+
+export type UserQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type AuthByPasswordMutationVariables = Exact<{
   login: Scalars['String'];
   password: Scalars['String'];
@@ -173,10 +208,20 @@ export type AddPropertyItemMutationVariables = Exact<{
 
 export type AddPropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', add: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
-export type GetPropertyListQueryVariables = Exact<{ [key: string]: never; }>;
+export type DeletePropertyItemMutationVariables = Exact<{
+  id: Array<Scalars['String']> | Scalars['String'];
+}>;
 
 
-export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null }> } };
+export type DeletePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', delete: Array<string> } };
+
+export type GetPropertyListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', count: number, list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null }> } };
 
 export const AuthByPasswordDocument = gql`
     mutation AuthByPassword($login: String!, $password: String!) {
@@ -288,10 +333,28 @@ export const AddPropertyItemDocument = gql`
       super(apollo);
     }
   }
-export const GetPropertyListDocument = gql`
-    query GetPropertyList {
+export const DeletePropertyItemDocument = gql`
+    mutation DeletePropertyItem($id: [String!]!) {
   property {
-    list {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeletePropertyItemGQL extends Apollo.Mutation<DeletePropertyItemMutation, DeletePropertyItemMutationVariables> {
+    document = DeletePropertyItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetPropertyListDocument = gql`
+    query GetPropertyList($limit: Int, $offset: Int) {
+  property {
+    list(limit: $limit, offset: $offset) {
       id
       property {
         value
@@ -300,6 +363,7 @@ export const GetPropertyListDocument = gql`
         }
       }
     }
+    count
   }
 }
     `;

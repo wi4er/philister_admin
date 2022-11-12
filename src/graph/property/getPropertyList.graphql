@@ -1,6 +1,6 @@
-query GetPropertyList {
+query GetPropertyList($limit: Int, $offset: Int) {
   property {
-    list {
+    list(limit: $limit, offset: $offset) {
       id
       property {
         value
@@ -9,5 +9,6 @@ query GetPropertyList {
         }
       }
     }
+    count
   }
 }

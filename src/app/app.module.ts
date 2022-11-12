@@ -30,6 +30,8 @@ import { PropertyListComponent } from './components/property-list/property-list.
 import { PropertyFormComponent } from './components/property-form/property-form.component';
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatMenuModule } from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     MatListModule,
     MatGridListModule,
     MatCheckboxModule,
+    MatPaginatorModule,
+    MatMenuModule,
     GraphQLModule,
     HttpClientModule,
   ],

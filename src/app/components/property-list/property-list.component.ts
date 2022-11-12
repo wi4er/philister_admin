@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PropertyService } from "../../services/property.service";
-import { Property } from "../../../graph/types";
+import { DeletePropertyItemGQL, GetPropertyListGQL, Property } from "../../../graph/types";
 import { MatDialog } from "@angular/material/dialog";
 import { PropertyFormComponent } from "../property-form/property-form.component";
 import { SelectionModel } from "@angular/cdk/collections";
+import { PageEvent } from "@angular/material/paginator";
+import { MatTable } from "@angular/material/table";
 
 @Component({
   selector: 'app-property-list',
@@ -12,46 +14,86 @@ import { SelectionModel } from "@angular/cdk/collections";
 })
 export class PropertyListComponent implements OnInit {
 
-  list: Map<string, string>[] = [];
-  columns: Set<string> = new Set();
-  selection = new SelectionModel<string>(true, []);
+  list: { [key: string]: string }[] = [];
+  columns: string[] = [];
+  properties: string[] = [];
+  selection = new SelectionModel<{ [key: string]: string }>(true, []);
+
+  pageEvent?: PageEvent;
+  totalCount: number = 0;
+  pageSize: number = 5;
+  currentPage: number = 0;
+
+  @ViewChild(MatTable)
+  table?: MatTable<any>;
 
   constructor(
     private propertyService: PropertyService,
     public dialog: MatDialog,
+    private getPropertyListQuery: GetPropertyListGQL,
+    private deletePropertyQuery: DeletePropertyItemGQL,
   ) {
   }
 
   formatData(data: Property[]) {
-    for (const item of data) {
-      const line = new Map<string, string>([['id', item.id]]);
+    const col = new Set<string>();
+    const list = []
 
-      for(const prop of item?.property ?? []) {
-        this.columns.add('property_' + prop.property.id);
-        line.set('property_' + prop.property.id, prop.value);
+    for (const item of data) {
+      const line: { [key: string]: string } = { 'id': item.id };
+
+      for (const prop of item?.property ?? []) {
+        col.add('property_' + prop.property.id);
+        line['property_' + prop.property.id] = prop.value;
       }
 
-      this.list.push(line);
+      list.push(line);
     }
+
+    this.properties = [ ...col ];
+    this.columns = [ 'select', 'action', 'id', ...col ];
+    this.list = list;
   }
 
   ngOnInit(): void {
-    this.propertyService.fetchPropertyList()
-      .then(res => this.formatData(res));
+    this.fetchData();
   }
 
-  getColumns() {
-    return [ 'select', 'id', ...this.columns ];
+  fetchData() {
+    this.getPropertyListQuery.fetch({
+      limit: this.pageSize,
+      offset: this.currentPage * this.pageSize,
+    }, {
+      fetchPolicy: 'network-only'
+    })
+      .subscribe(res => {
+        this.formatData(res.data.property.list as Property[]);
+        this.totalCount = res.data.property.count;
+
+        this.selection.clear();
+        this.table?.renderRows();
+      })
   }
 
   addProperty() {
-    this.dialog.open(PropertyFormComponent, {
+    const dialog = this.dialog.open(PropertyFormComponent, {
       width: '1000px'
     });
 
-    console.log('ADD')
+    dialog.afterClosed()
+      .subscribe(() => this.fetchData());
   }
 
+  deleteProperty() {
+    this.deletePropertyQuery.mutate({
+      id: this.selection.selected.map(item => item['id'])
+    }).subscribe(res => this.fetchData());
+  }
+
+  deletePropertyItem(id: string) {
+    this.deletePropertyQuery.mutate({id: id})
+      .subscribe(res => this.fetchData());
+  }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -59,20 +101,20 @@ export class PropertyListComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
-      return;
+    } else {
+      this.selection.select(...this.list);
     }
-
-    // this.selection.select(...this.list.keys());
   }
 
-  checkboxLabel(row?: Property): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row.id) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  changePage(event: PageEvent) {
+    this.pageEvent = event;
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.selection.clear();
+
+    this.fetchData();
   }
 }

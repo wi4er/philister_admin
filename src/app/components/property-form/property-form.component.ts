@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { PropertyService } from "../../services/property.service";
 import { AddPropertyItemGQL, Property, PropertyInput, PropertyPropertyInput } from "../../../graph/types";
 import { SelectionModel } from "@angular/cdk/collections";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-property-form',
@@ -17,6 +18,7 @@ export class PropertyFormComponent implements OnInit {
   constructor(
     private propertyService: PropertyService,
     private addItemMutation: AddPropertyItemGQL,
+    public dialogRef: MatDialogRef<PropertyFormComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +46,9 @@ export class PropertyFormComponent implements OnInit {
     this.addItemMutation.mutate({
       item: this.toInput(),
     }).subscribe(res => {
-      console.log(res.data)
+      console.log(res.data);
+
+      this.dialogRef.close();
     });
   }
 
