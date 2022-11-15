@@ -1,0 +1,29 @@
+table {
+  width: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.select {
+  width: 42px;
+}
+
+.action {
+  width: 42px;
+}
+
+.detail-row {
+  height: 0;
+}
+
+.value-list {
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+}
+
+.chip-list {
+  padding: 24px 0;
+}

@@ -1,0 +1,17 @@
+query GetPropertyEdit($id: String!) {
+  property {
+    list {
+      id
+    }
+    item(id: $id) {
+      id
+      property {
+        id
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}

@@ -79,7 +79,7 @@ type PropertyMutation {
   delete(id: [String!]!): [String!]!
 
   """Updating existent property"""
-  update: Property!
+  update(item: PropertyInput!): Property!
 }
 
 input PropertyInput {
@@ -92,10 +92,63 @@ input PropertyPropertyInput {
   value: String!
 }
 
+type DirectoryProperty {
+  id: String!
+  value: String!
+  property: Property!
+}
+
+type Value {
+  id: String!
+  directory: Directory!
+}
+
+type Directory {
+  id: String!
+  property: [DirectoryProperty!]
+  value: [Value!]
+}
+
+type DirectoryQuery {
+  list(limit: Int, offset: Int): [Directory!]!
+  count(limit: Int, offset: Int): Int!
+  item(id: String!): Directory
+}
+
+""""""
+type DirectoryMutation {
+  """Adding new directory"""
+  add(item: DirectoryInput!): Directory!
+
+  """Deletion existent directory"""
+  delete(id: [String!]!): [String!]!
+
+  """Updating existent directory"""
+  update: Directory!
+}
+
+input DirectoryInput {
+  id: String!
+  property: [DirectoryPropertyInput!]
+}
+
+input DirectoryPropertyInput {
+  property: String!
+  value: String!
+}
+
+type ValueQuery {
+  list(limit: Int, offset: Int): [Value!]!
+  count(limit: Int, offset: Int): Int!
+  item(id: String!): Value
+}
+
 type Query {
   user: UserQuery!
   userGroup: UserGroupQuery!
   property: PropertyQuery!
+  directory: DirectoryQuery!
+  value: ValueQuery!
 }
 
 type Mutation {
@@ -103,4 +156,5 @@ type Mutation {
   auth: AuthMutation
   userGroup: UserGroupMutation!
   property: PropertyMutation!
+  directory: DirectoryMutation!
 }

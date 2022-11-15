@@ -32,6 +32,11 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatTabsModule } from "@angular/material/tabs";
+import { TableSettingsComponent } from './components/table-settings/table-settings.component';
+import { DirectoryListComponent } from './components/directory-list/directory-list.component';
+import { DirectoryPageComponent } from './pages/directory-page/directory-page.component';
+import { MatChipsModule } from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -44,6 +49,9 @@ import { MatMenuModule } from "@angular/material/menu";
     PropertyPageComponent,
     PropertyListComponent,
     PropertyFormComponent,
+    TableSettingsComponent,
+    DirectoryListComponent,
+    DirectoryPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,7 +75,10 @@ import { MatMenuModule } from "@angular/material/menu";
     MatGridListModule,
     MatCheckboxModule,
     MatPaginatorModule,
+    MatTableModule,
+    MatTabsModule,
     MatMenuModule,
+    MatChipsModule,
     GraphQLModule,
     HttpClientModule,
   ],

@@ -1,0 +1,17 @@
+query GetDirectoryList($offset: Int, $limit: Int) {
+  directory {
+    list(limit: $limit, offset: $offset) {
+      id
+      property {
+        value
+        property {
+          id
+        }
+      }
+      value {
+        id
+      }
+    }
+    count
+  }
+}

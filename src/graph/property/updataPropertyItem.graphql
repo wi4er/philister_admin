@@ -1,0 +1,13 @@
+mutation UpdatePropertyItem($item: PropertyInput!) {
+  property {
+    update(item: $item) {
+      id
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}

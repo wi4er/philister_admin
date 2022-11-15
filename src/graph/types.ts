@@ -26,9 +26,78 @@ export type AuthMutationAuthByPasswordArgs = {
   password: Scalars['String'];
 };
 
+export type Directory = {
+  __typename?: 'Directory';
+  id: Scalars['String'];
+  property?: Maybe<Array<DirectoryProperty>>;
+  value?: Maybe<Array<Value>>;
+};
+
+export type DirectoryInput = {
+  id: Scalars['String'];
+  property?: InputMaybe<Array<DirectoryPropertyInput>>;
+};
+
+export type DirectoryMutation = {
+  __typename?: 'DirectoryMutation';
+  /** Adding new directory */
+  add: Directory;
+  /** Deletion existent directory */
+  delete: Array<Scalars['String']>;
+  /** Updating existent directory */
+  update: Directory;
+};
+
+
+export type DirectoryMutationAddArgs = {
+  item: DirectoryInput;
+};
+
+
+export type DirectoryMutationDeleteArgs = {
+  id: Array<Scalars['String']>;
+};
+
+export type DirectoryProperty = {
+  __typename?: 'DirectoryProperty';
+  id: Scalars['String'];
+  property: Property;
+  value: Scalars['String'];
+};
+
+export type DirectoryPropertyInput = {
+  property: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type DirectoryQuery = {
+  __typename?: 'DirectoryQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Directory>;
+  list: Array<Directory>;
+};
+
+
+export type DirectoryQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type DirectoryQueryItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type DirectoryQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   auth?: Maybe<AuthMutation>;
+  directory: DirectoryMutation;
   property: PropertyMutation;
   user: UserMutation;
   userGroup: UserGroupMutation;
@@ -63,6 +132,11 @@ export type PropertyMutationAddArgs = {
 
 export type PropertyMutationDeleteArgs = {
   id: Array<Scalars['String']>;
+};
+
+
+export type PropertyMutationUpdateArgs = {
+  item: PropertyInput;
 };
 
 export type PropertyProperty = {
@@ -103,9 +177,11 @@ export type PropertyQueryListArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  directory: DirectoryQuery;
   property: PropertyQuery;
   user: UserQuery;
   userGroup: UserGroupQuery;
+  value: ValueQuery;
 };
 
 export type User = {
@@ -183,6 +259,36 @@ export type UserQueryListArgs = {
   offset?: InputMaybe<Scalars['Int']>;
 };
 
+export type Value = {
+  __typename?: 'Value';
+  directory: Directory;
+  id: Scalars['String'];
+};
+
+export type ValueQuery = {
+  __typename?: 'ValueQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Value>;
+  list: Array<Value>;
+};
+
+
+export type ValueQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type ValueQueryItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type ValueQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type AuthByPasswordMutationVariables = Exact<{
   login: Scalars['String'];
   password: Scalars['String'];
@@ -201,6 +307,21 @@ export type GetUserListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', list: Array<{ __typename?: 'User', id: number, login?: string | null, property?: Array<{ __typename?: 'UserProperty', value: string, property: { __typename?: 'Property', id: string } }> | null, group?: Array<{ __typename?: 'User', id: number }> | null }> } };
 
+export type DeleteDirectoryMutationVariables = Exact<{
+  id: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type DeleteDirectoryMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', delete: Array<string> } };
+
+export type GetDirectoryListQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetDirectoryListQuery = { __typename?: 'Query', directory: { __typename?: 'DirectoryQuery', count: number, list: Array<{ __typename?: 'Directory', id: string, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null, value?: Array<{ __typename?: 'Value', id: string }> | null }> } };
+
 export type AddPropertyItemMutationVariables = Exact<{
   item: PropertyInput;
 }>;
@@ -215,6 +336,13 @@ export type DeletePropertyItemMutationVariables = Exact<{
 
 export type DeletePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', delete: Array<string> } };
 
+export type GetPropertyEditQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetPropertyEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }>, item?: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, value: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
+
 export type GetPropertyListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -222,6 +350,13 @@ export type GetPropertyListQueryVariables = Exact<{
 
 
 export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', count: number, list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null }> } };
+
+export type UpdatePropertyItemMutationVariables = Exact<{
+  item: PropertyInput;
+}>;
+
+
+export type UpdatePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', update: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
 export const AuthByPasswordDocument = gql`
     mutation AuthByPassword($login: String!, $password: String!) {
@@ -307,6 +442,54 @@ export const GetUserListDocument = gql`
       super(apollo);
     }
   }
+export const DeleteDirectoryDocument = gql`
+    mutation DeleteDirectory($id: [String!]!) {
+  directory {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteDirectoryGQL extends Apollo.Mutation<DeleteDirectoryMutation, DeleteDirectoryMutationVariables> {
+    document = DeleteDirectoryDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDirectoryListDocument = gql`
+    query GetDirectoryList($offset: Int, $limit: Int) {
+  directory {
+    list(limit: $limit, offset: $offset) {
+      id
+      property {
+        value
+        property {
+          id
+        }
+      }
+      value {
+        id
+      }
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDirectoryListGQL extends Apollo.Query<GetDirectoryListQuery, GetDirectoryListQueryVariables> {
+    document = GetDirectoryListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const AddPropertyItemDocument = gql`
     mutation AddPropertyItem($item: PropertyInput!) {
   property {
@@ -351,6 +534,36 @@ export const DeletePropertyItemDocument = gql`
       super(apollo);
     }
   }
+export const GetPropertyEditDocument = gql`
+    query GetPropertyEdit($id: String!) {
+  property {
+    list {
+      id
+    }
+    item(id: $id) {
+      id
+      property {
+        id
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPropertyEditGQL extends Apollo.Query<GetPropertyEditQuery, GetPropertyEditQueryVariables> {
+    document = GetPropertyEditDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetPropertyListDocument = gql`
     query GetPropertyList($limit: Int, $offset: Int) {
   property {
@@ -373,6 +586,32 @@ export const GetPropertyListDocument = gql`
   })
   export class GetPropertyListGQL extends Apollo.Query<GetPropertyListQuery, GetPropertyListQueryVariables> {
     document = GetPropertyListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdatePropertyItemDocument = gql`
+    mutation UpdatePropertyItem($item: PropertyInput!) {
+  property {
+    update(item: $item) {
+      id
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdatePropertyItemGQL extends Apollo.Mutation<UpdatePropertyItemMutation, UpdatePropertyItemMutationVariables> {
+    document = UpdatePropertyItemDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

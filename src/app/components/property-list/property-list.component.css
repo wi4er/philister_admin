@@ -14,7 +14,7 @@ th:nth-child(2n), td:nth-child(2n) {
   background-color: #EEE;
 }
 
-.example-spacer {
+.spacer {
   flex: 1 1 auto;
 }
 
@@ -25,3 +25,4 @@ th:nth-child(2n), td:nth-child(2n) {
 .action {
   width: 42px;
 }
+
