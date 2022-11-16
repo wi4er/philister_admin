@@ -33,7 +33,7 @@ export class DirectoryFormComponent implements OnInit {
     private dialogRef: MatDialogRef<DirectoryFormComponent>,
     private getPropertyListQuery: GetPropertyListGQL,
     private getPropertyEditQuery: GetPropertyEditGQL,
-    @Inject(MAT_DIALOG_DATA) private data: { id: string },
+    @Inject(MAT_DIALOG_DATA) public data: { id: string },
   ) {
   }
 

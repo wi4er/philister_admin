@@ -27,7 +27,7 @@ export class PropertyFormComponent implements OnInit {
     private dialogRef: MatDialogRef<PropertyFormComponent>,
     private getPropertyListQuery: GetPropertyListGQL,
     private getPropertyEditQuery: GetPropertyEditGQL,
-    @Inject(MAT_DIALOG_DATA) private data: { id: string },
+    @Inject(MAT_DIALOG_DATA) public data: { id: string },
   ) {
   }
 

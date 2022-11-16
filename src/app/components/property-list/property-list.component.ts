@@ -76,10 +76,13 @@ export class PropertyListComponent implements OnInit {
   }
 
   addPropertyItem() {
-    const dialog = this.dialog.open(PropertyFormComponent, {
-      width: '1000px',
-      panelClass: 'wrapper'
-    });
+    const dialog = this.dialog.open(
+      PropertyFormComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper'
+      }
+    );
 
     dialog.afterClosed()
       .subscribe(() => this.fetchList());
@@ -88,7 +91,10 @@ export class PropertyListComponent implements OnInit {
   updateProperty(id: number) {
     const dialog = this.dialog.open(
       PropertyFormComponent,
-      { data: { id } },
+      {
+        width: '1000px',
+        data: { id }
+      },
     );
 
     dialog.afterClosed()

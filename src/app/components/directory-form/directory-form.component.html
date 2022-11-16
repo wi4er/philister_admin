@@ -10,6 +10,7 @@
       matInput
       name="id"
       [(ngModel)]="id"
+      [disabled]="!!data?.id"
     >
   </mat-form-field>
 
