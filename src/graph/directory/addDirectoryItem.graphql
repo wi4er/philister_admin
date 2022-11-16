@@ -1,0 +1,16 @@
+mutation AddDirectoryItem($item: DirectoryInput!) {
+  directory {
+    add(item: $item) {
+      id
+      value {
+        id
+      }
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+mutation AddValueItem($item: ValueInput!) {
+  value {
+    add(item: $item) {
+      id
+      directory {
+        id
+      }
+    }
+  }
+}

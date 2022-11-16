@@ -37,6 +37,7 @@ import { TableSettingsComponent } from './components/table-settings/table-settin
 import { DirectoryListComponent } from './components/directory-list/directory-list.component';
 import { DirectoryPageComponent } from './pages/directory-page/directory-page.component';
 import { MatChipsModule } from "@angular/material/chips";
+import { DirectoryFormComponent } from './components/directory-form/directory-form.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { MatChipsModule } from "@angular/material/chips";
     TableSettingsComponent,
     DirectoryListComponent,
     DirectoryPageComponent,
+    DirectoryFormComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,16 @@
+mutation updateDirectoryItem($item: DirectoryInput!) {
+  directory {
+    update(item: $item) {
+      id
+      value {
+        id
+      }
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}

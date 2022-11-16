@@ -58,6 +58,11 @@ export type DirectoryMutationDeleteArgs = {
   id: Array<Scalars['String']>;
 };
 
+
+export type DirectoryMutationUpdateArgs = {
+  item: DirectoryInput;
+};
+
 export type DirectoryProperty = {
   __typename?: 'DirectoryProperty';
   id: Scalars['String'];
@@ -101,6 +106,7 @@ export type Mutation = {
   property: PropertyMutation;
   user: UserMutation;
   userGroup: UserGroupMutation;
+  value: ValueMutation;
 };
 
 export type Property = {
@@ -265,6 +271,42 @@ export type Value = {
   id: Scalars['String'];
 };
 
+export type ValueInput = {
+  directory: Scalars['String'];
+  id: Scalars['String'];
+  property?: InputMaybe<Array<ValuePropertyInput>>;
+};
+
+export type ValueMutation = {
+  __typename?: 'ValueMutation';
+  /** Adding new value */
+  add: Value;
+  /** Deletion existent value */
+  delete: Array<Scalars['String']>;
+  /** Updating existent value */
+  update: Value;
+};
+
+
+export type ValueMutationAddArgs = {
+  item: ValueInput;
+};
+
+
+export type ValueMutationDeleteArgs = {
+  id: Array<Scalars['String']>;
+};
+
+
+export type ValueMutationUpdateArgs = {
+  item: ValueInput;
+};
+
+export type ValuePropertyInput = {
+  property: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export type ValueQuery = {
   __typename?: 'ValueQuery';
   count: Scalars['Int'];
@@ -307,6 +349,20 @@ export type GetUserListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', list: Array<{ __typename?: 'User', id: number, login?: string | null, property?: Array<{ __typename?: 'UserProperty', value: string, property: { __typename?: 'Property', id: string } }> | null, group?: Array<{ __typename?: 'User', id: number }> | null }> } };
 
+export type AddDirectoryItemMutationVariables = Exact<{
+  item: DirectoryInput;
+}>;
+
+
+export type AddDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', add: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
+
+export type AddValueItemMutationVariables = Exact<{
+  item: ValueInput;
+}>;
+
+
+export type AddValueItemMutation = { __typename?: 'Mutation', value: { __typename?: 'ValueMutation', add: { __typename?: 'Value', id: string, directory: { __typename?: 'Directory', id: string } } } };
+
 export type DeleteDirectoryMutationVariables = Exact<{
   id: Array<Scalars['String']> | Scalars['String'];
 }>;
@@ -321,6 +377,13 @@ export type GetDirectoryListQueryVariables = Exact<{
 
 
 export type GetDirectoryListQuery = { __typename?: 'Query', directory: { __typename?: 'DirectoryQuery', count: number, list: Array<{ __typename?: 'Directory', id: string, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null, value?: Array<{ __typename?: 'Value', id: string }> | null }> } };
+
+export type UpdateDirectoryItemMutationVariables = Exact<{
+  item: DirectoryInput;
+}>;
+
+
+export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
 export type AddPropertyItemMutationVariables = Exact<{
   item: PropertyInput;
@@ -442,6 +505,58 @@ export const GetUserListDocument = gql`
       super(apollo);
     }
   }
+export const AddDirectoryItemDocument = gql`
+    mutation AddDirectoryItem($item: DirectoryInput!) {
+  directory {
+    add(item: $item) {
+      id
+      value {
+        id
+      }
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddDirectoryItemGQL extends Apollo.Mutation<AddDirectoryItemMutation, AddDirectoryItemMutationVariables> {
+    document = AddDirectoryItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddValueItemDocument = gql`
+    mutation AddValueItem($item: ValueInput!) {
+  value {
+    add(item: $item) {
+      id
+      directory {
+        id
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddValueItemGQL extends Apollo.Mutation<AddValueItemMutation, AddValueItemMutationVariables> {
+    document = AddValueItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteDirectoryDocument = gql`
     mutation DeleteDirectory($id: [String!]!) {
   directory {
@@ -485,6 +600,35 @@ export const GetDirectoryListDocument = gql`
   })
   export class GetDirectoryListGQL extends Apollo.Query<GetDirectoryListQuery, GetDirectoryListQueryVariables> {
     document = GetDirectoryListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateDirectoryItemDocument = gql`
+    mutation updateDirectoryItem($item: DirectoryInput!) {
+  directory {
+    update(item: $item) {
+      id
+      value {
+        id
+      }
+      property {
+        value
+        property {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateDirectoryItemGQL extends Apollo.Mutation<UpdateDirectoryItemMutation, UpdateDirectoryItemMutationVariables> {
+    document = UpdateDirectoryItemDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

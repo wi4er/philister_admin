@@ -10,6 +10,7 @@ import {
 } from "../../../graph/types";
 import { PropertyFormComponent } from "../property-form/property-form.component";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import { DirectoryFormComponent } from "../directory-form/directory-form.component";
 
 @Component({
   selector: 'app-directory-list',
@@ -17,8 +18,8 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   styleUrls: [ './directory-list.component.css' ],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition(
         'expanded <=> collapsed',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
@@ -97,10 +98,13 @@ export class DirectoryListComponent implements OnInit {
   }
 
   addPropertyItem() {
-    const dialog = this.dialog.open(PropertyFormComponent, {
-      width: '1000px',
-      panelClass: 'wrapper'
-    });
+    const dialog = this.dialog.open(
+      DirectoryFormComponent,
+      {
+        width: '1000px',
+        panelClass: 'wrapper'
+      }
+    );
 
     dialog.afterClosed()
       .subscribe(() => this.fetchList());
@@ -108,7 +112,7 @@ export class DirectoryListComponent implements OnInit {
 
   updateProperty(id: number) {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      DirectoryFormComponent,
       { data: { id } },
     );
 
