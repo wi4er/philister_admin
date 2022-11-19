@@ -99,10 +99,56 @@ export type DirectoryQueryListArgs = {
   offset?: InputMaybe<Scalars['Int']>;
 };
 
+export type Flag = {
+  __typename?: 'Flag';
+  flag: Array<FlagFlag>;
+  id: Scalars['String'];
+  label: Scalars['String'];
+  property: Array<FlagProperty>;
+};
+
+export type FlagFlag = {
+  __typename?: 'FlagFlag';
+  flag: Flag;
+  id: Scalars['Float'];
+};
+
+export type FlagProperty = {
+  __typename?: 'FlagProperty';
+  id: Scalars['Int'];
+  property: Property;
+  value: Scalars['String'];
+};
+
+export type FlagQuery = {
+  __typename?: 'FlagQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Flag>;
+  list: Array<Flag>;
+};
+
+
+export type FlagQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type FlagQueryItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type FlagQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   auth?: Maybe<AuthMutation>;
   directory: DirectoryMutation;
+  flag: PropertyMutation;
   property: PropertyMutation;
   user: UserMutation;
   userGroup: UserGroupMutation;
@@ -184,6 +230,7 @@ export type PropertyQueryListArgs = {
 export type Query = {
   __typename?: 'Query';
   directory: DirectoryQuery;
+  flag: FlagQuery;
   property: PropertyQuery;
   user: UserQuery;
   userGroup: UserGroupQuery;
@@ -192,11 +239,14 @@ export type Query = {
 
 export type User = {
   __typename?: 'User';
+  flag: Array<Flag>;
+  flagItem: Flag;
   group?: Maybe<Array<User>>;
   hash?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-  login?: Maybe<Scalars['String']>;
-  property?: Maybe<Array<UserProperty>>;
+  login: Scalars['String'];
+  property?: Maybe<Array<UserPropertySchema>>;
+  propertyItem?: Maybe<UserPropertySchema>;
 };
 
 export type UserGroup = {
@@ -240,18 +290,24 @@ export type UserMutation = {
   update: User;
 };
 
-export type UserProperty = {
-  __typename?: 'UserProperty';
+export type UserPropertySchema = {
   id: Scalars['Int'];
   property: Property;
-  value: Scalars['String'];
+  string: Scalars['String'];
 };
 
 export type UserQuery = {
   __typename?: 'UserQuery';
+  count: Scalars['Int'];
   item?: Maybe<User>;
   list: Array<User>;
   myself?: Maybe<User>;
+};
+
+
+export type UserQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -263,6 +319,30 @@ export type UserQueryItemArgs = {
 export type UserQueryListArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type UserString = UserPropertySchema & {
+  __typename?: 'UserString';
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+};
+
+export type UserUser = UserPropertySchema & {
+  __typename?: 'UserUser';
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  user: User;
+};
+
+export type UserValue = UserPropertySchema & {
+  __typename?: 'UserValue';
+  directory: Directory;
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  value: Value;
 };
 
 export type Value = {
@@ -337,17 +417,12 @@ export type AuthByPasswordMutationVariables = Exact<{
 }>;
 
 
-export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByPassword?: { __typename?: 'User', id: number, login?: string | null, group?: Array<{ __typename?: 'User', id: number }> | null } | null } | null };
+export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByPassword?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'User', id: number }> | null } | null } | null };
 
 export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login?: string | null, group?: Array<{ __typename?: 'User', id: number }> | null, property?: Array<{ __typename?: 'UserProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
-
-export type GetUserListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', list: Array<{ __typename?: 'User', id: number, login?: string | null, property?: Array<{ __typename?: 'UserProperty', value: string, property: { __typename?: 'Property', id: string } }> | null, group?: Array<{ __typename?: 'User', id: number }> | null }> } };
+export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
 
 export type AddDirectoryItemMutationVariables = Exact<{
   item: DirectoryInput;
@@ -421,6 +496,24 @@ export type UpdatePropertyItemMutationVariables = Exact<{
 
 export type UpdatePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', update: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
+export type AddUserItemMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddUserItemMutation = { __typename?: 'Mutation', user: { __typename?: 'UserMutation', add: { __typename?: 'User', id: number } } };
+
+export type DeleteUserListMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteUserListMutation = { __typename?: 'Mutation', user: { __typename?: 'UserMutation', delete: { __typename?: 'User', id: number } } };
+
+export type GetUserListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', count: number, list: Array<{ __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, value: { __typename?: 'Value', id: string }, property: { __typename?: 'Property', id: string } }> | null }> } };
+
 export const AuthByPasswordDocument = gql`
     mutation AuthByPassword($login: String!, $password: String!) {
   auth {
@@ -451,11 +544,8 @@ export const GetMyselfDocument = gql`
     myself {
       id
       login
-      group {
-        id
-      }
       property {
-        value
+        string
         property {
           id
         }
@@ -470,36 +560,6 @@ export const GetMyselfDocument = gql`
   })
   export class GetMyselfGQL extends Apollo.Query<GetMyselfQuery, GetMyselfQueryVariables> {
     document = GetMyselfDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const GetUserListDocument = gql`
-    query getUserList {
-  user {
-    list {
-      id
-      login
-      property {
-        value
-        property {
-          id
-        }
-      }
-      group {
-        id
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetUserListGQL extends Apollo.Query<GetUserListQuery, GetUserListQueryVariables> {
-    document = GetUserListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -756,6 +816,79 @@ export const UpdatePropertyItemDocument = gql`
   })
   export class UpdatePropertyItemGQL extends Apollo.Mutation<UpdatePropertyItemMutation, UpdatePropertyItemMutationVariables> {
     document = UpdatePropertyItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddUserItemDocument = gql`
+    mutation AddUserItem {
+  user {
+    add {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddUserItemGQL extends Apollo.Mutation<AddUserItemMutation, AddUserItemMutationVariables> {
+    document = AddUserItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteUserListDocument = gql`
+    mutation DeleteUserList {
+  user {
+    delete {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteUserListGQL extends Apollo.Mutation<DeleteUserListMutation, DeleteUserListMutationVariables> {
+    document = DeleteUserListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUserListDocument = gql`
+    query getUserList($limit: Int, $offset: Int) {
+  user {
+    list(limit: $limit, offset: $offset) {
+      id
+      login
+      property {
+        string
+        property {
+          id
+        }
+        ... on UserValue {
+          value {
+            id
+          }
+        }
+      }
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUserListGQL extends Apollo.Query<GetUserListQuery, GetUserListQueryVariables> {
+    document = GetUserListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

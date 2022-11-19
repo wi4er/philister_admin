@@ -1,0 +1,20 @@
+query getUserList($limit: Int, $offset: Int) {
+  user {
+    list(limit: $limit, offset: $offset) {
+      id
+      login
+      property {
+        string
+        property {
+          id
+        }
+        ... on UserValue {
+          value {
+            id
+          }
+        }
+      }
+    }
+    count
+  }
+}

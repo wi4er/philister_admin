@@ -3,11 +3,8 @@ query GetMyself {
     myself {
       id
       login
-      group {
-        id
-      }
       property {
-        value
+        string
         property {
           id
         }

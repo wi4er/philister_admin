@@ -1,0 +1,7 @@
+mutation DeleteUserList {
+  user {
+    delete {
+      id
+    }
+  }
+}

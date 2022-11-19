@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+interface UserPropertySchema {
+  id: Int!
+  string: String!
+  property: Property!
+}
+
 type PropertyProperty {
   id: String!
   value: String!
@@ -13,22 +19,38 @@ type Property {
   property: [PropertyProperty!]
 }
 
-type UserProperty {
+type FlagProperty {
   id: Int!
   value: String!
   property: Property!
 }
 
+type FlagFlag {
+  id: Float!
+  flag: Flag!
+}
+
+type Flag {
+  id: String!
+  label: String!
+  property: [FlagProperty!]!
+  flag: [FlagFlag!]!
+}
+
 type User {
   id: Int!
-  login: String
+  login: String!
   hash: String
   group: [User!]
-  property: [UserProperty!]
+  property: [UserPropertySchema!]
+  propertyItem: UserPropertySchema
+  flag: [Flag!]!
+  flagItem: Flag!
 }
 
 type UserQuery {
   list(limit: Int, offset: Int): [User!]!
+  count(limit: Int, offset: Int): Int!
   item(id: Int!): User
   myself: User
 }
@@ -65,6 +87,44 @@ type AuthMutation {
   authByPassword(login: String!, password: String!): User
 }
 
+type UserString implements UserPropertySchema {
+  id: Int!
+  string: String!
+  property: Property!
+}
+
+type DirectoryProperty {
+  id: String!
+  value: String!
+  property: Property!
+}
+
+type Value {
+  id: String!
+  directory: Directory!
+}
+
+type Directory {
+  id: String!
+  property: [DirectoryProperty!]
+  value: [Value!]
+}
+
+type UserValue implements UserPropertySchema {
+  id: Int!
+  string: String!
+  property: Property!
+  directory: Directory!
+  value: Value!
+}
+
+type UserUser implements UserPropertySchema {
+  id: Int!
+  string: String!
+  property: Property!
+  user: User!
+}
+
 type PropertyQuery {
   list(limit: Int, offset: Int): [Property!]!
   count(limit: Int, offset: Int): Int!
@@ -90,23 +150,6 @@ input PropertyInput {
 input PropertyPropertyInput {
   property: String!
   value: String!
-}
-
-type DirectoryProperty {
-  id: String!
-  value: String!
-  property: Property!
-}
-
-type Value {
-  id: String!
-  directory: Directory!
-}
-
-type Directory {
-  id: String!
-  property: [DirectoryProperty!]
-  value: [Value!]
 }
 
 type DirectoryQuery {
@@ -166,12 +209,19 @@ input ValuePropertyInput {
   value: String!
 }
 
+type FlagQuery {
+  list(limit: Int, offset: Int): [Flag!]!
+  count(limit: Int, offset: Int): Int!
+  item(id: String!): Flag
+}
+
 type Query {
   user: UserQuery!
   userGroup: UserGroupQuery!
   property: PropertyQuery!
   directory: DirectoryQuery!
   value: ValueQuery!
+  flag: FlagQuery!
 }
 
 type Mutation {
@@ -181,4 +231,5 @@ type Mutation {
   property: PropertyMutation!
   directory: DirectoryMutation!
   value: ValueMutation!
+  flag: PropertyMutation!
 }

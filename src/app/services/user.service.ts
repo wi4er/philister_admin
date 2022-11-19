@@ -12,7 +12,7 @@ export class UserService {
   constructor(
     private authMutation: AuthByPasswordGQL,
     private getMyselfQuery: GetMyselfGQL,
-    private getUserListQuery: GetUserListGQL
+    private getUserListQuery: GetUserListGQL,
   ) {
   }
 

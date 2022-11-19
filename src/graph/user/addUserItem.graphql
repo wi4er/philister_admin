@@ -1,0 +1,7 @@
+mutation AddUserItem {
+  user {
+    add {
+      id
+    }
+  }
+}
