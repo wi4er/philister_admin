@@ -5,34 +5,26 @@ import { MatTable } from "@angular/material/table";
 import { PropertyService } from "../../services/property.service";
 import { MatDialog } from "@angular/material/dialog";
 import {
-  DeleteDirectoryGQL, Directory,
-  GetDirectoryListGQL, GetPropertyListGQL,
+  DeleteFlagListGQL,
+  Flag,
+  GetFlagListGQL,
+  GetFlagListQuery,
+  GetPropertyListGQL,
+  Property
 } from "../../../graph/types";
-import { animate, state, style, transition, trigger } from "@angular/animations";
-import { DirectoryFormComponent } from "../directory-form/directory-form.component";
+import { PropertyFormComponent } from "../property-form/property-form.component";
 
 @Component({
-  selector: 'app-directory-list',
-  templateUrl: './directory-list.component.html',
-  styleUrls: [ './directory-list.component.css' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
+  selector: 'app-flag-list',
+  templateUrl: './flag-list.component.html',
+  styleUrls: ['./flag-list.component.css']
 })
-export class DirectoryListComponent implements OnInit {
+export class FlagListComponent implements OnInit {
 
   list: { [key: string]: string }[] = [];
+  columns: string[] = [];
   properties: string[] = [];
-  values: string[] = [];
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
-  expandedElement: Directory | null = null;
 
   pageEvent?: PageEvent;
   totalCount: number = 0;
@@ -43,53 +35,47 @@ export class DirectoryListComponent implements OnInit {
   table?: MatTable<any>;
 
   constructor(
-    private propertyService: PropertyService,
+    // private propertyService: PropertyService,
     private dialog: MatDialog,
-    private getDirectoryListQuery: GetDirectoryListGQL,
-    private getPropertyListQuery: GetPropertyListGQL,
-    private deleteDirectoryQuery: DeleteDirectoryGQL,
+    private getListQuery: GetFlagListGQL,
+    private deleteListMutation: DeleteFlagListGQL,
   ) {
+  }
+
+  formatData(data: Flag[]) {
+    const col = new Set<string>();
+    const list = []
+
+    for (const item of data) {
+      const line: { [key: string]: string } = { 'id': item.id };
+
+      for (const prop of item?.property ?? []) {
+        col.add('property_' + prop.property.id);
+        line['property_' + prop.property.id] = prop.string;
+      }
+
+      list.push(line);
+    }
+
+    this.properties = [ ...col ];
+    this.columns = [ 'select', 'action', 'id', ...col ];
+    this.list = list;
   }
 
   ngOnInit(): void {
     this.fetchList();
   }
 
-  formatData(data: Directory[]) {
-    const propSet = new Set<string>();
-    const list = []
-
-    for (const item of data) {
-      const line: { [key: string]: any } = { 'id': item.id };
-
-      for (const prop of item?.property ?? []) {
-        propSet.add('property_' + prop.property.id);
-        line['property_' + prop.property.id] = prop.value;
-      }
-
-      line['values'] = item.value;
-
-      list.push(line);
-    }
-
-    this.properties = [ ...propSet ];
-    this.list = list;
-  }
-
-  getColumns() {
-    return [ 'select', 'action', 'id', ...this.properties, 'value' ];
-  }
-
   fetchList() {
-    this.getDirectoryListQuery.fetch({
+    this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
     }, {
       fetchPolicy: 'network-only'
     })
       .subscribe(res => {
-        this.formatData(res.data.directory.list as Directory[]);
-        this.totalCount = res.data.directory.count;
+        this.formatData(res.data.flag.list as Flag[]);
+        this.totalCount = res.data.flag.count;
 
         this.selection.clear();
         this.table?.renderRows();
@@ -98,7 +84,7 @@ export class DirectoryListComponent implements OnInit {
 
   addPropertyItem() {
     const dialog = this.dialog.open(
-      DirectoryFormComponent,
+      PropertyFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper'
@@ -111,22 +97,25 @@ export class DirectoryListComponent implements OnInit {
 
   updateProperty(id: number) {
     const dialog = this.dialog.open(
-      DirectoryFormComponent,
-      { data: { id } },
+      PropertyFormComponent,
+      {
+        width: '1000px',
+        data: { id }
+      },
     );
 
     dialog.afterClosed()
       .subscribe(() => this.fetchList());
   }
 
-  deletePropertyList() {
-    this.deleteDirectoryQuery.mutate({
+  deleteList() {
+    this.deleteListMutation.mutate({
       id: this.selection.selected.map(item => item['id'])
     }).subscribe(() => this.fetchList());
   }
 
-  deletePropertyItem(id: string) {
-    this.deleteDirectoryQuery.mutate({
+  deleteItem(id: string) {
+    this.deleteListMutation.mutate({
       id: id
     }).subscribe(() => this.fetchList());
   }

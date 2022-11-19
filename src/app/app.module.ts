@@ -38,6 +38,9 @@ import { DirectoryListComponent } from './components/directory-list/directory-li
 import { DirectoryPageComponent } from './pages/directory-page/directory-page.component';
 import { MatChipsModule } from "@angular/material/chips";
 import { DirectoryFormComponent } from './components/directory-form/directory-form.component';
+import { FlagListComponent } from './components/flag-list/flag-list.component';
+import { FlagFormComponent } from './components/flag-form/flag-form.component';
+import { FlagPageComponent } from './pages/flag-page/flag-page.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,9 @@ import { DirectoryFormComponent } from './components/directory-form/directory-fo
     DirectoryListComponent,
     DirectoryPageComponent,
     DirectoryFormComponent,
+    FlagListComponent,
+    FlagFormComponent,
+    FlagPageComponent,
   ],
   imports: [
     BrowserModule,

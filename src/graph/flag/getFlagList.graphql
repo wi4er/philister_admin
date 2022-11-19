@@ -1,0 +1,22 @@
+query GetFlagList($limit: Int, $offset: Int) {
+  flag {
+    list (offset: $offset, limit: $limit) {
+      id
+      label
+      flag {
+        id
+        flag {
+          id
+        }
+      }
+      property {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+    count
+  }
+}

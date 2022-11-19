@@ -1,0 +1,5 @@
+mutation DeleteFlagList ($id: [String!]!) {
+  flag {
+    delete(id: $id)
+  }
+}

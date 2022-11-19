@@ -114,10 +114,9 @@ export type FlagFlag = {
 };
 
 export type FlagProperty = {
-  __typename?: 'FlagProperty';
   id: Scalars['Int'];
   property: Property;
-  value: Scalars['String'];
+  string: Scalars['String'];
 };
 
 export type FlagQuery = {
@@ -142,6 +141,14 @@ export type FlagQueryItemArgs = {
 export type FlagQueryListArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type FlagString = FlagProperty & {
+  __typename?: 'FlagString';
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  value: Scalars['String'];
 };
 
 export type Mutation = {
@@ -460,6 +467,21 @@ export type UpdateDirectoryItemMutationVariables = Exact<{
 
 export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
+export type DeleteFlagListMutationVariables = Exact<{
+  id: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type DeleteFlagListMutation = { __typename?: 'Mutation', flag: { __typename?: 'PropertyMutation', delete: Array<string> } };
+
+export type GetFlagListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetFlagListQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', count: number, list: Array<{ __typename?: 'Flag', id: string, label: string, flag: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }>, property: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+
 export type AddPropertyItemMutationVariables = Exact<{
   item: PropertyInput;
 }>;
@@ -467,12 +489,12 @@ export type AddPropertyItemMutationVariables = Exact<{
 
 export type AddPropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', add: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
-export type DeletePropertyItemMutationVariables = Exact<{
+export type DeletePropertyListMutationVariables = Exact<{
   id: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
-export type DeletePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', delete: Array<string> } };
+export type DeletePropertyListMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', delete: Array<string> } };
 
 export type GetPropertyEditQueryVariables = Exact<{
   id: Scalars['String'];
@@ -694,6 +716,59 @@ export const UpdateDirectoryItemDocument = gql`
       super(apollo);
     }
   }
+export const DeleteFlagListDocument = gql`
+    mutation DeleteFlagList($id: [String!]!) {
+  flag {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteFlagListGQL extends Apollo.Mutation<DeleteFlagListMutation, DeleteFlagListMutationVariables> {
+    document = DeleteFlagListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetFlagListDocument = gql`
+    query GetFlagList($limit: Int, $offset: Int) {
+  flag {
+    list(offset: $offset, limit: $limit) {
+      id
+      label
+      flag {
+        id
+        flag {
+          id
+        }
+      }
+      property {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetFlagListGQL extends Apollo.Query<GetFlagListQuery, GetFlagListQueryVariables> {
+    document = GetFlagListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const AddPropertyItemDocument = gql`
     mutation AddPropertyItem($item: PropertyInput!) {
   property {
@@ -720,8 +795,8 @@ export const AddPropertyItemDocument = gql`
       super(apollo);
     }
   }
-export const DeletePropertyItemDocument = gql`
-    mutation DeletePropertyItem($id: [String!]!) {
+export const DeletePropertyListDocument = gql`
+    mutation DeletePropertyList($id: [String!]!) {
   property {
     delete(id: $id)
   }
@@ -731,8 +806,8 @@ export const DeletePropertyItemDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class DeletePropertyItemGQL extends Apollo.Mutation<DeletePropertyItemMutation, DeletePropertyItemMutationVariables> {
-    document = DeletePropertyItemDocument;
+  export class DeletePropertyListGQL extends Apollo.Mutation<DeletePropertyListMutation, DeletePropertyListMutationVariables> {
+    document = DeletePropertyListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

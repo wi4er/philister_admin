@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PropertyService } from "../../services/property.service";
-import { DeletePropertyItemGQL, GetPropertyListGQL, Property } from "../../../graph/types";
+import { DeletePropertyListGQL, GetPropertyListGQL, Property } from "../../../graph/types";
 import { MatDialog } from "@angular/material/dialog";
 import { PropertyFormComponent } from "../property-form/property-form.component";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -31,7 +31,7 @@ export class PropertyListComponent implements OnInit {
     private propertyService: PropertyService,
     private dialog: MatDialog,
     private getPropertyListQuery: GetPropertyListGQL,
-    private deletePropertyQuery: DeletePropertyItemGQL,
+    private deleteListMutation: DeletePropertyListGQL,
   ) {
   }
 
@@ -75,7 +75,7 @@ export class PropertyListComponent implements OnInit {
       });
   }
 
-  addPropertyItem() {
+  addItem() {
     const dialog = this.dialog.open(
       PropertyFormComponent,
       {
@@ -101,14 +101,14 @@ export class PropertyListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  deletePropertyList() {
-    this.deletePropertyQuery.mutate({
+  deleteList() {
+    this.deleteListMutation.mutate({
       id: this.selection.selected.map(item => item['id'])
     }).subscribe(() => this.fetchList());
   }
 
-  deletePropertyItem(id: string) {
-    this.deletePropertyQuery.mutate({
+  deleteItem(id: string) {
+    this.deleteListMutation.mutate({
       id: id
     }).subscribe(() => this.fetchList());
   }
