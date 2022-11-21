@@ -6,7 +6,7 @@ mutation AddDirectoryItem($item: DirectoryInput!) {
         id
       }
       property {
-        value
+        string
         property {
           id
         }

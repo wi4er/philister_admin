@@ -41,6 +41,7 @@ import { DirectoryFormComponent } from './components/directory-form/directory-fo
 import { FlagListComponent } from './components/flag-list/flag-list.component';
 import { FlagFormComponent } from './components/flag-form/flag-form.component';
 import { FlagPageComponent } from './pages/flag-page/flag-page.component';
+import { ValueFormComponent } from './components/value-form/value-form.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { FlagPageComponent } from './pages/flag-page/flag-page.component';
     FlagListComponent,
     FlagFormComponent,
     FlagPageComponent,
+    ValueFormComponent,
   ],
   imports: [
     BrowserModule,

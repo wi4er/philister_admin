@@ -1,0 +1,21 @@
+query GetValueEdit($id: String!) {
+  value {
+    item(id: $id) {
+      id
+      updated_at
+      created_at
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+  }
+  property {
+    list {
+      id
+    }
+  }
+}

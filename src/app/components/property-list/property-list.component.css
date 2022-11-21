@@ -10,10 +10,6 @@ td span {
   padding: 0 4px;
 }
 
-th:nth-child(2n), td:nth-child(2n) {
-  background-color: #EEE;
-}
-
 .spacer {
   flex: 1 1 auto;
 }

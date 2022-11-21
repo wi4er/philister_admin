@@ -1,0 +1,9 @@
+.property_wrap {
+  padding: 24px 0;
+}
+
+.flag_wrap {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+}

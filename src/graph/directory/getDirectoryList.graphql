@@ -2,8 +2,11 @@ query GetDirectoryList($offset: Int, $limit: Int) {
   directory {
     list(limit: $limit, offset: $offset) {
       id
+      created_at
+      updated_at
+      version
       property {
-        value
+        string
         property {
           id
         }

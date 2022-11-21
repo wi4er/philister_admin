@@ -3,6 +3,7 @@ query GetPropertyList($limit: Int, $offset: Int) {
     list(limit: $limit, offset: $offset) {
       id
       property {
+        id
         value
         property {
           id

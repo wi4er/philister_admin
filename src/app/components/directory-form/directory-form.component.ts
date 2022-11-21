@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddDirectoryItemGQL, AddValueItemGQL,
-  GetPropertyEditGQL,
+  AddDirectoryItemGQL, AddValueItemGQL, Directory, DirectoryInput, DirectoryPropertyInput, GetDirectoryEditGQL,
   GetPropertyListGQL,
-  Property, PropertyInput, PropertyPropertyInput, UpdateDirectoryItemGQL,
+  Property, UpdateDirectoryItemGQL,
 } from "../../../graph/types";
 import { PropertyService } from "../../services/property.service";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
@@ -13,16 +12,22 @@ import { MatChipInputEvent } from "@angular/material/chips";
 @Component({
   selector: 'app-directory-form',
   templateUrl: './directory-form.component.html',
-  styleUrls: ['./directory-form.component.css']
+  styleUrls: [ './directory-form.component.css' ]
 })
 export class DirectoryFormComponent implements OnInit {
 
-  list: Property[] = [];
   id: string = '';
-  properties: { [field: string]: string } = {};
-  values: Set<string> = new Set();
+  created_at: string = '';
+  updated_at: string = '';
+  version: number = 0;
 
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  current?: Directory;
+
+  propertyList: Property[] = [];
+  propertyEdit: { [field: string]: string } = {};
+  editValues: Set<string> = new Set();
+
+  readonly separatorKeysCodes = [ ENTER, COMMA ] as const;
   addOnBlur = true;
 
   constructor(
@@ -32,46 +37,58 @@ export class DirectoryFormComponent implements OnInit {
     private updateMutation: UpdateDirectoryItemGQL,
     private dialogRef: MatDialogRef<DirectoryFormComponent>,
     private getPropertyListQuery: GetPropertyListGQL,
-    private getPropertyEditQuery: GetPropertyEditGQL,
-    @Inject(MAT_DIALOG_DATA) public data: { id: string },
+    private getDirectoryEditQuery: GetDirectoryEditGQL,
+    @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
   ) {
+  }
+
+  getPropertyCount() {
+    return Object.keys(this.propertyEdit).length
   }
 
   ngOnInit(): void {
     if (this.data?.id) {
       this.id = this.data.id;
 
-      this.getPropertyEditQuery.fetch({ id: this.data?.id }).subscribe(res => {
-        this.list = res.data?.property?.list as Property[];
-        // this.toValues(res.data.property.item as Property);
+      this.getDirectoryEditQuery.fetch({ id: this.id }).subscribe(res => {
+        this.current = res.data.directory.item as Directory;
+
+        this.propertyList = res.data.property.list as Property[];
+        this.toValues(this.current);
       });
     } else {
       this.getPropertyListQuery.fetch().subscribe(res => {
-        this.list = res.data?.property?.list as Property[];
+        this.propertyList = res.data?.property?.list as Property[];
       });
     }
   }
 
-  toValues(item: Property) {
+  toValues(item: Directory) {
     this.id = item.id;
 
-    // for (const prop of item?.property ?? []) {
-    //   this.values.a[prop.property.id] = prop.value;
-    // }
+    for (const prop of item?.property ?? []) {
+      this.propertyEdit[prop.property.id] = prop.string;
+    }
+
+    for (const prop of item?.value ?? []) {
+      this.editValues.add(prop.id);
+    }
   }
 
-  toInput(): PropertyInput {
-    const addition: PropertyInput = {
+  toInput(): DirectoryInput {
+    const addition: DirectoryInput = {
       id: this.id,
       property: [],
-    } as PropertyInput;
+    } as DirectoryInput;
 
-    for (const key in this.properties) {
+    for (const key in this.propertyEdit) {
       addition.property?.push({
-        value: this.properties[key],
+        string: this.propertyEdit[key],
         property: key
-      } as PropertyPropertyInput);
+      } as DirectoryPropertyInput);
     }
+
+    addition.value = Array.from(this.editValues);
 
     return addition;
   }
@@ -87,32 +104,22 @@ export class DirectoryFormComponent implements OnInit {
       this.addMutation.mutate({
         item: this.toInput(),
       }).subscribe(res => {
-        for (const key of this.values) {
-          this.addValueMutation.mutate({item: {
-              id: key,
-              directory: this.id,
-            }}).subscribe(res => {
-
-          });
-        }
-
         this.dialogRef.close();
       });
     }
   }
 
   removeValue(value: string) {
-    this.values.delete(value);
+    this.editValues.delete(value);
   }
 
   addValue(event: MatChipInputEvent) {
     const value = (event.value || '').trim();
 
     if (value) {
-      this.values.add(value);
+      this.editValues.add(value);
     }
 
-    // Clear the input value
     event.chipInput!.clear();
   }
 

@@ -1,0 +1,7 @@
+query GetPropertyId {
+  property {
+    idList: list {
+      id
+    }
+  }
+}

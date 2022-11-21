@@ -5,7 +5,7 @@
 
   <button
     mat-icon-button
-    (click)="addPropertyItem()"
+    (click)="addDirectoryItem()"
     title="add item"
   >
     <mat-icon>add</mat-icon>
@@ -70,7 +70,7 @@
           <span>Delete</span>
         </button>
 
-        <button mat-menu-item (click)="updateProperty(element.id)">
+        <button mat-menu-item (click)="updateDirectoryItem(element.id)">
           <mat-icon>edit</mat-icon>
           <span>Edit</span>
         </button>
@@ -84,6 +84,24 @@
     </th>
     <td mat-cell *matCellDef="let element">
       <span>{{element.id}}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="created_at">
+    <th mat-header-cell *matHeaderCellDef>
+      <span> created at </span>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{element.created_at}}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="updated_at">
+    <th mat-header-cell *matHeaderCellDef>
+      <span> updated at </span>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{element.updated_at}}</span>
     </td>
   </ng-container>
 
@@ -102,7 +120,7 @@
 
   <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef>
-      <span> Values </span>
+      <span> Value count </span>
     </th>
     <td mat-cell *matCellDef="let element">
       <span>{{element.values.length}}</span>
@@ -127,6 +145,7 @@
           <mat-chip
             class="example-box"
             cdkDrag
+            (dblclick)="updateValueItem(chip.id)"
             *ngFor="let chip of element.values">
             {{chip.id}}
           </mat-chip>
@@ -140,7 +159,7 @@
     mat-row
     [class.expanded-row]="expandedElement === element"
     *matRowDef="let element; columns: getColumns();"
-    (click)="expandedElement = expandedElement === element ? null : element"
+    (click)="expandElement(element)"
   ></tr>
   <tr
     mat-row

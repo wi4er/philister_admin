@@ -28,14 +28,18 @@ export type AuthMutationAuthByPasswordArgs = {
 
 export type Directory = {
   __typename?: 'Directory';
+  created_at: Scalars['String'];
   id: Scalars['String'];
-  property?: Maybe<Array<DirectoryProperty>>;
+  property?: Maybe<Array<DirectoryString>>;
+  updated_at: Scalars['String'];
   value?: Maybe<Array<Value>>;
+  version: Scalars['Int'];
 };
 
 export type DirectoryInput = {
   id: Scalars['String'];
   property?: InputMaybe<Array<DirectoryPropertyInput>>;
+  value?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type DirectoryMutation = {
@@ -64,15 +68,17 @@ export type DirectoryMutationUpdateArgs = {
 };
 
 export type DirectoryProperty = {
-  __typename?: 'DirectoryProperty';
-  id: Scalars['String'];
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
   property: Property;
-  value: Scalars['String'];
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type DirectoryPropertyInput = {
   property: Scalars['String'];
-  value: Scalars['String'];
+  string: Scalars['String'];
 };
 
 export type DirectoryQuery = {
@@ -97,6 +103,16 @@ export type DirectoryQueryItemArgs = {
 export type DirectoryQueryListArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type DirectoryString = DirectoryProperty & {
+  __typename?: 'DirectoryString';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type Flag = {
@@ -164,8 +180,11 @@ export type Mutation = {
 
 export type Property = {
   __typename?: 'Property';
+  created_at: Scalars['String'];
   id: Scalars['String'];
   property?: Maybe<Array<PropertyProperty>>;
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type PropertyInput = {
@@ -354,7 +373,23 @@ export type UserValue = UserPropertySchema & {
 
 export type Value = {
   __typename?: 'Value';
+  created_at: Scalars['String'];
   directory: Directory;
+  id: Scalars['String'];
+  propertyItem: ValueProperty;
+  propertyList: Array<ValueProperty>;
+  propertyString: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+
+export type ValuePropertyItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type ValuePropertyStringArgs = {
   id: Scalars['String'];
 };
 
@@ -389,6 +424,15 @@ export type ValueMutationUpdateArgs = {
   item: ValueInput;
 };
 
+export type ValueProperty = {
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
 export type ValuePropertyInput = {
   property: Scalars['String'];
   value: Scalars['String'];
@@ -418,6 +462,16 @@ export type ValueQueryListArgs = {
   offset?: InputMaybe<Scalars['Int']>;
 };
 
+export type ValueString = ValueProperty & {
+  __typename?: 'ValueString';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
 export type AuthByPasswordMutationVariables = Exact<{
   login: Scalars['String'];
   password: Scalars['String'];
@@ -436,7 +490,7 @@ export type AddDirectoryItemMutationVariables = Exact<{
 }>;
 
 
-export type AddDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', add: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
+export type AddDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', add: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
 export type AddValueItemMutationVariables = Exact<{
   item: ValueInput;
@@ -452,20 +506,34 @@ export type DeleteDirectoryMutationVariables = Exact<{
 
 export type DeleteDirectoryMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', delete: Array<string> } };
 
+export type GetDirectoryEditQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetDirectoryEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, directory: { __typename?: 'DirectoryQuery', item?: { __typename?: 'Directory', id: string, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null, value?: Array<{ __typename?: 'Value', id: string }> | null } | null } };
+
 export type GetDirectoryListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GetDirectoryListQuery = { __typename?: 'Query', directory: { __typename?: 'DirectoryQuery', count: number, list: Array<{ __typename?: 'Directory', id: string, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null, value?: Array<{ __typename?: 'Value', id: string }> | null }> } };
+export type GetDirectoryListQuery = { __typename?: 'Query', directory: { __typename?: 'DirectoryQuery', count: number, list: Array<{ __typename?: 'Directory', id: string, created_at: string, updated_at: string, version: number, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null, value?: Array<{ __typename?: 'Value', id: string }> | null }> } };
+
+export type GetValueEditQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetValueEditQuery = { __typename?: 'Query', value: { __typename?: 'ValueQuery', item?: { __typename?: 'Value', id: string, updated_at: string, created_at: string, propertyList: Array<{ __typename?: 'ValueString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> } };
 
 export type UpdateDirectoryItemMutationVariables = Exact<{
   item: DirectoryInput;
 }>;
 
 
-export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
+export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
 export type DeleteFlagListMutationVariables = Exact<{
   id: Array<Scalars['String']> | Scalars['String'];
@@ -501,7 +569,12 @@ export type GetPropertyEditQueryVariables = Exact<{
 }>;
 
 
-export type GetPropertyEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }>, item?: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, value: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
+export type GetPropertyEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }>, item?: { __typename?: 'Property', id: string, created_at: string, updated_at: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, value: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
+
+export type GetPropertyIdQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPropertyIdQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', idList: Array<{ __typename?: 'Property', id: string }> } };
 
 export type GetPropertyListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -509,7 +582,7 @@ export type GetPropertyListQueryVariables = Exact<{
 }>;
 
 
-export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', count: number, list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null }> } };
+export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', count: number, list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, value: string, property: { __typename?: 'Property', id: string } }> | null }> } };
 
 export type UpdatePropertyItemMutationVariables = Exact<{
   item: PropertyInput;
@@ -596,7 +669,7 @@ export const AddDirectoryItemDocument = gql`
         id
       }
       property {
-        value
+        string
         property {
           id
         }
@@ -657,13 +730,50 @@ export const DeleteDirectoryDocument = gql`
       super(apollo);
     }
   }
+export const GetDirectoryEditDocument = gql`
+    query GetDirectoryEdit($id: String!) {
+  property {
+    list {
+      id
+    }
+  }
+  directory {
+    item(id: $id) {
+      id
+      property {
+        string
+        property {
+          id
+        }
+      }
+      value {
+        id
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDirectoryEditGQL extends Apollo.Query<GetDirectoryEditQuery, GetDirectoryEditQueryVariables> {
+    document = GetDirectoryEditDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetDirectoryListDocument = gql`
     query GetDirectoryList($offset: Int, $limit: Int) {
   directory {
     list(limit: $limit, offset: $offset) {
       id
+      created_at
+      updated_at
+      version
       property {
-        value
+        string
         property {
           id
         }
@@ -687,6 +797,40 @@ export const GetDirectoryListDocument = gql`
       super(apollo);
     }
   }
+export const GetValueEditDocument = gql`
+    query GetValueEdit($id: String!) {
+  value {
+    item(id: $id) {
+      id
+      updated_at
+      created_at
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+  }
+  property {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetValueEditGQL extends Apollo.Query<GetValueEditQuery, GetValueEditQueryVariables> {
+    document = GetValueEditDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UpdateDirectoryItemDocument = gql`
     mutation updateDirectoryItem($item: DirectoryInput!) {
   directory {
@@ -696,7 +840,7 @@ export const UpdateDirectoryItemDocument = gql`
         id
       }
       property {
-        value
+        string
         property {
           id
         }
@@ -821,6 +965,8 @@ export const GetPropertyEditDocument = gql`
     }
     item(id: $id) {
       id
+      created_at
+      updated_at
       property {
         id
         value
@@ -843,12 +989,33 @@ export const GetPropertyEditDocument = gql`
       super(apollo);
     }
   }
+export const GetPropertyIdDocument = gql`
+    query GetPropertyId {
+  property {
+    idList: list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPropertyIdGQL extends Apollo.Query<GetPropertyIdQuery, GetPropertyIdQueryVariables> {
+    document = GetPropertyIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetPropertyListDocument = gql`
     query GetPropertyList($limit: Int, $offset: Int) {
   property {
     list(limit: $limit, offset: $offset) {
       id
       property {
+        id
         value
         property {
           id

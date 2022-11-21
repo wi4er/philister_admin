@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from "@angular/cdk/collections";
 import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
-import { PropertyService } from "../../services/property.service";
 import { MatDialog } from "@angular/material/dialog";
 import {
   DeleteDirectoryGQL, Directory,
-  GetDirectoryListGQL, GetPropertyListGQL,
+  GetDirectoryListGQL,
 } from "../../../graph/types";
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { DirectoryFormComponent } from "../directory-form/directory-form.component";
+import { ValueFormComponent } from "../value-form/value-form.component";
 
 @Component({
   selector: 'app-directory-list',
@@ -32,7 +32,7 @@ export class DirectoryListComponent implements OnInit {
   properties: string[] = [];
   values: string[] = [];
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
-  expandedElement: Directory | null = null;
+  expandedElement: { [key: string]: string } | null = null;
 
   pageEvent?: PageEvent;
   totalCount: number = 0;
@@ -43,10 +43,8 @@ export class DirectoryListComponent implements OnInit {
   table?: MatTable<any>;
 
   constructor(
-    private propertyService: PropertyService,
     private dialog: MatDialog,
-    private getDirectoryListQuery: GetDirectoryListGQL,
-    private getPropertyListQuery: GetPropertyListGQL,
+    private getListQuery: GetDirectoryListGQL,
     private deleteDirectoryQuery: DeleteDirectoryGQL,
   ) {
   }
@@ -60,11 +58,16 @@ export class DirectoryListComponent implements OnInit {
     const list = []
 
     for (const item of data) {
-      const line: { [key: string]: any } = { 'id': item.id };
+      const line: { [key: string]: any } = {
+        'id': item.id,
+        'created_at': item.created_at,
+        'updated_at': item.updated_at,
+        'version': item.version,
+      };
 
       for (const prop of item?.property ?? []) {
         propSet.add('property_' + prop.property.id);
-        line['property_' + prop.property.id] = prop.value;
+        line['property_' + prop.property.id] = prop.string;
       }
 
       line['values'] = item.value;
@@ -77,11 +80,11 @@ export class DirectoryListComponent implements OnInit {
   }
 
   getColumns() {
-    return [ 'select', 'action', 'id', ...this.properties, 'value' ];
+    return [ 'select', 'action', 'id', 'created_at', 'updated_at', ...this.properties, 'value' ];
   }
 
   fetchList() {
-    this.getDirectoryListQuery.fetch({
+    this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
     }, {
@@ -96,7 +99,7 @@ export class DirectoryListComponent implements OnInit {
       });
   }
 
-  addPropertyItem() {
+  addDirectoryItem() {
     const dialog = this.dialog.open(
       DirectoryFormComponent,
       {
@@ -109,10 +112,26 @@ export class DirectoryListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  updateProperty(id: number) {
+  updateDirectoryItem(id: number) {
     const dialog = this.dialog.open(
       DirectoryFormComponent,
-      { data: { id } },
+      {
+        width: '1000px',
+        data: { id },
+      },
+    );
+
+    dialog.afterClosed()
+      .subscribe(() => this.fetchList());
+  }
+
+  updateValueItem(id: number) {
+    const dialog = this.dialog.open(
+      ValueFormComponent,
+      {
+        width: '1000px',
+        data: { id },
+      },
     );
 
     dialog.afterClosed()
@@ -150,4 +169,19 @@ export class DirectoryListComponent implements OnInit {
 
     this.fetchList();
   }
+
+  expandElement(element: { [key: string]: string }) {
+    console.log(element)
+
+    if (element['values']?.length === 0) {
+      return;
+    }
+
+    if (this.expandedElement === element) {
+      this.expandedElement = null;
+    } else {
+      this.expandedElement = element;
+    }
+  }
+
 }

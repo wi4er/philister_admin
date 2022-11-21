@@ -1,0 +1,8 @@
+.property_wrap {
+  padding: 24px 0;
+}
+
+.value_wrap {
+  padding: 24px 12px;
+  display: block;
+}
