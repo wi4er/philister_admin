@@ -1,0 +1,28 @@
+query GetLangList ($offset: Int, $limit: Int) {
+  lang {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+        ... on LangString {
+          lang {
+            id
+          }
+        }
+      }
+    }
+    count
+  }
+  property {
+    list {
+      id
+    }
+  }
+}

@@ -42,6 +42,9 @@ import { FlagListComponent } from './components/flag-list/flag-list.component';
 import { FlagFormComponent } from './components/flag-form/flag-form.component';
 import { FlagPageComponent } from './pages/flag-page/flag-page.component';
 import { ValueFormComponent } from './components/value-form/value-form.component';
+import { LangListComponent } from './components/lang-list/lang-list.component';
+import { LangFormComponent } from './components/lang-form/lang-form.component';
+import { LangPageComponent } from './pages/lang-page/lang-page.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +65,9 @@ import { ValueFormComponent } from './components/value-form/value-form.component
     FlagFormComponent,
     FlagPageComponent,
     ValueFormComponent,
+    LangListComponent,
+    LangFormComponent,
+    LangPageComponent,
   ],
   imports: [
     BrowserModule,

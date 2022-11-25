@@ -167,11 +167,122 @@ export type FlagString = FlagProperty & {
   value: Scalars['String'];
 };
 
+export type Lang = {
+  __typename?: 'Lang';
+  created_at: Scalars['String'];
+  flagList: Array<LangFlag>;
+  flagString: Array<Scalars['String']>;
+  id: Scalars['String'];
+  propertyItem?: Maybe<LangProperty>;
+  propertyList: Array<LangProperty>;
+  propertyString?: Maybe<Scalars['String']>;
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+
+export type LangPropertyItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type LangPropertyStringArgs = {
+  id: Scalars['String'];
+};
+
+export type LangFlag = {
+  __typename?: 'LangFlag';
+  flag: Flag;
+  id: Scalars['Int'];
+};
+
+export type LangInput = {
+  flag?: InputMaybe<Array<Scalars['String']>>;
+  id: Scalars['String'];
+  property?: InputMaybe<Array<LangPropertyInput>>;
+};
+
+export type LangMutation = {
+  __typename?: 'LangMutation';
+  /** Adding new lang */
+  add: Lang;
+  /** Deletion existent lang */
+  delete: Array<Scalars['String']>;
+  /** Updating existent lang */
+  update: Lang;
+};
+
+
+export type LangMutationAddArgs = {
+  item: LangInput;
+};
+
+
+export type LangMutationDeleteArgs = {
+  id: Array<Scalars['String']>;
+};
+
+
+export type LangMutationUpdateArgs = {
+  item: LangInput;
+};
+
+export type LangProperty = {
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+export type LangPropertyInput = {
+  lang?: InputMaybe<Scalars['String']>;
+  property: Scalars['String'];
+  string: Scalars['String'];
+};
+
+export type LangQuery = {
+  __typename?: 'LangQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Lang>;
+  list: Array<Lang>;
+};
+
+
+export type LangQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type LangQueryItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type LangQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type LangString = LangProperty & {
+  __typename?: 'LangString';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  lang: Lang;
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   auth?: Maybe<AuthMutation>;
   directory: DirectoryMutation;
   flag: PropertyMutation;
+  lang: LangMutation;
   property: PropertyMutation;
   user: UserMutation;
   userGroup: UserGroupMutation;
@@ -257,6 +368,7 @@ export type Query = {
   __typename?: 'Query';
   directory: DirectoryQuery;
   flag: FlagQuery;
+  lang: LangQuery;
   property: PropertyQuery;
   user: UserQuery;
   userGroup: UserGroupQuery;
@@ -550,6 +662,14 @@ export type GetFlagListQueryVariables = Exact<{
 
 export type GetFlagListQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', count: number, list: Array<{ __typename?: 'Flag', id: string, label: string, flag: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }>, property: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
+export type GetLangListQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetLangListQuery = { __typename?: 'Query', lang: { __typename?: 'LangQuery', count: number, list: Array<{ __typename?: 'Lang', id: string, created_at: string, updated_at: string, propertyList: Array<{ __typename?: 'LangString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } }> }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> } };
+
 export type AddPropertyItemMutationVariables = Exact<{
   item: PropertyInput;
 }>;
@@ -628,7 +748,7 @@ export const AuthByPasswordDocument = gql`
   })
   export class AuthByPasswordGQL extends Apollo.Mutation<AuthByPasswordMutation, AuthByPasswordMutationVariables> {
     document = AuthByPasswordDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -655,7 +775,7 @@ export const GetMyselfDocument = gql`
   })
   export class GetMyselfGQL extends Apollo.Query<GetMyselfQuery, GetMyselfQueryVariables> {
     document = GetMyselfDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -684,7 +804,7 @@ export const AddDirectoryItemDocument = gql`
   })
   export class AddDirectoryItemGQL extends Apollo.Mutation<AddDirectoryItemMutation, AddDirectoryItemMutationVariables> {
     document = AddDirectoryItemDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -707,7 +827,7 @@ export const AddValueItemDocument = gql`
   })
   export class AddValueItemGQL extends Apollo.Mutation<AddValueItemMutation, AddValueItemMutationVariables> {
     document = AddValueItemDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -725,7 +845,7 @@ export const DeleteDirectoryDocument = gql`
   })
   export class DeleteDirectoryGQL extends Apollo.Mutation<DeleteDirectoryMutation, DeleteDirectoryMutationVariables> {
     document = DeleteDirectoryDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -759,7 +879,7 @@ export const GetDirectoryEditDocument = gql`
   })
   export class GetDirectoryEditGQL extends Apollo.Query<GetDirectoryEditQuery, GetDirectoryEditQueryVariables> {
     document = GetDirectoryEditDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -792,7 +912,7 @@ export const GetDirectoryListDocument = gql`
   })
   export class GetDirectoryListGQL extends Apollo.Query<GetDirectoryListQuery, GetDirectoryListQueryVariables> {
     document = GetDirectoryListDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -826,7 +946,7 @@ export const GetValueEditDocument = gql`
   })
   export class GetValueEditGQL extends Apollo.Query<GetValueEditQuery, GetValueEditQueryVariables> {
     document = GetValueEditDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -855,7 +975,7 @@ export const UpdateDirectoryItemDocument = gql`
   })
   export class UpdateDirectoryItemGQL extends Apollo.Mutation<UpdateDirectoryItemMutation, UpdateDirectoryItemMutationVariables> {
     document = UpdateDirectoryItemDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -873,7 +993,7 @@ export const DeleteFlagListDocument = gql`
   })
   export class DeleteFlagListGQL extends Apollo.Mutation<DeleteFlagListMutation, DeleteFlagListMutationVariables> {
     document = DeleteFlagListDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -908,7 +1028,47 @@ export const GetFlagListDocument = gql`
   })
   export class GetFlagListGQL extends Apollo.Query<GetFlagListQuery, GetFlagListQueryVariables> {
     document = GetFlagListDocument;
-    
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetLangListDocument = gql`
+    query GetLangList($offset: Int, $limit: Int) {
+  lang {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+        ... on LangString {
+          lang {
+            id
+          }
+        }
+      }
+    }
+    count
+  }
+  property {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetLangListGQL extends Apollo.Query<GetLangListQuery, GetLangListQueryVariables> {
+    document = GetLangListDocument;
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -934,7 +1094,7 @@ export const AddPropertyItemDocument = gql`
   })
   export class AddPropertyItemGQL extends Apollo.Mutation<AddPropertyItemMutation, AddPropertyItemMutationVariables> {
     document = AddPropertyItemDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -952,7 +1112,7 @@ export const DeletePropertyListDocument = gql`
   })
   export class DeletePropertyListGQL extends Apollo.Mutation<DeletePropertyListMutation, DeletePropertyListMutationVariables> {
     document = DeletePropertyListDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -984,7 +1144,7 @@ export const GetPropertyEditDocument = gql`
   })
   export class GetPropertyEditGQL extends Apollo.Query<GetPropertyEditQuery, GetPropertyEditQueryVariables> {
     document = GetPropertyEditDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1004,7 +1164,7 @@ export const GetPropertyIdDocument = gql`
   })
   export class GetPropertyIdGQL extends Apollo.Query<GetPropertyIdQuery, GetPropertyIdQueryVariables> {
     document = GetPropertyIdDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1032,7 +1192,7 @@ export const GetPropertyListDocument = gql`
   })
   export class GetPropertyListGQL extends Apollo.Query<GetPropertyListQuery, GetPropertyListQueryVariables> {
     document = GetPropertyListDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1058,7 +1218,7 @@ export const UpdatePropertyItemDocument = gql`
   })
   export class UpdatePropertyItemGQL extends Apollo.Mutation<UpdatePropertyItemMutation, UpdatePropertyItemMutationVariables> {
     document = UpdatePropertyItemDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1078,7 +1238,7 @@ export const AddUserItemDocument = gql`
   })
   export class AddUserItemGQL extends Apollo.Mutation<AddUserItemMutation, AddUserItemMutationVariables> {
     document = AddUserItemDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1098,7 +1258,7 @@ export const DeleteUserListDocument = gql`
   })
   export class DeleteUserListGQL extends Apollo.Mutation<DeleteUserListMutation, DeleteUserListMutationVariables> {
     document = DeleteUserListDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1131,7 +1291,7 @@ export const GetUserListDocument = gql`
   })
   export class GetUserListGQL extends Apollo.Query<GetUserListQuery, GetUserListQueryVariables> {
     document = GetUserListDocument;
-    
+
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
