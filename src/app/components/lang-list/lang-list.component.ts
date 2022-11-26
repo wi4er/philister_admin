@@ -4,13 +4,20 @@ import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
 import { PropertyService } from "../../services/property.service";
 import { MatDialog } from "@angular/material/dialog";
-import { DeletePropertyListGQL, GetLangListGQL, GetPropertyListGQL, Lang, LangString } from "../../../graph/types";
+import {
+  DeleteLangListGQL,
+  DeletePropertyListGQL,
+  GetLangListGQL,
+  GetPropertyListGQL,
+  Lang,
+  LangString
+} from "../../../graph/types";
 import { LangFormComponent } from "../lang-form/lang-form.component";
 
 @Component({
   selector: 'app-lang-list',
   templateUrl: './lang-list.component.html',
-  styleUrls: ['./lang-list.component.css']
+  styleUrls: [ './lang-list.component.css' ]
 })
 export class LangListComponent implements OnInit {
 
@@ -32,7 +39,7 @@ export class LangListComponent implements OnInit {
     private dialog: MatDialog,
     private getPropertyListQuery: GetPropertyListGQL,
     private getLangListQuery: GetLangListGQL,
-    private deleteListMutation: DeletePropertyListGQL,
+    private deleteListMutation: DeleteLangListGQL,
   ) {
   }
 

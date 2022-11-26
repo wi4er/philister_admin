@@ -797,6 +797,13 @@ export type GetFlagListQueryVariables = Exact<{
 
 export type GetFlagListQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', count: number, list: Array<{ __typename?: 'Flag', id: string, label: string, flag: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }>, property: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
+export type DeleteLangListMutationVariables = Exact<{
+  id: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type DeleteLangListMutation = { __typename?: 'Mutation', lang: { __typename?: 'LangMutation', delete: Array<string> } };
+
 export type GetLangListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -1195,6 +1202,24 @@ export const GetFlagListDocument = gql`
   })
   export class GetFlagListGQL extends Apollo.Query<GetFlagListQuery, GetFlagListQueryVariables> {
     document = GetFlagListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteLangListDocument = gql`
+    mutation DeleteLangList($id: [String!]!) {
+  lang {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteLangListGQL extends Apollo.Mutation<DeleteLangListMutation, DeleteLangListMutationVariables> {
+    document = DeleteLangListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

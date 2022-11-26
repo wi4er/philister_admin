@@ -1,0 +1,5 @@
+mutation DeleteLangList($id: [String!]!) {
+  lang {
+    delete(id: $id)
+  }
+}
