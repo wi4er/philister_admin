@@ -6,6 +6,14 @@ query GetBlockList($limit: Int, $offset: Int) {
       updated_at
       version
       name: propertyString(id: "NAME")
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
     }
+    count
   }
 }

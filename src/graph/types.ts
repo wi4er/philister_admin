@@ -730,7 +730,7 @@ export type GetBlockListQueryVariables = Exact<{
 }>;
 
 
-export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name: string }> } };
+export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name: string, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type AddDirectoryItemMutationVariables = Exact<{
   item: DirectoryInput;
@@ -924,7 +924,15 @@ export const GetBlockListDocument = gql`
       updated_at
       version
       name: propertyString(id: "NAME")
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
     }
+    count
   }
 }
     `;
