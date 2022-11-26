@@ -7,19 +7,19 @@
     </a>
   </mat-list-item>
 
+  <mat-list-item *ngFor="let block of blockList">
+    <mat-icon>category</mat-icon>
+
+    <a [routerLink]="['/content', block.id]">
+      {{block.name}}
+    </a>
+  </mat-list-item>
+
   <mat-list-item>
     <mat-icon>person</mat-icon>
 
     <a [routerLink]="['/user']">
       Users
-    </a>
-  </mat-list-item>
-
-  <mat-list-item>
-    <mat-icon>category</mat-icon>
-
-    <a [routerLink]="['/element']">
-      Elements
     </a>
   </mat-list-item>
 
@@ -33,6 +33,14 @@
 
   <mat-divider></mat-divider>
   <div mat-subheader>Settings</div>
+
+  <mat-list-item>
+    <mat-icon>category</mat-icon>
+
+    <a [routerLink]="['/content']">
+      Content
+    </a>
+  </mat-list-item>
 
   <mat-list-item>
     <mat-icon>display_settings</mat-icon>

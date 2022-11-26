@@ -1,0 +1,11 @@
+query GetBlockList($limit: Int, $offset: Int) {
+  block {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      version
+      name: propertyString(id: "NAME")
+    }
+  }
+}

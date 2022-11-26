@@ -45,6 +45,9 @@ import { ValueFormComponent } from './components/value-form/value-form.component
 import { LangListComponent } from './components/lang-list/lang-list.component';
 import { LangFormComponent } from './components/lang-form/lang-form.component';
 import { LangPageComponent } from './pages/lang-page/lang-page.component';
+import { BlockPageComponent } from './pages/block-page/block-page.component';
+import { BlockListComponent } from './components/block-list/block-list.component';
+import { ContentPageComponent } from './pages/content-page/content-page.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +71,9 @@ import { LangPageComponent } from './pages/lang-page/lang-page.component';
     LangListComponent,
     LangFormComponent,
     LangPageComponent,
+    BlockPageComponent,
+    BlockListComponent,
+    ContentPageComponent,
   ],
   imports: [
     BrowserModule,

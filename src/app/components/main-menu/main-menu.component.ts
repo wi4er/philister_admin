@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Block, GetBlockListGQL } from "../../../graph/types";
+
+
+interface MenuBlock extends Block {
+  name: string;
+}
+
 
 @Component({
   selector: 'app-main-menu',
@@ -7,10 +14,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainMenuComponent implements OnInit {
 
-  constructor() {
+  blockList?: MenuBlock[];
+
+  constructor(
+    private getBlockList: GetBlockListGQL
+  ) {
   }
 
   ngOnInit(): void {
+    this.getBlockList.fetch()
+      .subscribe(res => {
+        this.blockList = res.data.block.list as unknown as MenuBlock[];
+      });
   }
 
 }

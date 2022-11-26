@@ -26,6 +26,96 @@ export type AuthMutationAuthByPasswordArgs = {
   password: Scalars['String'];
 };
 
+export type Block = Content & {
+  __typename?: 'Block';
+  created_at: Scalars['String'];
+  element: Array<Element>;
+  flagList: Array<LangFlag>;
+  flagString: Array<Scalars['String']>;
+  id: Scalars['Int'];
+  propertyItem: ContentProperty;
+  propertyList: Array<ContentProperty>;
+  propertyString: Scalars['String'];
+  section: Array<Section>;
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+
+export type BlockPropertyItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type BlockPropertyStringArgs = {
+  id: Scalars['String'];
+};
+
+export type BlockQuery = {
+  __typename?: 'BlockQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Block>;
+  list: Array<Block>;
+};
+
+
+export type BlockQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type BlockQueryItemArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type BlockQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type BlockString = ContentProperty & {
+  __typename?: 'BlockString';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+export type Content = {
+  created_at: Scalars['String'];
+  flagList: Array<LangFlag>;
+  flagString: Array<Scalars['String']>;
+  id: Scalars['Int'];
+  propertyItem: ContentProperty;
+  propertyList: Array<ContentProperty>;
+  propertyString: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+
+export type ContentPropertyItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type ContentPropertyStringArgs = {
+  id: Scalars['String'];
+};
+
+export type ContentProperty = {
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
 export type Directory = {
   __typename?: 'Directory';
   created_at: Scalars['String'];
@@ -113,6 +203,22 @@ export type DirectoryString = DirectoryProperty & {
   string: Scalars['String'];
   updated_at: Scalars['String'];
   version: Scalars['Int'];
+};
+
+export type Element = {
+  __typename?: 'Element';
+  block: Block;
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+export type ElementQuery = {
+  __typename?: 'ElementQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Element>;
+  list: Array<Element>;
 };
 
 export type Flag = {
@@ -366,17 +472,36 @@ export type PropertyQueryListArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  block: BlockQuery;
   directory: DirectoryQuery;
+  element: ElementQuery;
   flag: FlagQuery;
   lang: LangQuery;
   property: PropertyQuery;
+  section: SectionQuery;
   user: UserQuery;
   userGroup: UserGroupQuery;
   value: ValueQuery;
 };
 
+export type Section = {
+  __typename?: 'Section';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+export type SectionQuery = {
+  __typename?: 'SectionQuery';
+  count: Scalars['Int'];
+  item?: Maybe<Section>;
+  list: Array<Section>;
+};
+
 export type User = {
   __typename?: 'User';
+  created_at: Scalars['String'];
   flag: Array<Flag>;
   flagItem: Flag;
   group?: Maybe<Array<User>>;
@@ -385,6 +510,8 @@ export type User = {
   login: Scalars['String'];
   property?: Maybe<Array<UserPropertySchema>>;
   propertyItem?: Maybe<UserPropertySchema>;
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type UserGroup = {
@@ -597,6 +724,14 @@ export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
 
+export type GetBlockListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name: string }> } };
+
 export type AddDirectoryItemMutationVariables = Exact<{
   item: DirectoryInput;
 }>;
@@ -748,7 +883,7 @@ export const AuthByPasswordDocument = gql`
   })
   export class AuthByPasswordGQL extends Apollo.Mutation<AuthByPasswordMutation, AuthByPasswordMutationVariables> {
     document = AuthByPasswordDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -775,7 +910,31 @@ export const GetMyselfDocument = gql`
   })
   export class GetMyselfGQL extends Apollo.Query<GetMyselfQuery, GetMyselfQueryVariables> {
     document = GetMyselfDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetBlockListDocument = gql`
+    query GetBlockList($limit: Int, $offset: Int) {
+  block {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      version
+      name: propertyString(id: "NAME")
+    }
+  }
+}
+    `;
 
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetBlockListGQL extends Apollo.Query<GetBlockListQuery, GetBlockListQueryVariables> {
+    document = GetBlockListDocument;
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -804,7 +963,7 @@ export const AddDirectoryItemDocument = gql`
   })
   export class AddDirectoryItemGQL extends Apollo.Mutation<AddDirectoryItemMutation, AddDirectoryItemMutationVariables> {
     document = AddDirectoryItemDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -827,7 +986,7 @@ export const AddValueItemDocument = gql`
   })
   export class AddValueItemGQL extends Apollo.Mutation<AddValueItemMutation, AddValueItemMutationVariables> {
     document = AddValueItemDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -845,7 +1004,7 @@ export const DeleteDirectoryDocument = gql`
   })
   export class DeleteDirectoryGQL extends Apollo.Mutation<DeleteDirectoryMutation, DeleteDirectoryMutationVariables> {
     document = DeleteDirectoryDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -879,7 +1038,7 @@ export const GetDirectoryEditDocument = gql`
   })
   export class GetDirectoryEditGQL extends Apollo.Query<GetDirectoryEditQuery, GetDirectoryEditQueryVariables> {
     document = GetDirectoryEditDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -912,7 +1071,7 @@ export const GetDirectoryListDocument = gql`
   })
   export class GetDirectoryListGQL extends Apollo.Query<GetDirectoryListQuery, GetDirectoryListQueryVariables> {
     document = GetDirectoryListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -946,7 +1105,7 @@ export const GetValueEditDocument = gql`
   })
   export class GetValueEditGQL extends Apollo.Query<GetValueEditQuery, GetValueEditQueryVariables> {
     document = GetValueEditDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -975,7 +1134,7 @@ export const UpdateDirectoryItemDocument = gql`
   })
   export class UpdateDirectoryItemGQL extends Apollo.Mutation<UpdateDirectoryItemMutation, UpdateDirectoryItemMutationVariables> {
     document = UpdateDirectoryItemDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -993,7 +1152,7 @@ export const DeleteFlagListDocument = gql`
   })
   export class DeleteFlagListGQL extends Apollo.Mutation<DeleteFlagListMutation, DeleteFlagListMutationVariables> {
     document = DeleteFlagListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1028,7 +1187,7 @@ export const GetFlagListDocument = gql`
   })
   export class GetFlagListGQL extends Apollo.Query<GetFlagListQuery, GetFlagListQueryVariables> {
     document = GetFlagListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1068,7 +1227,7 @@ export const GetLangListDocument = gql`
   })
   export class GetLangListGQL extends Apollo.Query<GetLangListQuery, GetLangListQueryVariables> {
     document = GetLangListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1094,7 +1253,7 @@ export const AddPropertyItemDocument = gql`
   })
   export class AddPropertyItemGQL extends Apollo.Mutation<AddPropertyItemMutation, AddPropertyItemMutationVariables> {
     document = AddPropertyItemDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1112,7 +1271,7 @@ export const DeletePropertyListDocument = gql`
   })
   export class DeletePropertyListGQL extends Apollo.Mutation<DeletePropertyListMutation, DeletePropertyListMutationVariables> {
     document = DeletePropertyListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1144,7 +1303,7 @@ export const GetPropertyEditDocument = gql`
   })
   export class GetPropertyEditGQL extends Apollo.Query<GetPropertyEditQuery, GetPropertyEditQueryVariables> {
     document = GetPropertyEditDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1164,7 +1323,7 @@ export const GetPropertyIdDocument = gql`
   })
   export class GetPropertyIdGQL extends Apollo.Query<GetPropertyIdQuery, GetPropertyIdQueryVariables> {
     document = GetPropertyIdDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1192,7 +1351,7 @@ export const GetPropertyListDocument = gql`
   })
   export class GetPropertyListGQL extends Apollo.Query<GetPropertyListQuery, GetPropertyListQueryVariables> {
     document = GetPropertyListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1218,7 +1377,7 @@ export const UpdatePropertyItemDocument = gql`
   })
   export class UpdatePropertyItemGQL extends Apollo.Mutation<UpdatePropertyItemMutation, UpdatePropertyItemMutationVariables> {
     document = UpdatePropertyItemDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1238,7 +1397,7 @@ export const AddUserItemDocument = gql`
   })
   export class AddUserItemGQL extends Apollo.Mutation<AddUserItemMutation, AddUserItemMutationVariables> {
     document = AddUserItemDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1258,7 +1417,7 @@ export const DeleteUserListDocument = gql`
   })
   export class DeleteUserListGQL extends Apollo.Mutation<DeleteUserListMutation, DeleteUserListMutationVariables> {
     document = DeleteUserListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
@@ -1291,7 +1450,7 @@ export const GetUserListDocument = gql`
   })
   export class GetUserListGQL extends Apollo.Query<GetUserListQuery, GetUserListQueryVariables> {
     document = GetUserListDocument;
-
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
