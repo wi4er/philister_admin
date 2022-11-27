@@ -48,6 +48,10 @@ import { LangPageComponent } from './pages/lang-page/lang-page.component';
 import { BlockPageComponent } from './pages/block-page/block-page.component';
 import { BlockListComponent } from './components/block-list/block-list.component';
 import { ContentPageComponent } from './pages/content-page/content-page.component';
+import { ChangeLogListComponent } from './components/change-log-list/change-log-list.component';
+import { FetchLogListComponent } from './components/fetch-log-list/fetch-log-list.component';
+import { LogPageComponent } from './pages/log-page/log-page.component';
+import { ReportPageComponent } from './pages/report-page/report-page.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +78,10 @@ import { ContentPageComponent } from './pages/content-page/content-page.componen
     BlockPageComponent,
     BlockListComponent,
     ContentPageComponent,
+    ChangeLogListComponent,
+    FetchLogListComponent,
+    LogPageComponent,
+    ReportPageComponent,
   ],
   imports: [
     BrowserModule,

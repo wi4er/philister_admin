@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from "@angular/cdk/collections";
 import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
-import { PropertyService } from "../../services/property.service";
 import { MatDialog } from "@angular/material/dialog";
 import { Block, DeletePropertyListGQL, GetBlockListGQL, GetPropertyListGQL, Property } from "../../../graph/types";
 import { PropertyFormComponent } from "../property-form/property-form.component";

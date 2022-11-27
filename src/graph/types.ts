@@ -13,6 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: any;
 };
 
 export type AuthMutation = {
@@ -83,6 +85,36 @@ export type BlockString = ContentProperty & {
   string: Scalars['String'];
   updated_at: Scalars['String'];
   version: Scalars['Int'];
+};
+
+export type ChangeLog = {
+  __typename?: 'ChangeLog';
+  created_at: Scalars['DateTime'];
+  entity: Scalars['String'];
+  entityId: Scalars['String'];
+  field: Scalars['String'];
+  id: Scalars['Int'];
+  user: User;
+  value: Scalars['String'];
+};
+
+export type ChangeLogQuery = {
+  __typename?: 'ChangeLogQuery';
+  count: Scalars['Int'];
+  item?: Maybe<ChangeLog>;
+  list: Array<ChangeLog>;
+};
+
+
+export type ChangeLogQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type ChangeLogQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 export type Content = {
@@ -219,6 +251,40 @@ export type ElementQuery = {
   count: Scalars['Int'];
   item?: Maybe<Element>;
   list: Array<Element>;
+};
+
+export type FetchLog = {
+  __typename?: 'FetchLog';
+  arguments: Scalars['String'];
+  entity: Scalars['String'];
+  entityId: Scalars['String'];
+  id: Scalars['Float'];
+  operation: Scalars['String'];
+  user: User;
+};
+
+export type FetchLogQuery = {
+  __typename?: 'FetchLogQuery';
+  count: Scalars['Int'];
+  item?: Maybe<FetchLog>;
+  list: Array<FetchLog>;
+};
+
+
+export type FetchLogQueryCountArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type FetchLogQueryItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type FetchLogQueryListArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 export type Flag = {
@@ -473,8 +539,10 @@ export type PropertyQueryListArgs = {
 export type Query = {
   __typename?: 'Query';
   block: BlockQuery;
+  changeLog: ChangeLogQuery;
   directory: DirectoryQuery;
   element: ElementQuery;
+  fetchLog: FetchLogQuery;
   flag: FlagQuery;
   lang: LangQuery;
   property: PropertyQuery;
@@ -811,6 +879,22 @@ export type GetLangListQueryVariables = Exact<{
 
 
 export type GetLangListQuery = { __typename?: 'Query', lang: { __typename?: 'LangQuery', count: number, list: Array<{ __typename?: 'Lang', id: string, created_at: string, updated_at: string, propertyList: Array<{ __typename?: 'LangString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } }> }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> } };
+
+export type GetChangeLogListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetChangeLogListQuery = { __typename?: 'Query', changeLog: { __typename?: 'ChangeLogQuery', count: number, list: Array<{ __typename?: 'ChangeLog', id: number, created_at: any, entity: string, entityId: string, field: string, value: string, user: { __typename?: 'User', id: number } }> } };
+
+export type GetFetchListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetFetchListQuery = { __typename?: 'Query', fetchLog: { __typename?: 'FetchLogQuery', count: number, list: Array<{ __typename?: 'FetchLog', id: number, entity: string, operation: string, arguments: string }> } };
 
 export type AddPropertyItemMutationVariables = Exact<{
   item: PropertyInput;
@@ -1260,6 +1344,59 @@ export const GetLangListDocument = gql`
   })
   export class GetLangListGQL extends Apollo.Query<GetLangListQuery, GetLangListQueryVariables> {
     document = GetLangListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetChangeLogListDocument = gql`
+    query GetChangeLogList($limit: Int, $offset: Int) {
+  changeLog {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      entity
+      entityId
+      field
+      value
+      user {
+        id
+      }
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetChangeLogListGQL extends Apollo.Query<GetChangeLogListQuery, GetChangeLogListQueryVariables> {
+    document = GetChangeLogListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetFetchListDocument = gql`
+    query GetFetchList($limit: Int, $offset: Int) {
+  fetchLog {
+    list(limit: $limit, offset: $offset) {
+      id
+      entity
+      operation
+      arguments
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetFetchListGQL extends Apollo.Query<GetFetchListQuery, GetFetchListQueryVariables> {
+    document = GetFetchListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

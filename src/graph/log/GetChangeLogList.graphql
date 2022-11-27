@@ -1,0 +1,16 @@
+query GetChangeLogList($limit: Int, $offset: Int) {
+  changeLog {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      entity
+      entityId
+      field
+      value
+      user {
+        id
+      }
+    }
+    count
+  }
+}

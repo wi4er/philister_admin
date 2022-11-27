@@ -1,0 +1,11 @@
+query GetFetchList($limit: Int, $offset: Int) {
+  fetchLog {
+    list(limit: $limit, offset: $offset) {
+      id
+      entity
+      operation
+      arguments
+    }
+    count
+  }
+}
