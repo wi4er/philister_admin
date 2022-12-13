@@ -1,0 +1,7 @@
+mutation UpdateLangItem($item: LangInput!) {
+  lang {
+    update(item: $item) {
+      id
+    }
+  }
+}

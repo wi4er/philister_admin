@@ -13,3 +13,13 @@ table {
 .action {
   width: 42px;
 }
+
+.value-list {
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+}
+
+.detail-row {
+  height: 0;
+}

@@ -35,9 +35,9 @@ export type Block = Content & {
   flagList: Array<LangFlag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
-  propertyItem: ContentProperty;
+  propertyItem?: Maybe<ContentProperty>;
   propertyList: Array<ContentProperty>;
-  propertyString: Scalars['String'];
+  propertyString?: Maybe<Scalars['String']>;
   section: Array<Section>;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
@@ -51,6 +51,31 @@ export type BlockPropertyItemArgs = {
 
 export type BlockPropertyStringArgs = {
   id: Scalars['String'];
+};
+
+export type BlockInput = {
+  id?: InputMaybe<Scalars['Float']>;
+  property?: InputMaybe<Array<BlockPropertyInput>>;
+};
+
+export type BlockMutation = {
+  __typename?: 'BlockMutation';
+  /** Adding new content block */
+  add: Block;
+  /** Deletion existent content block */
+  delete: Array<Scalars['String']>;
+  /** Updating existent content block */
+  update: Block;
+};
+
+
+export type BlockMutationAddArgs = {
+  item: BlockInput;
+};
+
+export type BlockPropertyInput = {
+  property: Scalars['String'];
+  string: Scalars['String'];
 };
 
 export type BlockQuery = {
@@ -122,9 +147,9 @@ export type Content = {
   flagList: Array<LangFlag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
-  propertyItem: ContentProperty;
+  propertyItem?: Maybe<ContentProperty>;
   propertyList: Array<ContentProperty>;
-  propertyString: Scalars['String'];
+  propertyString?: Maybe<Scalars['String']>;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
 };
@@ -151,6 +176,8 @@ export type ContentProperty = {
 export type Directory = {
   __typename?: 'Directory';
   created_at: Scalars['String'];
+  flagList: Array<LangFlag>;
+  flagString: Array<Scalars['String']>;
   id: Scalars['String'];
   property?: Maybe<Array<DirectoryString>>;
   updated_at: Scalars['String'];
@@ -159,6 +186,7 @@ export type Directory = {
 };
 
 export type DirectoryInput = {
+  flag?: InputMaybe<Array<Scalars['String']>>;
   id: Scalars['String'];
   property?: InputMaybe<Array<DirectoryPropertyInput>>;
   value?: InputMaybe<Array<Scalars['String']>>;
@@ -199,6 +227,7 @@ export type DirectoryProperty = {
 };
 
 export type DirectoryPropertyInput = {
+  lang: Scalars['String'];
   property: Scalars['String'];
   string: Scalars['String'];
 };
@@ -231,6 +260,7 @@ export type DirectoryString = DirectoryProperty & {
   __typename?: 'DirectoryString';
   created_at: Scalars['String'];
   id: Scalars['Int'];
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
   updated_at: Scalars['String'];
@@ -452,6 +482,7 @@ export type LangString = LangProperty & {
 export type Mutation = {
   __typename?: 'Mutation';
   auth?: Maybe<AuthMutation>;
+  block: BlockMutation;
   directory: DirectoryMutation;
   flag: PropertyMutation;
   lang: LangMutation;
@@ -773,6 +804,7 @@ export type ValueString = ValueProperty & {
   __typename?: 'ValueString';
   created_at: Scalars['String'];
   id: Scalars['Int'];
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
   updated_at: Scalars['String'];
@@ -798,7 +830,7 @@ export type GetBlockListQueryVariables = Exact<{
 }>;
 
 
-export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name: string, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type AddDirectoryItemMutationVariables = Exact<{
   item: DirectoryInput;
@@ -865,12 +897,26 @@ export type GetFlagListQueryVariables = Exact<{
 
 export type GetFlagListQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', count: number, list: Array<{ __typename?: 'Flag', id: string, label: string, flag: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }>, property: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
+export type AddLangItemMutationVariables = Exact<{
+  item: LangInput;
+}>;
+
+
+export type AddLangItemMutation = { __typename?: 'Mutation', lang: { __typename?: 'LangMutation', add: { __typename?: 'Lang', id: string, propertyList: Array<{ __typename?: 'LangString', string: string, property: { __typename?: 'Property', id: string } }> } } };
+
 export type DeleteLangListMutationVariables = Exact<{
   id: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
 export type DeleteLangListMutation = { __typename?: 'Mutation', lang: { __typename?: 'LangMutation', delete: Array<string> } };
+
+export type GetLangEditQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetLangEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }>, item?: { __typename?: 'Lang', id: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename: 'LangString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } }> } | null } };
 
 export type GetLangListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -879,6 +925,13 @@ export type GetLangListQueryVariables = Exact<{
 
 
 export type GetLangListQuery = { __typename?: 'Query', lang: { __typename?: 'LangQuery', count: number, list: Array<{ __typename?: 'Lang', id: string, created_at: string, updated_at: string, propertyList: Array<{ __typename?: 'LangString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } }> }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> } };
+
+export type UpdateLangItemMutationVariables = Exact<{
+  item: LangInput;
+}>;
+
+
+export type UpdateLangItemMutation = { __typename?: 'Mutation', lang: { __typename?: 'LangMutation', update: { __typename?: 'Lang', id: string } } };
 
 export type GetChangeLogListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1291,6 +1344,32 @@ export const GetFlagListDocument = gql`
       super(apollo);
     }
   }
+export const AddLangItemDocument = gql`
+    mutation AddLangItem($item: LangInput!) {
+  lang {
+    add(item: $item) {
+      id
+      propertyList {
+        string
+        property {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddLangItemGQL extends Apollo.Mutation<AddLangItemMutation, AddLangItemMutationVariables> {
+    document = AddLangItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteLangListDocument = gql`
     mutation DeleteLangList($id: [String!]!) {
   lang {
@@ -1304,6 +1383,53 @@ export const DeleteLangListDocument = gql`
   })
   export class DeleteLangListGQL extends Apollo.Mutation<DeleteLangListMutation, DeleteLangListMutationVariables> {
     document = DeleteLangListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetLangEditDocument = gql`
+    query GetLangEdit($id: String!) {
+  property {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+  lang {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        property {
+          id
+        }
+        string
+        __typename
+        ... on LangString {
+          lang {
+            id
+          }
+        }
+      }
+      flagString
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetLangEditGQL extends Apollo.Query<GetLangEditQuery, GetLangEditQueryVariables> {
+    document = GetLangEditDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -1344,6 +1470,26 @@ export const GetLangListDocument = gql`
   })
   export class GetLangListGQL extends Apollo.Query<GetLangListQuery, GetLangListQueryVariables> {
     document = GetLangListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateLangItemDocument = gql`
+    mutation UpdateLangItem($item: LangInput!) {
+  lang {
+    update(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateLangItemGQL extends Apollo.Mutation<UpdateLangItemMutation, UpdateLangItemMutationVariables> {
+    document = UpdateLangItemDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

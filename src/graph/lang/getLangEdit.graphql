@@ -1,0 +1,36 @@
+query GetLangEdit($id: String!) {
+  property {
+    list {
+      id
+    }
+  }
+
+  lang {
+    list {
+      id
+    }
+  }
+
+  lang {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        property {
+          id
+        }
+        string
+        __typename
+        ... on LangString {
+          lang {
+            id
+          }
+        }
+      }
+      flagString
+    }
+  }
+}

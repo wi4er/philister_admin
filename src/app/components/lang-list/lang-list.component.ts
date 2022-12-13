@@ -6,7 +6,6 @@ import { PropertyService } from "../../services/property.service";
 import { MatDialog } from "@angular/material/dialog";
 import {
   DeleteLangListGQL,
-  DeletePropertyListGQL,
   GetLangListGQL,
   GetPropertyListGQL,
   Lang,
@@ -17,12 +16,13 @@ import { LangFormComponent } from "../lang-form/lang-form.component";
 @Component({
   selector: 'app-lang-list',
   templateUrl: './lang-list.component.html',
-  styleUrls: [ './lang-list.component.css' ]
+  styleUrls: [ './lang-list.component.css' ],
 })
 export class LangListComponent implements OnInit {
 
   list: { [key: string]: string }[] = [];
   columns: string[] = [];
+  sub_columns: string[] = [];
   properties: string[] = [];
   selection = new SelectionModel<{ [key: string]: string }>(true, []);
 
@@ -45,24 +45,32 @@ export class LangListComponent implements OnInit {
 
   formatData(data: Lang[]) {
     const col = new Set<string>();
+    const sub = new Set<string>();
     const list = []
 
-    console.log(data)
     for (const item of data) {
       const line: { [key: string]: string } = { 'id': item.id };
 
       for (const prop of item?.propertyList ?? []) {
         const strProp = prop as LangString;
 
-        col.add(`property_${strProp.lang.id}_${strProp.property.id}`);
-        line['property_' + strProp.property.id] = strProp.string;
+        if (strProp.lang.id === 'EN') {
+          col.add(`property_${strProp.lang.id}_${strProp.property.id}`);
+        } else {
+          sub.add(`property_${strProp.lang.id}_${strProp.property.id}`);
+        }
+
+        line[`property_${strProp.lang.id}_${strProp.property.id}`] = strProp.string;
       }
 
       list.push(line);
     }
 
-    this.properties = [ ...col ];
+    console.log(list)
+    this.properties = [ ...col, ...sub ];
     this.columns = [ 'select', 'action', 'id', ...col ];
+    this.sub_columns = [ ...sub ];
+
     this.list = list;
   }
 
@@ -99,7 +107,7 @@ export class LangListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  updateProperty(id: number) {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
       LangFormComponent,
       {

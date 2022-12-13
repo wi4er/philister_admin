@@ -171,8 +171,6 @@ export class DirectoryListComponent implements OnInit {
   }
 
   expandElement(element: { [key: string]: string }) {
-    console.log(element)
-
     if (element['values']?.length === 0) {
       return;
     }

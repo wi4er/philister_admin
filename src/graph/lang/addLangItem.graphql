@@ -1,0 +1,13 @@
+mutation AddLangItem($item: LangInput!) {
+  lang {
+    add(item: $item) {
+      id
+      propertyList {
+        string
+        property {
+          id
+        }
+      }
+    }
+  }
+}

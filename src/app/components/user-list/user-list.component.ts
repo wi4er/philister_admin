@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { UserService } from "../../services/user.service";
-import { AddUserItemGQL, DeleteUserListGQL, Directory, GetUserListGQL, Property, User } from "../../../graph/types";
+import { DeleteUserListGQL, GetUserListGQL, User } from "../../../graph/types";
 import { DirectoryFormComponent } from "../directory-form/directory-form.component";
 import { MatDialog } from "@angular/material/dialog";
 import { PageEvent } from "@angular/material/paginator";

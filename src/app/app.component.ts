@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from "./services/user.service";
 import { MatDialog } from "@angular/material/dialog";
-import { AuthPopupComponent } from "./components/auth-popup/auth-popup.component";
 
 @Component({
   selector: 'app-root',
@@ -9,15 +8,17 @@ import { AuthPopupComponent } from "./components/auth-popup/auth-popup.component
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  title = 'Philister Admin';
 
-  ngOnInit() {
-    this.userService.fetchMyself()
-  }
+  title = 'Philister Admin';
 
   constructor(
     private userService: UserService,
     public dialog: MatDialog,
   ) {
   }
+
+  ngOnInit() {
+    this.userService.fetchMyself()
+  }
+
 }
