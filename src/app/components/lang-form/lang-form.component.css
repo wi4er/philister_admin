@@ -7,3 +7,9 @@
   height: 100px;
   background-color: green;
 }
+
+.lang_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

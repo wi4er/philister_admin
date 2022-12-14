@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from "@angular/cdk/collections";
-import { PageEvent } from "@angular/material/paginator";
-import { MatTable } from "@angular/material/table";
-import { PropertyService } from "../../services/property.service";
-import { MatDialog } from "@angular/material/dialog";
+import { SelectionModel } from '@angular/cdk/collections';
+import { PageEvent } from '@angular/material/paginator';
+import { MatTable } from '@angular/material/table';
+import { PropertyService } from '../../services/property.service';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DeleteLangListGQL,
   GetLangListGQL,
   GetPropertyListGQL,
   Lang,
   LangString
-} from "../../../graph/types";
-import { LangFormComponent } from "../lang-form/lang-form.component";
+} from '../../../graph/types';
+import { LangFormComponent } from '../lang-form/lang-form.component';
 
 @Component({
   selector: 'app-lang-list',
@@ -54,13 +54,13 @@ export class LangListComponent implements OnInit {
       for (const prop of item?.propertyList ?? []) {
         const strProp = prop as LangString;
 
-        if (strProp.lang.id === 'EN') {
+        if (strProp.lang?.id === 'EN') {
           col.add(`property_${strProp.lang.id}_${strProp.property.id}`);
         } else {
-          sub.add(`property_${strProp.lang.id}_${strProp.property.id}`);
+          sub.add(`property_${strProp.lang?.id}_${strProp.property.id}`);
         }
 
-        line[`property_${strProp.lang.id}_${strProp.property.id}`] = strProp.string;
+        line[`property_${strProp.lang?.id}_${strProp.property.id}`] = strProp.string;
       }
 
       list.push(line);
@@ -99,7 +99,7 @@ export class LangListComponent implements OnInit {
       LangFormComponent,
       {
         width: '1000px',
-        panelClass: 'wrapper'
+        panelClass: 'wrapper',
       }
     );
 
@@ -112,7 +112,8 @@ export class LangListComponent implements OnInit {
       LangFormComponent,
       {
         width: '1000px',
-        data: { id }
+        panelClass: 'wrapper',
+        data: { id },
       },
     );
 

@@ -472,7 +472,7 @@ export type LangString = LangProperty & {
   __typename?: 'LangString';
   created_at: Scalars['String'];
   id: Scalars['Int'];
-  lang: Lang;
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
   updated_at: Scalars['String'];
@@ -916,7 +916,7 @@ export type GetLangEditQueryVariables = Exact<{
 }>;
 
 
-export type GetLangEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }>, item?: { __typename?: 'Lang', id: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename: 'LangString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } }> } | null } };
+export type GetLangEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }>, item?: { __typename?: 'Lang', id: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename: 'LangString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null } };
 
 export type GetLangListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -924,7 +924,7 @@ export type GetLangListQueryVariables = Exact<{
 }>;
 
 
-export type GetLangListQuery = { __typename?: 'Query', lang: { __typename?: 'LangQuery', count: number, list: Array<{ __typename?: 'Lang', id: string, created_at: string, updated_at: string, propertyList: Array<{ __typename?: 'LangString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } }> }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> } };
+export type GetLangListQuery = { __typename?: 'Query', lang: { __typename?: 'LangQuery', count: number, list: Array<{ __typename?: 'Lang', id: string, created_at: string, updated_at: string, propertyList: Array<{ __typename?: 'LangString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> } };
 
 export type UpdateLangItemMutationVariables = Exact<{
   item: LangInput;

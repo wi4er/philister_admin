@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   AddLangItemGQL, GetLangEditGQL,
-  GetPropertyIdGQL, Lang, LangInput, LangPropertyInput,
+  GetPropertyIdGQL, Lang, LangInput, LangPropertyInput, LangString,
   Property, UpdateLangItemGQL,
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
@@ -45,7 +45,7 @@ export class LangFormComponent implements OnInit {
 
   getPropertyCount() {
     return Object.values(this.editValues)
-      .flatMap(item => Object.values(item) .filter(item => item))
+      .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
@@ -64,11 +64,18 @@ export class LangFormComponent implements OnInit {
       }
     }
 
+    console.log(item)
+
     for (const prop of item?.propertyList ?? []) {
       // @ts-ignore
       if (prop['__typename'] === 'LangString') {
-        // @ts-ignore
-        this.editValues[prop.property.id][prop.lang.id] = prop.string;
+        const strProp: LangString = prop;
+
+        if (!strProp?.lang?.id) {
+          this.editValues[strProp.property.id][''] = prop.string;
+        } else {
+          this.editValues[strProp.property.id][strProp.lang.id] = prop.string;
+        }
       }
     }
   }
