@@ -10,13 +10,14 @@ import { BlockPageComponent } from "./pages/block-page/block-page.component";
 import { ContentPageComponent } from "./pages/content-page/content-page.component";
 import { LogPageComponent } from "./pages/log-page/log-page.component";
 import { ReportPageComponent } from "./pages/report-page/report-page.component";
+import { LangListComponent } from "./components/lang-list/lang-list.component";
 
 const routes: Routes = [
   { path: 'directory', component: DirectoryPageComponent },
   { path: 'content', component: BlockPageComponent },
   { path: 'content/:id', component: ContentPageComponent },
   { path: 'property', component: PropertyPageComponent },
-  { path: 'lang', component: LangPageComponent },
+  { path: 'lang', component: LangListComponent },
   { path: 'user', component: UserPageComponent },
   { path: 'flag', component: FlagPageComponent },
   { path: 'log', component: LogPageComponent },

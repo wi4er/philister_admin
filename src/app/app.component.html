@@ -30,15 +30,18 @@
 </mat-toolbar>
 
 <mat-drawer-container
-  class="example-container"
+  class="container"
   id="page"
 >
-  <router-outlet></router-outlet>
+  <mat-drawer-content class="page">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
 
   <mat-drawer
     #drawer
     class="sidenav"
     mode="side"
+
   >
     <app-main-menu></app-main-menu>
   </mat-drawer>

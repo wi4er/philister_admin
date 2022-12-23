@@ -1,4 +1,6 @@
-<mat-toolbar>
+<mat-toolbar
+  *ngIf="list.length"
+>
   <span>Languages</span>
 
   <span class="spacer"></span>
@@ -27,7 +29,11 @@
   </button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="list">
+<table
+  *ngIf="list.length"
+  mat-table
+  [dataSource]="list"
+>
   <ng-container matColumnDef="select">
     <th
       class="select"
@@ -108,6 +114,7 @@
 </table>
 
 <mat-paginator
+  *ngIf="list.length"
   [length]="totalCount"
   [pageSize]="pageSize"
   [pageIndex]="currentPage"
@@ -116,3 +123,9 @@
   aria-label="Select page"
 >
 </mat-paginator>
+
+<app-add-button
+  [onClick]="addItem.bind(this)"
+  *ngIf="!list.length"
+  name="language"
+></app-add-button>

@@ -1,10 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
 
-html, body, app-root, #page {
-  height: 100%;
-  display: block;
+body {
+  min-height: 100vh;
 }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#page {
+  flex: 1;
+  min-height: 100%;
+  display: flex;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .wrapper {
   overflow: scroll;

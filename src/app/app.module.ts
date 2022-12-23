@@ -52,6 +52,7 @@ import { ChangeLogListComponent } from './components/change-log-list/change-log-
 import { FetchLogListComponent } from './components/fetch-log-list/fetch-log-list.component';
 import { LogPageComponent } from './pages/log-page/log-page.component';
 import { ReportPageComponent } from './pages/report-page/report-page.component';
+import { AddButtonComponent } from "./components/add-button/add-button.component";
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { ReportPageComponent } from './pages/report-page/report-page.component';
     FetchLogListComponent,
     LogPageComponent,
     ReportPageComponent,
+    AddButtonComponent,
   ],
   imports: [
     BrowserModule,
