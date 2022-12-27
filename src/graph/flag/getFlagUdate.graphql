@@ -1,0 +1,46 @@
+query GetFlagUpdate($id: String!) {
+  flag {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagList {
+        id
+        flag {
+          id
+        }
+      }
+    }
+  }
+  property {
+    list {
+      id
+      property {
+        id
+        property {
+          id
+        }
+      }
+    }
+  }
+  flag {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+  lang {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+}

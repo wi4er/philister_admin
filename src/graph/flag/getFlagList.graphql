@@ -3,13 +3,13 @@ query GetFlagList($limit: Int, $offset: Int) {
     list (offset: $offset, limit: $limit) {
       id
       label
-      flag {
+      flagList {
         id
         flag {
           id
         }
       }
-      property {
+      propertyList{
         id
         string
         property {

@@ -1,0 +1,25 @@
+query GetFlagAddition {
+  property {
+    list {
+      id
+      property {
+        id
+        property {
+          id
+        }
+      }
+    }
+  }
+  flag {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+  lang {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+}

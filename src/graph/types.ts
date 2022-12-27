@@ -106,6 +106,7 @@ export type BlockString = ContentProperty & {
   __typename?: 'BlockString';
   created_at: Scalars['String'];
   id: Scalars['Int'];
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
   updated_at: Scalars['String'];
@@ -319,10 +320,26 @@ export type FetchLogQueryListArgs = {
 
 export type Flag = {
   __typename?: 'Flag';
-  flag: Array<FlagFlag>;
+  created_at: Scalars['String'];
+  flagList: Array<FlagFlag>;
+  flagString: Array<Scalars['String']>;
   id: Scalars['String'];
-  label: Scalars['String'];
-  property: Array<FlagProperty>;
+  label?: Maybe<Scalars['String']>;
+  propertyItem?: Maybe<FlagProperty>;
+  propertyList: Array<FlagProperty>;
+  propertyString?: Maybe<Scalars['String']>;
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+
+export type FlagPropertyItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type FlagPropertyStringArgs = {
+  id: Scalars['String'];
 };
 
 export type FlagFlag = {
@@ -331,9 +348,49 @@ export type FlagFlag = {
   id: Scalars['Float'];
 };
 
+export type FlagInput = {
+  flag: Array<Scalars['String']>;
+  id: Scalars['String'];
+  property: Array<FlagPropertyInput>;
+};
+
+export type FlagMutation = {
+  __typename?: 'FlagMutation';
+  /** Adding new flag */
+  add: Flag;
+  /** Deletion existent flag */
+  delete: Array<Scalars['String']>;
+  /** Updating existent flag */
+  update: Flag;
+};
+
+
+export type FlagMutationAddArgs = {
+  item: FlagInput;
+};
+
+
+export type FlagMutationDeleteArgs = {
+  id: Array<Scalars['String']>;
+};
+
+
+export type FlagMutationUpdateArgs = {
+  item: FlagInput;
+};
+
 export type FlagProperty = {
+  created_at: Scalars['String'];
   id: Scalars['Int'];
   property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
+};
+
+export type FlagPropertyInput = {
+  lang?: InputMaybe<Scalars['String']>;
+  property: Scalars['String'];
   string: Scalars['String'];
 };
 
@@ -363,10 +420,13 @@ export type FlagQueryListArgs = {
 
 export type FlagString = FlagProperty & {
   __typename?: 'FlagString';
+  created_at: Scalars['String'];
   id: Scalars['Int'];
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
-  value: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type Lang = {
@@ -484,7 +544,7 @@ export type Mutation = {
   auth?: Maybe<AuthMutation>;
   block: BlockMutation;
   directory: DirectoryMutation;
-  flag: PropertyMutation;
+  flag: FlagMutation;
   lang: LangMutation;
   property: PropertyMutation;
   user: UserMutation;
@@ -882,12 +942,24 @@ export type UpdateDirectoryItemMutationVariables = Exact<{
 
 export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
+export type AddFlagMutationVariables = Exact<{
+  item: FlagInput;
+}>;
+
+
+export type AddFlagMutation = { __typename?: 'Mutation', flag: { __typename?: 'FlagMutation', add: { __typename?: 'Flag', id: string } } };
+
 export type DeleteFlagListMutationVariables = Exact<{
   id: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
-export type DeleteFlagListMutation = { __typename?: 'Mutation', flag: { __typename?: 'PropertyMutation', delete: Array<string> } };
+export type DeleteFlagListMutation = { __typename?: 'Mutation', flag: { __typename?: 'FlagMutation', delete: Array<string> } };
+
+export type GetFlagAdditionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFlagAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, property: { __typename?: 'Property', id: string } }> | null }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string, name?: string | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string, name?: string | null }> } };
 
 export type GetFlagListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -895,7 +967,21 @@ export type GetFlagListQueryVariables = Exact<{
 }>;
 
 
-export type GetFlagListQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', count: number, list: Array<{ __typename?: 'Flag', id: string, label: string, flag: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }>, property: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetFlagListQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', count: number, list: Array<{ __typename?: 'Flag', id: string, label?: string | null, flagList: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }>, propertyList: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+
+export type GetFlagUpdateQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetFlagUpdateQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', item?: { __typename?: 'Flag', id: string, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }>, flagList: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }> } | null, list: Array<{ __typename?: 'Flag', id: string, name?: string | null }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, property: { __typename?: 'Property', id: string } }> | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string, name?: string | null }> } };
+
+export type UpdateFlagMutationVariables = Exact<{
+  item: FlagInput;
+}>;
+
+
+export type UpdateFlagMutation = { __typename?: 'Mutation', flag: { __typename?: 'FlagMutation', update: { __typename?: 'Flag', id: string } } };
 
 export type AddLangItemMutationVariables = Exact<{
   item: LangInput;
@@ -1291,6 +1377,26 @@ export const UpdateDirectoryItemDocument = gql`
       super(apollo);
     }
   }
+export const AddFlagDocument = gql`
+    mutation AddFlag($item: FlagInput!) {
+  flag {
+    add(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddFlagGQL extends Apollo.Mutation<AddFlagMutation, AddFlagMutationVariables> {
+    document = AddFlagDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteFlagListDocument = gql`
     mutation DeleteFlagList($id: [String!]!) {
   flag {
@@ -1309,19 +1415,57 @@ export const DeleteFlagListDocument = gql`
       super(apollo);
     }
   }
+export const GetFlagAdditionDocument = gql`
+    query GetFlagAddition {
+  property {
+    list {
+      id
+      property {
+        id
+        property {
+          id
+        }
+      }
+    }
+  }
+  flag {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+  lang {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetFlagAdditionGQL extends Apollo.Query<GetFlagAdditionQuery, GetFlagAdditionQueryVariables> {
+    document = GetFlagAdditionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetFlagListDocument = gql`
     query GetFlagList($limit: Int, $offset: Int) {
   flag {
     list(offset: $offset, limit: $limit) {
       id
       label
-      flag {
+      flagList {
         id
         flag {
           id
         }
       }
-      property {
+      propertyList {
         id
         string
         property {
@@ -1339,6 +1483,85 @@ export const GetFlagListDocument = gql`
   })
   export class GetFlagListGQL extends Apollo.Query<GetFlagListQuery, GetFlagListQueryVariables> {
     document = GetFlagListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetFlagUpdateDocument = gql`
+    query GetFlagUpdate($id: String!) {
+  flag {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagList {
+        id
+        flag {
+          id
+        }
+      }
+    }
+  }
+  property {
+    list {
+      id
+      property {
+        id
+        property {
+          id
+        }
+      }
+    }
+  }
+  flag {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+  lang {
+    list {
+      id
+      name: propertyString(id: "NAME")
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetFlagUpdateGQL extends Apollo.Query<GetFlagUpdateQuery, GetFlagUpdateQueryVariables> {
+    document = GetFlagUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateFlagDocument = gql`
+    mutation updateFlag($item: FlagInput!) {
+  flag {
+    update(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateFlagGQL extends Apollo.Mutation<UpdateFlagMutation, UpdateFlagMutationVariables> {
+    document = UpdateFlagDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

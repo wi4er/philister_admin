@@ -66,7 +66,6 @@ export class LangListComponent implements OnInit {
       list.push(line);
     }
 
-    console.log(list)
     this.properties = [ ...col, ...sub ];
     this.columns = [ 'select', 'action', 'id', ...col ];
     this.sub_columns = [ ...sub ];

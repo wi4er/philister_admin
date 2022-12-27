@@ -1,0 +1,18 @@
+<button mat-menu-item (click)="onDelete()">
+  <mat-icon>delete</mat-icon>
+  <span>Delete</span>
+</button>
+
+<button mat-menu-item (click)="onEdit()">
+  <mat-icon>edit</mat-icon>
+  <span>Edit</span>
+</button>
+
+<button
+  *ngFor="let flagItem of flags"
+  mat-menu-item
+  (click)="onFlag(flagItem.id)"
+>
+  <mat-icon>edit</mat-icon>
+  <span>Edit</span>
+</button>

@@ -10,6 +10,9 @@ interface UserPropertySchema {
 
 interface FlagProperty {
   id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
   string: String!
   property: Property!
 }
@@ -62,9 +65,15 @@ type FlagFlag {
 
 type Flag {
   id: String!
-  label: String!
-  property: [FlagProperty!]!
-  flag: [FlagFlag!]!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  label: String
+  propertyList: [FlagProperty!]!
+  propertyItem(id: String!): FlagProperty
+  propertyString(id: String!): String
+  flagList: [FlagFlag!]!
+  flagString: [String!]!
 }
 
 type User {
@@ -286,6 +295,7 @@ type BlockString implements ContentProperty {
   version: Int!
   string: String!
   property: Property!
+  lang: Lang
 }
 
 type PropertyQuery {
@@ -427,11 +437,37 @@ type FlagQuery {
   item(id: String!): Flag
 }
 
+type FlagMutation {
+  """Adding new flag"""
+  add(item: FlagInput!): Flag!
+
+  """Deletion existent flag"""
+  delete(id: [String!]!): [String!]!
+
+  """Updating existent flag"""
+  update(item: FlagInput!): Flag!
+}
+
+input FlagInput {
+  id: String!
+  property: [FlagPropertyInput!]!
+  flag: [String!]!
+}
+
+input FlagPropertyInput {
+  property: String!
+  string: String!
+  lang: String
+}
+
 type FlagString implements FlagProperty {
   id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
   string: String!
   property: Property!
-  value: String!
+  lang: Lang
 }
 
 type LangQuery {
@@ -496,6 +532,6 @@ type Mutation {
   property: PropertyMutation!
   directory: DirectoryMutation!
   value: ValueMutation!
-  flag: PropertyMutation!
+  flag: FlagMutation!
   lang: LangMutation!
 }

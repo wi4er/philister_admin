@@ -1,11 +1,11 @@
-<mat-toolbar>
+<mat-toolbar *ngIf="list.length">
   <span>Flags</span>
 
   <span class="spacer"></span>
 
   <button
     mat-icon-button
-    (click)="addPropertyItem()"
+    (click)="addItem()"
     title="add item"
   >
     <mat-icon>add</mat-icon>
@@ -27,7 +27,7 @@
   </button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="list">
+<table mat-table *ngIf="list.length" [dataSource]="list">
   <ng-container matColumnDef="select">
     <th
       class="select"
@@ -65,15 +65,10 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="deleteItem(element.id)">
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-
-        <button mat-menu-item (click)="updateProperty(element.id)">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
+        <app-item-menu
+          [onDelete]="deleteItem.bind(this, element.id)"
+          [onEdit]="updateItem.bind(this, element.id)"
+        ></app-item-menu>
       </mat-menu>
     </td>
   </ng-container>
@@ -105,6 +100,7 @@
 </table>
 
 <mat-paginator
+  *ngIf="list.length"
   [length]="totalCount"
   [pageSize]="pageSize"
   [pageIndex]="currentPage"
@@ -113,3 +109,10 @@
   aria-label="Select page"
 >
 </mat-paginator>
+
+
+<app-add-button
+  [onClick]="addItem.bind(this)"
+  *ngIf="!list.length"
+  name="flag"
+></app-add-button>

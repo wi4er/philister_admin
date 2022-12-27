@@ -1,0 +1,7 @@
+mutation updateFlag($item: FlagInput!) {
+  flag {
+    update(item: $item) {
+      id
+    }
+  }
+}

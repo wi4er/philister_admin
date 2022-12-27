@@ -2,17 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from "@angular/cdk/collections";
 import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
-import { PropertyService } from "../../services/property.service";
 import { MatDialog } from "@angular/material/dialog";
 import {
   DeleteFlagListGQL,
   Flag,
   GetFlagListGQL,
-  GetFlagListQuery,
-  GetPropertyListGQL,
-  Property
 } from "../../../graph/types";
-import { PropertyFormComponent } from "../property-form/property-form.component";
+import { FlagFormComponent } from "../flag-form/flag-form.component";
 
 @Component({
   selector: 'app-flag-list',
@@ -35,7 +31,6 @@ export class FlagListComponent implements OnInit {
   table?: MatTable<any>;
 
   constructor(
-    // private propertyService: PropertyService,
     private dialog: MatDialog,
     private getListQuery: GetFlagListGQL,
     private deleteListMutation: DeleteFlagListGQL,
@@ -49,7 +44,7 @@ export class FlagListComponent implements OnInit {
     for (const item of data) {
       const line: { [key: string]: string } = { 'id': item.id };
 
-      for (const prop of item?.property ?? []) {
+      for (const prop of item?.propertyList ?? []) {
         col.add('property_' + prop.property.id);
         line['property_' + prop.property.id] = prop.string;
       }
@@ -82,9 +77,9 @@ export class FlagListComponent implements OnInit {
       });
   }
 
-  addPropertyItem() {
+  addItem() {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      FlagFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper'
@@ -95,9 +90,9 @@ export class FlagListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  updateProperty(id: number) {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      FlagFormComponent,
       {
         width: '1000px',
         data: { id }

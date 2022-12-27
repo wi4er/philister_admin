@@ -1,6 +1,4 @@
-<mat-toolbar
-  *ngIf="list.length"
->
+<mat-toolbar *ngIf="list.length">
   <span>Languages</span>
 
   <span class="spacer"></span>
@@ -71,15 +69,10 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="deleteItem(element.id)">
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-
-        <button mat-menu-item (click)="updateItem(element.id)">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
+        <app-item-menu
+          [onDelete]="deleteItem.bind(this, element.id)"
+          [onEdit]="updateItem.bind(this, element.id)"
+        ></app-item-menu>
       </mat-menu>
     </td>
   </ng-container>

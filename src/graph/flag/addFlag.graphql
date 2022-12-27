@@ -1,0 +1,8 @@
+
+mutation AddFlag($item: FlagInput!) {
+  flag {
+    add(item: $item) {
+      id
+    }
+  }
+}
