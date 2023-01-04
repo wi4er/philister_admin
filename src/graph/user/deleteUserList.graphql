@@ -1,7 +1,5 @@
-mutation DeleteUserList {
+mutation DeleteUserList ($id: [Int!]!) {
   user {
-    delete {
-      id
-    }
+    delete (id: $id)
   }
 }

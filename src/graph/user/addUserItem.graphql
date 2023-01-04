@@ -1,6 +1,6 @@
-mutation AddUserItem {
+mutation AddUserItem($item: UserInput!) {
   user {
-    add {
+    add (item: $item){
       id
     }
   }

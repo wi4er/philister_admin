@@ -6,6 +6,7 @@ import { PageEvent } from "@angular/material/paginator";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTable } from "@angular/material/table";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import { UserFormComponent } from "../user-form/user-form.component";
 
 @Component({
   selector: 'app-user-list',
@@ -93,9 +94,9 @@ export class UserListComponent implements OnInit {
     this.fetchList();
   }
 
-  addUserItem() {
+  addItem() {
     const dialog = this.dialog.open(
-      DirectoryFormComponent,
+      UserFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper'
@@ -108,7 +109,7 @@ export class UserListComponent implements OnInit {
 
   updateUserItem(id: number) {
     const dialog = this.dialog.open(
-      DirectoryFormComponent,
+      UserFormComponent,
       { data: { id } },
     );
 
@@ -118,13 +119,13 @@ export class UserListComponent implements OnInit {
 
   deleteUserList() {
     this.deleteList.mutate({
-      // id: this.selection.selected.map(item => item['id'])
+      id: this.selection.selected.map(item => +item['id'])
     }).subscribe(() => this.fetchList());
   }
 
   deleteUserItem(id: string) {
     this.deleteList.mutate({
-      // id: id
+      id: +id
     }).subscribe(() => this.fetchList());
   }
 

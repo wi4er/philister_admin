@@ -1,18 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddPropertyItemGQL, GetPropertyEditGQL, GetPropertyIdGQL,
-  Property,
-  PropertyInput,
-  PropertyPropertyInput, UpdatePropertyItemGQL
+  AddUserItemGQL,
+  GetPropertyEditGQL,
+  GetPropertyIdGQL,
+  Property, UpdateUserGQL, UserInput,
+
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-property-form',
-  templateUrl: './property-form.component.html',
-  styleUrls: [ './property-form.component.css' ]
+  selector: 'app-user-form',
+  templateUrl: './user-form.component.html',
+  styleUrls: ['./user-form.component.css']
 })
-export class PropertyFormComponent implements OnInit {
+export class UserFormComponent implements OnInit {
 
   id: string = '';
   created_at: string = '';
@@ -22,9 +23,9 @@ export class PropertyFormComponent implements OnInit {
   editValues: { [field: string]: string } = {};
 
   constructor(
-    private addItemMutation: AddPropertyItemGQL,
-    private updateItemMutation: UpdatePropertyItemGQL,
-    private dialogRef: MatDialogRef<PropertyFormComponent>,
+    private addItemMutation: AddUserItemGQL,
+    private updateItemMutation: UpdateUserGQL,
+    private dialogRef: MatDialogRef<UserFormComponent>,
     private getListQuery: GetPropertyIdGQL,
     private getPropertyEditQuery: GetPropertyEditGQL,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
@@ -65,18 +66,20 @@ export class PropertyFormComponent implements OnInit {
     }
   }
 
-  toInput(): PropertyInput {
-    const addition: PropertyInput = {
-      id: this.id,
+  toInput(): UserInput {
+    const addition: UserInput = {
+      id: +this.id,
+      login: '213',
       property: [],
-    } as PropertyInput;
+      contact: [],
+    } as UserInput;
 
-    for (const key in this.editValues) {
-      addition.property?.push({
-        value: this.editValues[key],
-        property: key
-      } as PropertyPropertyInput);
-    }
+    // for (const key in this.editValues) {
+    //   addition.property?.push({
+    //     value: this.editValues[key],
+    //     property: key
+    //   } as PropertyPropertyInput);
+    // }
 
     return addition;
   }

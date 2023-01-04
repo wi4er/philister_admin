@@ -54,6 +54,11 @@ import { LogPageComponent } from './pages/log-page/log-page.component';
 import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { AddButtonComponent } from "./components/add-button/add-button.component";
 import { ItemMenuComponent } from './components/item-menu/item-menu.component';
+import { UserGroupListComponent } from './components/user-group-list/user-group-list.component';
+import { UserContactListComponent } from './components/user-contact-list/user-contact-list.component';
+import { UserFormComponent } from './components/user-form/user-form.component';
+import { UserContactFormComponent } from './components/user-contact-form/user-contact-form.component';
+import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +91,11 @@ import { ItemMenuComponent } from './components/item-menu/item-menu.component';
     ReportPageComponent,
     AddButtonComponent,
     ItemMenuComponent,
+    UserGroupListComponent,
+    UserContactListComponent,
+    UserFormComponent,
+    UserContactFormComponent,
+    UserGroupFormComponent,
   ],
   imports: [
     BrowserModule,

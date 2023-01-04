@@ -1,0 +1,101 @@
+<form (submit)="saveItem()">
+  <h2 mat-dialog-title>
+    Create new user
+  </h2>
+
+  <mat-form-field appearance="fill">
+    <mat-label>ID</mat-label>
+
+    <input
+      matInput
+      name="id"
+      [(ngModel)]="id"
+      [disabled]="!!data?.id"
+    />
+  </mat-form-field>
+
+  <div *ngIf="!!data?.id">
+    <mat-form-field appearance="fill">
+      <mat-label>Created at</mat-label>
+
+      <input
+        matInput
+        name="created_at"
+        [(ngModel)]="created_at"
+        disabled
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Updated at</mat-label>
+
+      <input
+        matInput
+        name="updated_at"
+        [(ngModel)]="updated_at"
+        disabled
+      />
+    </mat-form-field>
+  </div>
+
+  <mat-tab-group dynamicHeight>
+    <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
+<!--      <div *ngFor="let item of propertyList">-->
+<!--        <div mat-subheader>{{item.id}}</div>-->
+
+<!--        <div class="lang_list" >-->
+<!--          <span>-->
+<!--            <mat-form-field appearance="fill">-->
+<!--              <mat-label>-->
+<!--                No lang-->
+<!--              </mat-label>-->
+
+<!--              <input-->
+<!--                matInput-->
+<!--                [name]="item.id"-->
+<!--                [(ngModel)]="editValues[item.id]['']"-->
+<!--              />-->
+<!--            </mat-form-field>-->
+<!--          </span>-->
+
+<!--          <span *ngFor="let lang of langList">-->
+<!--            <mat-form-field appearance="fill">-->
+<!--              <mat-label>-->
+<!--                {{lang.id}}-->
+<!--              </mat-label>-->
+
+<!--              <input-->
+<!--                matInput-->
+<!--                [name]="item.id + '_' + lang.id"-->
+<!--                [(ngModel)]="editValues[item.id][lang.id]"-->
+<!--              />-->
+<!--            </mat-form-field>-->
+<!--          </span>-->
+
+<!--        </div>-->
+<!--      </div>-->
+    </mat-tab>
+
+    <mat-tab label="Flags">
+      <div class="flag_wrap"></div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      type="button"
+    >
+      Cancel
+    </button>
+
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>

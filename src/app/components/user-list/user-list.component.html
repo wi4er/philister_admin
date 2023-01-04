@@ -1,11 +1,11 @@
-<mat-toolbar>
+<mat-toolbar *ngIf="list.length">
   <span>Users</span>
 
   <span class="spacer"></span>
 
   <button
     mat-icon-button
-    (click)="addUserItem()"
+    (click)="addItem()"
     title="add item"
   >
     <mat-icon>add</mat-icon>
@@ -27,7 +27,12 @@
   </button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="list" multiTemplateDataRows>
+<table
+  mat-table
+  [dataSource]="list"
+  multiTemplateDataRows
+  *ngIf="list.length"
+>
   <ng-container matColumnDef="select">
     <th
       class="select"
@@ -139,6 +144,7 @@
 </table>
 
 <mat-paginator
+  *ngIf="list.length"
   [length]="totalCount"
   [pageSize]="pageSize"
   [pageIndex]="currentPage"
@@ -147,3 +153,9 @@
   aria-label="Select page"
 >
 </mat-paginator>
+
+<app-add-button
+  [onClick]="addItem.bind(this)"
+  *ngIf="!list.length"
+  name="user"
+></app-add-button>
