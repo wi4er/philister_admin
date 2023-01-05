@@ -1,0 +1,6 @@
+
+mutation DeleteUserContactList($id: [String!]!) {
+  userContact {
+    delete(id: $id)
+  }
+}

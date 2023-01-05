@@ -1,0 +1,19 @@
+query GetUserContactAddition {
+  property {
+    list {
+      id
+    }
+  }
+
+  flag {
+    list {
+      id
+    }
+  }
+
+  lang {
+    list {
+      id
+    }
+  }
+}

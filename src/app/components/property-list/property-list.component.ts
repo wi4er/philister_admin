@@ -30,7 +30,7 @@ export class PropertyListComponent implements OnInit {
   constructor(
     private propertyService: PropertyService,
     private dialog: MatDialog,
-    private getPropertyListQuery: GetPropertyListGQL,
+    private getListQuery: GetPropertyListGQL,
     private deleteListMutation: DeletePropertyListGQL,
   ) {
   }
@@ -60,7 +60,7 @@ export class PropertyListComponent implements OnInit {
   }
 
   fetchList() {
-    this.getPropertyListQuery.fetch({
+    this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
     }, {
@@ -88,7 +88,7 @@ export class PropertyListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  updateProperty(id: number) {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
       PropertyFormComponent,
       {
@@ -132,4 +132,5 @@ export class PropertyListComponent implements OnInit {
 
     this.fetchList();
   }
+
 }

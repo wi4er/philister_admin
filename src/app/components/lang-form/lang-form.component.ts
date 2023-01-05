@@ -64,8 +64,6 @@ export class LangFormComponent implements OnInit {
       }
     }
 
-    console.log(item)
-
     for (const prop of item?.propertyList ?? []) {
       // @ts-ignore
       if (prop['__typename'] === 'LangString') {

@@ -1,0 +1,7 @@
+mutation AddUserContactItem ($item: UserContactInput!) {
+  userContact {
+    add(item: $item) {
+      id
+    }
+  }
+}

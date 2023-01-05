@@ -87,7 +87,7 @@ type Flag {
 
 type UserContact {
   id: String!
-  type: String!
+  type: UserContactType!
   created_at: String!
   updated_at: String!
   version: Int!
@@ -96,6 +96,13 @@ type UserContact {
   propertyString(id: String!): String
   flagList: [Flag!]!
   flagString: [String!]!
+}
+
+enum UserContactType {
+  EMAIL
+  PHONE
+  GOOGLE
+  APPLE
 }
 
 type UserUserContact {
@@ -181,12 +188,12 @@ type UserContactQuery {
   item(id: String!): UserContact
 }
 
-type UserContactMutationSchema {
+type UserContactMutation {
   """Adding new user contact"""
   add(item: UserContactInput!): UserContact!
 
   """Deletion existent user contact"""
-  delete(id: [Int!]!): [String!]!
+  delete(id: [String!]!): [String!]!
 
   """Updating existent user contact"""
   update(item: UserContactInput!): UserContact!
@@ -197,13 +204,6 @@ input UserContactInput {
   type: UserContactType!
   property: [UserContactPropertyInput!]!
   flag: [String!]!
-}
-
-enum UserContactType {
-  EMAIL
-  PHONE
-  GOOGLE
-  APPLE
 }
 
 input UserContactPropertyInput {
@@ -290,13 +290,13 @@ type UserUser implements UserPropertySchema {
   user: User!
 }
 
-type UserContactString implements UserPropertySchema {
+type UserContactString implements UserContactProperty {
   id: Int!
-  string: String!
-  property: Property!
   created_at: String!
   updated_at: String!
   version: Int!
+  string: String!
+  property: Property!
   lang: Lang!
 }
 
@@ -621,7 +621,7 @@ type Mutation {
   user: UserMutation!
   auth: AuthMutation
   userGroup: UserGroupMutation!
-  userContact: UserContactMutationSchema!
+  userContact: UserContactMutation!
   block: BlockMutation!
   property: PropertyMutation!
   directory: DirectoryMutation!

@@ -1,0 +1,19 @@
+
+query GetUserContactList($limit: Int, $offset: Int) {
+  userContact {
+    list(limit: $limit, offset: $offset) {
+      id
+      type
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagString
+    }
+    count
+  }
+
+}

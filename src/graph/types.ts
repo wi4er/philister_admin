@@ -548,7 +548,7 @@ export type Mutation = {
   lang: LangMutation;
   property: PropertyMutation;
   user: UserMutation;
-  userContact: UserContactMutationSchema;
+  userContact: UserContactMutation;
   userGroup: UserGroupMutation;
   value: ValueMutation;
 };
@@ -685,7 +685,7 @@ export type UserContact = {
   propertyItem?: Maybe<UserContactProperty>;
   propertyList: Array<UserContactProperty>;
   propertyString?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  type: UserContactType;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
 };
@@ -707,8 +707,8 @@ export type UserContactInput = {
   type: UserContactType;
 };
 
-export type UserContactMutationSchema = {
-  __typename?: 'UserContactMutationSchema';
+export type UserContactMutation = {
+  __typename?: 'UserContactMutation';
   /** Adding new user contact */
   add: UserContact;
   /** Deletion existent user contact */
@@ -718,17 +718,17 @@ export type UserContactMutationSchema = {
 };
 
 
-export type UserContactMutationSchemaAddArgs = {
+export type UserContactMutationAddArgs = {
   item: UserContactInput;
 };
 
 
-export type UserContactMutationSchemaDeleteArgs = {
-  id: Array<Scalars['Int']>;
+export type UserContactMutationDeleteArgs = {
+  id: Array<Scalars['String']>;
 };
 
 
-export type UserContactMutationSchemaUpdateArgs = {
+export type UserContactMutationUpdateArgs = {
   item: UserContactInput;
 };
 
@@ -770,7 +770,7 @@ export type UserContactQueryListArgs = {
   offset?: InputMaybe<Scalars['Int']>;
 };
 
-export type UserContactString = UserPropertySchema & {
+export type UserContactString = UserContactProperty & {
   __typename?: 'UserContactString';
   created_at: Scalars['String'];
   id: Scalars['Int'];
@@ -1036,7 +1036,7 @@ export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typen
 export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserContactString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
+export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
 
 export type GetBlockListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1230,6 +1230,47 @@ export type UpdatePropertyItemMutationVariables = Exact<{
 
 export type UpdatePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', update: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
+export type AddUserContactItemMutationVariables = Exact<{
+  item: UserContactInput;
+}>;
+
+
+export type AddUserContactItemMutation = { __typename?: 'Mutation', userContact: { __typename?: 'UserContactMutation', add: { __typename?: 'UserContact', id: string } } };
+
+export type DeleteUserContactListMutationVariables = Exact<{
+  id: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type DeleteUserContactListMutation = { __typename?: 'Mutation', userContact: { __typename?: 'UserContactMutation', delete: Array<string> } };
+
+export type GetUserContactAdditionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserContactAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type GetUserContactListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetUserContactListQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', count: number, list: Array<{ __typename?: 'UserContact', id: string, type: UserContactType, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+
+export type GetUserContactUpdateQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetUserContactUpdateQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', item?: { __typename?: 'UserContact', id: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type UpdateUserContactItemMutationVariables = Exact<{
+  item: UserContactInput;
+}>;
+
+
+export type UpdateUserContactItemMutation = { __typename?: 'Mutation', userContact: { __typename?: 'UserContactMutation', update: { __typename?: 'UserContact', id: string } } };
+
 export type AddUserItemMutationVariables = Exact<{
   item: UserInput;
 }>;
@@ -1255,7 +1296,7 @@ export type GetUserListQueryVariables = Exact<{
 }>;
 
 
-export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', count: number, list: Array<{ __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserContactString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, value: { __typename?: 'Value', id: string }, property: { __typename?: 'Property', id: string } }> | null }> } };
+export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', count: number, list: Array<{ __typename?: 'User', id: number, login: string, property?: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, value: { __typename?: 'Value', id: string }, property: { __typename?: 'Property', id: string } }> | null }> } };
 
 export type GetUserUpdateQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2091,6 +2132,170 @@ export const UpdatePropertyItemDocument = gql`
   })
   export class UpdatePropertyItemGQL extends Apollo.Mutation<UpdatePropertyItemMutation, UpdatePropertyItemMutationVariables> {
     document = UpdatePropertyItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddUserContactItemDocument = gql`
+    mutation AddUserContactItem($item: UserContactInput!) {
+  userContact {
+    add(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddUserContactItemGQL extends Apollo.Mutation<AddUserContactItemMutation, AddUserContactItemMutationVariables> {
+    document = AddUserContactItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteUserContactListDocument = gql`
+    mutation DeleteUserContactList($id: [String!]!) {
+  userContact {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteUserContactListGQL extends Apollo.Mutation<DeleteUserContactListMutation, DeleteUserContactListMutationVariables> {
+    document = DeleteUserContactListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUserContactAdditionDocument = gql`
+    query GetUserContactAddition {
+  property {
+    list {
+      id
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUserContactAdditionGQL extends Apollo.Query<GetUserContactAdditionQuery, GetUserContactAdditionQueryVariables> {
+    document = GetUserContactAdditionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUserContactListDocument = gql`
+    query GetUserContactList($limit: Int, $offset: Int) {
+  userContact {
+    list(limit: $limit, offset: $offset) {
+      id
+      type
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagString
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUserContactListGQL extends Apollo.Query<GetUserContactListQuery, GetUserContactListQueryVariables> {
+    document = GetUserContactListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUserContactUpdateDocument = gql`
+    query GetUserContactUpdate($id: String!) {
+  userContact {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagString
+    }
+  }
+  property {
+    list {
+      id
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUserContactUpdateGQL extends Apollo.Query<GetUserContactUpdateQuery, GetUserContactUpdateQueryVariables> {
+    document = GetUserContactUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateUserContactItemDocument = gql`
+    mutation UpdateUserContactItem($item: UserContactInput!) {
+  userContact {
+    update(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateUserContactItemGQL extends Apollo.Mutation<UpdateUserContactItemMutation, UpdateUserContactItemMutationVariables> {
+    document = UpdateUserContactItemDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

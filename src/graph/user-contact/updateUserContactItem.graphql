@@ -1,0 +1,7 @@
+mutation UpdateUserContactItem ($item: UserContactInput!) {
+  userContact {
+    update(item: $item) {
+      id
+    }
+  }
+}
