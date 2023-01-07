@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthPopupComponent } from './components/auth-popup/auth-popup.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from "@angular/material/button";
 import { RootPageComponent } from './pages/root-page/root-page.component';
@@ -59,6 +59,7 @@ import { UserContactListComponent } from './components/user-contact-list/user-co
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { UserContactFormComponent } from './components/user-contact-form/user-contact-form.component';
 import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
+import { MatSelectModule } from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -114,6 +115,8 @@ import { UserGroupFormComponent } from './components/user-group-form/user-group-
     AppRoutingModule,
     MatFormFieldModule,
     MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
     MatTableModule,
     MatListModule,
     MatGridListModule,

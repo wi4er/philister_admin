@@ -42,7 +42,10 @@ export class UserContactListComponent implements OnInit {
     const list = []
 
     for (const item of data) {
-      const line: { [key: string]: string } = { 'id': item.id };
+      const line: { [key: string]: string } = {
+        'id': item.id,
+        'type': item.type,
+      };
 
       for (const prop of item?.propertyList ?? []) {
         col.add('property_' + prop.property.id);
@@ -53,7 +56,7 @@ export class UserContactListComponent implements OnInit {
     }
 
     this.properties = [ ...col ];
-    this.columns = [ 'select', 'action', 'id', ...col ];
+    this.columns = [ 'select', 'action', 'id', 'type', ...col ];
     this.list = list;
   }
 

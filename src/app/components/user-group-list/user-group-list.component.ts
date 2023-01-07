@@ -1,29 +1,17 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { DeleteUserListGQL, GetUserListGQL, User } from "../../../graph/types";
-import { DirectoryFormComponent } from "../directory-form/directory-form.component";
-import { MatDialog } from "@angular/material/dialog";
-import { PageEvent } from "@angular/material/paginator";
 import { SelectionModel } from "@angular/cdk/collections";
+import { DeleteUserListGQL, GetUserListGQL, User } from "../../../graph/types";
+import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
-import { animate, state, style, transition, trigger } from "@angular/animations";
+import { MatDialog } from "@angular/material/dialog";
 import { UserFormComponent } from "../user-form/user-form.component";
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: [ './user-list.component.css' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
+  selector: 'app-user-group-list',
+  templateUrl: './user-group-list.component.html',
+  styleUrls: ['./user-group-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserGroupListComponent implements OnInit {
 
   list: { [key: string]: string }[] = [];
   properties: string[] = [];
