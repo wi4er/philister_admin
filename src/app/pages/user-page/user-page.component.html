@@ -3,9 +3,10 @@
   mat-stretch-tabs="false"
   mat-align-tabs="center"
   class="tab-group"
-
+  [selectedIndex]="selected.value"
+  (selectedIndexChange)="handleChange($event)"
 >
-  <mat-tab label="Users" class="tab-group">
+  <mat-tab label="Users">
     <app-user-list class="wrap"></app-user-list>
   </mat-tab>
 
