@@ -1,6 +1,10 @@
 <form (submit)="saveItem()">
-  <h2 mat-dialog-title>
+  <h2 *ngIf="!data?.id" mat-dialog-title>
     Create new contact
+  </h2>
+
+  <h2 *ngIf="data?.id" mat-dialog-title>
+    Update contact #{{data?.id}}
   </h2>
 
   <mat-form-field appearance="fill">
@@ -53,44 +57,18 @@
 
   <mat-tab-group dynamicHeight>
     <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
-      <div *ngFor="let item of propertyList">
-        <div mat-subheader>{{item.id}}</div>
-
-        <div class="lang_list" >
-          <span>
-            <mat-form-field appearance="fill">
-              <mat-label>
-                No lang
-              </mat-label>
-
-              <input
-                matInput
-                [name]="item.id"
-                [(ngModel)]="editValues[item.id]['']"
-              />
-            </mat-form-field>
-          </span>
-
-          <span *ngFor="let lang of langList">
-            <mat-form-field appearance="fill">
-              <mat-label>
-                {{lang.id}}
-              </mat-label>
-
-              <input
-                matInput
-                [name]="item.id + '_' + lang.id"
-                [(ngModel)]="editValues[item.id][lang.id]"
-              />
-            </mat-form-field>
-          </span>
-
-        </div>
-      </div>
+      <app-property-edit
+        [edit]="editProperties"
+        [list]="propertyList"
+        [lang]="langList"
+      ></app-property-edit>
     </mat-tab>
 
     <mat-tab label="Flags">
-      <div class="flag_wrap"></div>
+      <app-flag-edit
+        [list]="flagList"
+        [edit]="editFlags"
+      ></app-flag-edit>
     </mat-tab>
   </mat-tab-group>
 

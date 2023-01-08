@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddUserContactItemGQL, GetUserContactAdditionGQL,
+  AddUserContactItemGQL, Flag, GetUserContactAdditionGQL,
   GetUserContactUpdateGQL,
   Lang,
   LangPropertyInput,
@@ -27,7 +27,10 @@ export class UserContactFormComponent implements OnInit {
 
   propertyList: Property[] = [];
   langList: Lang[] = [];
-  editValues: { [property: string]: { [lang: string]: string } } = {};
+  flagList: Flag[] = [];
+
+  editProperties: { [property: string]: { [lang: string]: string } } = {};
+  editFlags: { [flag: string]: boolean } = {};
 
   constructor(
     private addItemMutation: AddUserContactItemGQL,
@@ -45,8 +48,9 @@ export class UserContactFormComponent implements OnInit {
         { id: this.data.id },
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.list as Property[];
-        this.langList = res.data?.lang?.list as Lang[];
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
 
         this.toValues(res.data.userContact.item as unknown as UserContact);
       });
@@ -55,32 +59,36 @@ export class UserContactFormComponent implements OnInit {
         {},
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.list as Property[];
-        this.langList = res.data?.lang?.list as Lang[];
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
 
         this.initEditValues();
       });
-
     }
   }
 
   getTypeList() {
-    return Object.values(UserContactType) ;
+    return Object.values(UserContactType);
   }
 
   getPropertyCount() {
-    return Object.values(this.editValues)
+    return Object.values(this.editProperties)
       .flatMap(item => Object.values(item).filter(item => item))
       .length;
   }
 
   initEditValues() {
     for (const prop of this.propertyList) {
-      this.editValues[prop.id] = {};
+      this.editProperties[prop.id] = {};
 
       for (const lang of this.langList) {
-        this.editValues[prop.id][lang.id] = '';
+        this.editProperties[prop.id][lang.id] = '';
       }
+    }
+
+    for (const flag of this.flagList) {
+      this.editFlags[flag.id] = false;
     }
   }
 
@@ -92,21 +100,23 @@ export class UserContactFormComponent implements OnInit {
       this.type.setValue(item.type);
     }
 
-    console.log(item)
-
     this.initEditValues();
 
     for (const prop of item?.propertyList ?? []) {
       // @ts-ignore
-      if (prop['__typename'] === 'LangString') {
+      if (prop['__typename'] === 'UserContactString') {
         const strProp: LangString = prop;
 
         if (!strProp?.lang?.id) {
-          this.editValues[strProp.property.id][''] = prop.string;
+          this.editProperties[strProp.property.id][''] = prop.string;
         } else {
-          this.editValues[strProp.property.id][strProp.lang.id] = prop.string;
+          this.editProperties[strProp.property.id][strProp.lang.id] = prop.string;
         }
       }
+    }
+
+    for (const flag of item?.flagString ?? []) {
+      this.editFlags[flag] = true;
     }
   }
 
@@ -118,17 +128,23 @@ export class UserContactFormComponent implements OnInit {
       flag: [],
     } as UserContactInput;
 
-    for (const prop in this.editValues) {
-      for (const lang in this.editValues[prop]) {
-        if (!this.editValues[prop][lang]) {
+    for (const prop in this.editProperties) {
+      for (const lang in this.editProperties[prop]) {
+        if (!this.editProperties[prop][lang]) {
           continue;
         }
 
         input.property?.push({
-          string: this.editValues[prop][lang],
+          string: this.editProperties[prop][lang],
           property: prop,
           lang: lang
         } as LangPropertyInput);
+      }
+    }
+
+    for (const flag in this.editFlags) {
+      if (this.editFlags[flag]) {
+        input.flag.push(flag)
       }
     }
 
@@ -137,17 +153,11 @@ export class UserContactFormComponent implements OnInit {
 
   saveItem() {
     if (this.data?.id) {
-      this.updateItemMutation.mutate({
-        item: this.toInput(),
-      }).subscribe(res => {
-        this.dialogRef.close();
-      });
+      this.updateItemMutation.mutate({ item: this.toInput() })
+        .subscribe(() => this.dialogRef.close());
     } else {
-      this.addItemMutation.mutate({
-        item: this.toInput(),
-      }).subscribe(res => {
-        this.dialogRef.close();
-      });
+      this.addItemMutation.mutate({ item: this.toInput() })
+        .subscribe(() => this.dialogRef.close());
     }
   }
 

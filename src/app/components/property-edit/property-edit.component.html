@@ -1,0 +1,33 @@
+<div *ngFor="let item of list">
+  <div mat-subheader>{{item.id}}</div>
+
+  <div class="lang_list">
+    <span>
+      <mat-form-field appearance="fill">
+        <mat-label>
+          No lang
+        </mat-label>
+
+        <input
+          matInput
+          [name]="item.id"
+          [(ngModel)]="edit[item.id]['']"
+        />
+      </mat-form-field>
+    </span>
+
+    <span *ngFor="let lang of lang">
+      <mat-form-field appearance="fill">
+        <mat-label>
+          {{lang.id}}
+        </mat-label>
+
+        <input
+          matInput
+          [name]="item.id + '_' + lang.id"
+          [(ngModel)]="edit[item.id][lang.id]"
+        />
+      </mat-form-field>
+    </span>
+  </div>
+</div>

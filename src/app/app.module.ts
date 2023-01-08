@@ -60,6 +60,8 @@ import { UserFormComponent } from './components/user-form/user-form.component';
 import { UserContactFormComponent } from './components/user-contact-form/user-contact-form.component';
 import { UserGroupFormComponent } from './components/user-group-form/user-group-form.component';
 import { MatSelectModule } from "@angular/material/select";
+import { FlagEditComponent } from './components/flag-edit/flag-edit.component';
+import { PropertyEditComponent } from './components/property-edit/property-edit.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +99,8 @@ import { MatSelectModule } from "@angular/material/select";
     UserFormComponent,
     UserContactFormComponent,
     UserGroupFormComponent,
+    FlagEditComponent,
+    PropertyEditComponent,
   ],
   imports: [
     BrowserModule,
