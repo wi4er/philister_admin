@@ -742,6 +742,7 @@ export type UserContactProperty = {
 };
 
 export type UserContactPropertyInput = {
+  lang?: InputMaybe<Scalars['String']>;
   property: Scalars['String'];
   string: Scalars['String'];
 };
@@ -790,8 +791,10 @@ export enum UserContactType {
 
 export type UserGroup = {
   __typename?: 'UserGroup';
+  created_at: Scalars['String'];
   id: Scalars['Int'];
-  name: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type UserGroupMutation = {
@@ -804,6 +807,7 @@ export type UserGroupMutation = {
 
 export type UserGroupQuery = {
   __typename?: 'UserGroupQuery';
+  count: Scalars['Int'];
   item: UserGroup;
   list: Array<UserGroup>;
 };
@@ -1262,7 +1266,7 @@ export type GetUserContactUpdateQueryVariables = Exact<{
 }>;
 
 
-export type GetUserContactUpdateQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', item?: { __typename?: 'UserContact', id: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetUserContactUpdateQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', item?: { __typename?: 'UserContact', id: string, type: UserContactType, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type UpdateUserContactItemMutationVariables = Exact<{
   item: UserContactInput;
@@ -2240,6 +2244,7 @@ export const GetUserContactUpdateDocument = gql`
   userContact {
     item(id: $id) {
       id
+      type
       created_at
       updated_at
       version

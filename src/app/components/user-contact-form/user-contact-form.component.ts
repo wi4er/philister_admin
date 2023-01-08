@@ -11,6 +11,7 @@ import {
   UserContactType
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: 'app-user-contact-form',
@@ -20,7 +21,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 export class UserContactFormComponent implements OnInit {
 
   id: string = '';
-  type: UserContactType = UserContactType.Email;
+  type = new FormControl(UserContactType.Email);
   created_at: string = '';
   updated_at: string = '';
 
@@ -63,6 +64,10 @@ export class UserContactFormComponent implements OnInit {
     }
   }
 
+  getTypeList() {
+    return Object.values(UserContactType) ;
+  }
+
   getPropertyCount() {
     return Object.values(this.editValues)
       .flatMap(item => Object.values(item).filter(item => item))
@@ -84,8 +89,10 @@ export class UserContactFormComponent implements OnInit {
       this.id = item.id;
       this.created_at = item.created_at;
       this.updated_at = item.updated_at;
-      this.type = item.type;
+      this.type.setValue(item.type);
     }
+
+    console.log(item)
 
     this.initEditValues();
 
@@ -104,9 +111,9 @@ export class UserContactFormComponent implements OnInit {
   }
 
   toInput(): UserContactInput {
-    const addition: UserContactInput = {
+    const input: UserContactInput = {
       id: this.id,
-      type: this.type,
+      type: this.type.value,
       property: [],
       flag: [],
     } as UserContactInput;
@@ -117,7 +124,7 @@ export class UserContactFormComponent implements OnInit {
           continue;
         }
 
-        addition.property?.push({
+        input.property?.push({
           string: this.editValues[prop][lang],
           property: prop,
           lang: lang
@@ -125,7 +132,7 @@ export class UserContactFormComponent implements OnInit {
       }
     }
 
-    return addition;
+    return input;
   }
 
   saveItem() {

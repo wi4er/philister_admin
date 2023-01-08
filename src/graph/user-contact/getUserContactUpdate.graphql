@@ -2,6 +2,7 @@ query GetUserContactUpdate ($id: String!) {
   userContact {
     item(id: $id) {
       id
+      type
       created_at
       updated_at
       version
