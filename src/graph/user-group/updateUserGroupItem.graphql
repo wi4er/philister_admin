@@ -1,0 +1,7 @@
+mutation UpdateUserGroupItem($item: UserGroupInput!) {
+  userGroup {
+    update(item: $item) {
+      id
+    }
+  }
+}

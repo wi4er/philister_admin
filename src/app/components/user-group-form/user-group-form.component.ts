@@ -1,18 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddUserItemGQL,
-  GetPropertyEditGQL,
-  GetPropertyIdGQL,
+  AddUserGroupItemGQL,
+  Flag,
+  GetPropertyIdGQL, GetUserGroupAdditionGQL, GetUserGroupUpdateGQL, GetUserUpdateGQL, Lang, LangString,
   Property,
-  UpdateUserGQL,
-  UserInput
+  UpdateUserGroupItemGQL, User, UserGroup, UserGroupInput
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-user-group-form',
   templateUrl: './user-group-form.component.html',
-  styleUrls: ['./user-group-form.component.css']
+  styleUrls: [ './user-group-form.component.css' ]
 })
 export class UserGroupFormComponent implements OnInit {
 
@@ -21,26 +20,33 @@ export class UserGroupFormComponent implements OnInit {
   updated_at: string = '';
 
   propertyList: Property[] = [];
-  editValues: { [field: string]: string } = {};
+  langList: Lang[] = [];
+  flagList: Flag[] = [];
+  editProperties: { [property: string]: { [lang: string]: string } } = {};
+  editFlags: { [field: string]: boolean } = {};
 
   constructor(
-    private addItemMutation: AddUserItemGQL,
-    private updateItemMutation: UpdateUserGQL,
+    private addItemMutation: AddUserGroupItemGQL,
+    private updateItemMutation: UpdateUserGroupItemGQL,
     private dialogRef: MatDialogRef<UserGroupFormComponent>,
     private getListQuery: GetPropertyIdGQL,
-    private getPropertyEditQuery: GetPropertyEditGQL,
+    private getAdditionQuery: GetUserGroupAdditionGQL,
+    private getUpdateQuery: GetUserGroupUpdateGQL,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
   ) {
   }
 
   ngOnInit(): void {
     if (this.data?.id) {
-      this.getPropertyEditQuery.fetch(
-        { id: this.data?.id },
+      this.getUpdateQuery.fetch(
+        { id: +this.data.id },
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.list as Property[];
-        this.toValues(res.data.property.item as Property);
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
+
+        this.toValues(res.data.userGroup.item as unknown as UserGroup);
       });
     } else {
       this.getListQuery.fetch(
@@ -52,45 +58,71 @@ export class UserGroupFormComponent implements OnInit {
     }
   }
 
-
   getPropertyCount() {
-    return Object.keys(this.editValues).length
+    return Object.values(this.editProperties)
+      .flatMap(item => Object.values(item).filter(item => item))
+      .length;
   }
 
-  toValues(item: Property) {
-    this.id = item.id;
-    this.created_at = item.created_at;
-    this.updated_at = item.updated_at;
+  initEditValues() {
+    for (const prop of this.propertyList) {
+      this.editProperties[prop.id] = {};
 
-    for (const prop of item?.property ?? []) {
-      this.editValues[prop.property.id] = prop.value;
+      for (const lang of this.langList) {
+        this.editProperties[prop.id][lang.id] = '';
+      }
+    }
+
+    for (const flag of this.flagList) {
+      this.editFlags[flag.id] = false;
     }
   }
 
-  toInput(): UserInput {
-    const addition: UserInput = {
+  toValues(item: UserGroup) {
+    if (item) {
+      this.id = String(item.id);
+      this.created_at = item.created_at;
+      this.updated_at = item.updated_at;
+    }
+
+    this.initEditValues();
+
+    for (const prop of item?.propertyList ?? []) {
+      // @ts-ignore
+      if (prop['__typename'] === 'UserGroupString') {
+        const strProp: LangString = prop;
+
+        if (!strProp?.lang?.id) {
+          this.editProperties[strProp.property.id][''] = prop.string;
+        } else {
+          this.editProperties[strProp.property.id][strProp.lang.id] = prop.string;
+        }
+      }
+    }
+
+    for (const flag of item?.flagString ?? []) {
+      this.editFlags[flag] = true;
+    }
+  }
+
+  toInput(): UserGroupInput {
+    const addition: UserGroupInput = {
       id: +this.id,
-      login: '213',
       property: [],
       contact: [],
-    } as UserInput;
+      flag: [],
+    } as UserGroupInput;
 
     return addition;
   }
 
   saveItem() {
     if (this.data?.id) {
-      this.updateItemMutation.mutate({
-        item: this.toInput(),
-      }).subscribe(res => {
-        this.dialogRef.close();
-      });
+      this.updateItemMutation.mutate({ item: this.toInput() })
+        .subscribe(res => this.dialogRef.close());
     } else {
-      this.addItemMutation.mutate({
-        item: this.toInput(),
-      }).subscribe(res => {
-        this.dialogRef.close();
-      });
+      this.addItemMutation.mutate({ item: this.toInput() })
+        .subscribe(res => this.dialogRef.close());
     }
   }
 

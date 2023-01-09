@@ -47,7 +47,7 @@ export class UserGroupListComponent implements OnInit {
         'login': item.login,
       };
 
-      for (const prop of item?.property ?? []) {
+      for (const prop of item?.propertyList ?? []) {
         propSet.add('property_' + prop.property.id);
         line['property_' + prop.property.id] = prop.string;
       }

@@ -3,7 +3,7 @@ query GetMyself {
     myself {
       id
       login
-      property {
+      propertyList {
         string
         property {
           id

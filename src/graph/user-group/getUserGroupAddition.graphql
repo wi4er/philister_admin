@@ -1,23 +1,23 @@
-query GetUserAddition {
+query GetUserGroupAddition {
+  userGroup {
+    list {
+      id
+    }
+  }
+
   property {
     list {
       id
     }
   }
 
-  flag {
-    list {
-      id
-    }
-  }
-
-  userContact {
-    list {
-      id
-    }
-  }
-
   lang {
+    list {
+      id
+    }
+  }
+
+  flag {
     list {
       id
     }

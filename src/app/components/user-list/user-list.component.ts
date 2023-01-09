@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DeleteUserListGQL, GetUserListGQL, User } from "../../../graph/types";
-import { DirectoryFormComponent } from "../directory-form/directory-form.component";
 import { MatDialog } from "@angular/material/dialog";
 import { PageEvent } from "@angular/material/paginator";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -40,13 +39,13 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private getList: GetUserListGQL,
-    private deleteList: DeleteUserListGQL,
+    private getListQuery: GetUserListGQL,
+    private deleteListQuery: DeleteUserListGQL,
   ) {
   }
 
   getColumns() {
-    return [ 'select', 'action', 'id', ...this.properties ];
+    return [ 'select', 'action', 'id', 'login', ...this.properties ];
   }
 
   formatData(data: User[]) {
@@ -59,7 +58,7 @@ export class UserListComponent implements OnInit {
         'login': item.login,
       };
 
-      for (const prop of item?.property ?? []) {
+      for (const prop of item?.propertyList ?? []) {
         propSet.add('property_' + prop.property.id);
         line['property_' + prop.property.id] = prop.string;
       }
@@ -72,7 +71,7 @@ export class UserListComponent implements OnInit {
   }
 
   fetchList() {
-    this.getList.fetch({
+    this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
     }, {
@@ -107,26 +106,28 @@ export class UserListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  updateUserItem(id: number) {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
       UserFormComponent,
-      { data: { id } },
+      {
+        width: '1000px',
+        data: { id },
+      },
     );
 
     dialog.afterClosed()
       .subscribe(() => this.fetchList());
   }
 
-  deleteUserList() {
-    this.deleteList.mutate({
+  deleteList() {
+    this.deleteListQuery.mutate({
       id: this.selection.selected.map(item => +item['id'])
     }).subscribe(() => this.fetchList());
   }
 
-  deleteUserItem(id: string) {
-    this.deleteList.mutate({
-      id: +id
-    }).subscribe(() => this.fetchList());
+  deleteItem(id: string) {
+    this.deleteListQuery.mutate({ id: +id })
+      .subscribe(() => this.fetchList());
   }
 
   isAllSelected() {

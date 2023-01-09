@@ -3,7 +3,7 @@ query getUserList($limit: Int, $offset: Int) {
     list(limit: $limit, offset: $offset) {
       id
       login
-      property {
+      propertyList {
         string
         property {
           id

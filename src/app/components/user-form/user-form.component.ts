@@ -1,102 +1,152 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddUserItemGQL,
-  GetPropertyEditGQL,
-  GetPropertyIdGQL,
-  Property, UpdateUserGQL, UserInput,
-
+  AddUserItemGQL, Flag,
+  GetPropertyIdGQL, GetUserAdditionGQL, GetUserUpdateGQL, Lang, LangPropertyInput,
+  Property, UpdateUserGQL, User, UserInput, UserString,
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.css']
+  styleUrls: [ './user-form.component.css' ]
 })
 export class UserFormComponent implements OnInit {
 
   id: string = '';
+
+  login: string = '';
   created_at: string = '';
   updated_at: string = '';
 
   propertyList: Property[] = [];
-  editValues: { [field: string]: string } = {};
+  langList: Lang[] = [];
+  flagList: Flag[] = [];
+  editProperties: { [property: string]: { [lang: string]: string } } = {};
+  editFlags: { [field: string]: boolean } = {};
 
   constructor(
     private addItemMutation: AddUserItemGQL,
     private updateItemMutation: UpdateUserGQL,
     private dialogRef: MatDialogRef<UserFormComponent>,
     private getListQuery: GetPropertyIdGQL,
-    private getPropertyEditQuery: GetPropertyEditGQL,
+    private getAdditionQuery: GetUserAdditionGQL,
+    private getUpdateQuery: GetUserUpdateGQL,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
   ) {
   }
 
   ngOnInit(): void {
     if (this.data?.id) {
-      this.getPropertyEditQuery.fetch(
-        { id: this.data?.id },
+      this.getUpdateQuery.fetch(
+        { id: +this.data.id },
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.list as Property[];
-        this.toValues(res.data.property.item as Property);
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
+
+        this.toValues(res.data.user.item as unknown as User);
       });
     } else {
-      this.getListQuery.fetch(
+      this.getAdditionQuery.fetch(
         {},
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.idList as Property[];
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
+
+        this.initEditValues();
       });
     }
   }
 
-
   getPropertyCount() {
-    return Object.keys(this.editValues).length
+    return 10;
   }
 
-  toValues(item: Property) {
-    this.id = item.id;
-    this.created_at = item.created_at;
-    this.updated_at = item.updated_at;
+  initEditValues() {
+    for (const prop of this.propertyList) {
+      this.editProperties[prop.id] = {};
 
-    for (const prop of item?.property ?? []) {
-      this.editValues[prop.property.id] = prop.value;
+      for (const lang of this.langList) {
+        this.editProperties[prop.id][lang.id] = '';
+      }
+    }
+
+    for (const flag of this.flagList) {
+      this.editFlags[flag.id] = false;
+    }
+  }
+
+  toValues(item: User) {
+    if (item) {
+      this.id = String(item.id);
+      this.login = item.login;
+      this.created_at = item.created_at;
+      this.updated_at = item.updated_at;
+    }
+
+    this.initEditValues();
+
+    for (const prop of item?.propertyList ?? []) {
+      // @ts-ignore
+      if (prop['__typename'] === 'UserString') {
+        const strProp = prop as UserString;
+
+        if (!strProp?.lang?.id) {
+          this.editProperties[strProp.property.id][''] = prop.string;
+        } else {
+          this.editProperties[strProp.property.id][strProp.lang.id] = prop.string;
+        }
+      }
+    }
+
+    for (const flag of item?.flagString ?? []) {
+      this.editFlags[flag] = true;
     }
   }
 
   toInput(): UserInput {
-    const addition: UserInput = {
+    const input: UserInput = {
       id: +this.id,
-      login: '213',
+      login: this.login,
       property: [],
       contact: [],
+      flag: [],
     } as UserInput;
 
-    // for (const key in this.editValues) {
-    //   addition.property?.push({
-    //     value: this.editValues[key],
-    //     property: key
-    //   } as PropertyPropertyInput);
-    // }
+    for (const prop in this.editProperties) {
+      for (const lang in this.editProperties[prop]) {
+        if (!this.editProperties[prop][lang]) {
+          continue;
+        }
 
-    return addition;
+        input.property?.push({
+          string: this.editProperties[prop][lang],
+          property: prop,
+          lang: lang
+        } as LangPropertyInput);
+      }
+    }
+
+    for (const flag in this.editFlags) {
+      if (this.editFlags[flag]) {
+        input.flag.push(flag)
+      }
+    }
+
+    return input;
   }
 
   saveItem() {
     if (this.data?.id) {
-      this.updateItemMutation.mutate({
-        item: this.toInput(),
-      }).subscribe(res => {
-        this.dialogRef.close();
-      });
+      this.updateItemMutation.mutate({ item: this.toInput() })
+        .subscribe(() => this.dialogRef.close());
     } else {
-      this.addItemMutation.mutate({
-        item: this.toInput(),
-      }).subscribe(res => {
-        this.dialogRef.close();
-      });
+      this.addItemMutation.mutate({ item: this.toInput() })
+        .subscribe(() => this.dialogRef.close());
     }
   }
 

@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-interface UserPropertySchema {
+interface UserProperty {
   id: Int!
   string: String!
   property: Property!
@@ -18,6 +18,15 @@ interface FlagProperty {
 }
 
 interface UserContactProperty {
+  id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  string: String!
+  property: Property!
+}
+
+interface UserGroupProperty {
   id: Int!
   created_at: String!
   updated_at: String!
@@ -85,7 +94,9 @@ type Flag {
   flagString: [String!]!
 }
 
-type UserContact {
+type UserContact implements WithFlagSchema {
+  flagList: [Flag!]!
+  flagString: [String!]!
   id: String!
   type: UserContactType!
   created_at: String!
@@ -94,6 +105,9 @@ type UserContact {
   propertyList: [UserContactProperty!]!
   propertyItem(id: String!): UserContactProperty
   propertyString(id: String!): String
+}
+
+interface WithFlagSchema {
   flagList: [Flag!]!
   flagString: [String!]!
 }
@@ -111,7 +125,9 @@ type UserUserContact {
   contact: UserContact!
 }
 
-type User {
+type User implements WithFlagSchema {
+  flagList: [Flag!]!
+  flagString: [String!]!
   id: Int!
   created_at: String!
   updated_at: String!
@@ -120,10 +136,9 @@ type User {
   hash: String
   contact: [UserUserContact!]!
   group: [User!]
-  property: [UserPropertySchema!]
-  propertyItem: UserPropertySchema
-  flag: [Flag!]!
-  flagItem: Flag!
+  propertyList: [UserProperty!]!
+  propertyItem(id: String!): UserProperty
+  propertyString(id: String!, lang: String): String
 }
 
 type UserQuery {
@@ -149,6 +164,7 @@ input UserInput {
   login: String!
   contact: [UserUserContactInput!]!
   property: [UserPropertyInput!]!
+  flag: [String!]!
 }
 
 input UserUserContactInput {
@@ -159,23 +175,7 @@ input UserUserContactInput {
 input UserPropertyInput {
   property: String!
   string: String!
-}
-
-type UserGroup {
-  id: Int!
-  name: String!
-}
-
-type UserGroupQuery {
-  list(limit: Int, offset: Int): [UserGroup!]!
-  item(id: String!): UserGroup!
-}
-
-type UserGroupMutation {
-  """Adding new user group"""
-  add: UserGroup!
-  delete: UserGroup!
-  update: UserGroup!
+  lang: String
 }
 
 type AuthMutation {
@@ -209,12 +209,47 @@ input UserContactInput {
 input UserContactPropertyInput {
   property: String!
   string: String!
+  lang: String
 }
 
-type UserString implements UserPropertySchema {
+type UserGroup implements WithFlagSchema {
+  flagList: [Flag!]!
+  flagString: [String!]!
   id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  parent: UserGroup
+  children: [UserGroup!]!
+  propertyList: [UserGroupProperty!]!
+  propertyItem(id: String!): UserGroupProperty
+  propertyString(id: String!, lang: String): String
+}
+
+type UserGroupQuery {
+  list(limit: Int, offset: Int): [UserGroup!]!
+  item(id: Int!): UserGroup
+  count(limit: Int, offset: Int): Int!
+}
+
+type UserGroupMutation {
+  """Adding new user group"""
+  add(item: UserGroupInput!): UserGroup!
+  delete(id: [String!]!): UserGroup!
+  update(item: UserGroupInput!): UserGroup!
+}
+
+input UserGroupInput {
+  id: Float
+  parent: Int
+  property: [UserGroupPropertyInput!]!
+  flag: [String!]!
+}
+
+input UserGroupPropertyInput {
+  property: String!
   string: String!
-  property: Property!
+  lang: String
 }
 
 type LangFlag {
@@ -232,6 +267,13 @@ type Lang {
   propertyString(id: String!): String
   flagList: [LangFlag!]!
   flagString: [String!]!
+}
+
+type UserString implements UserProperty {
+  id: Int!
+  string: String!
+  property: Property!
+  lang: Lang!
 }
 
 type DirectoryString implements DirectoryProperty {
@@ -275,7 +317,7 @@ type Directory {
   flagString: [String!]!
 }
 
-type UserValue implements UserPropertySchema {
+type UserValue implements UserProperty {
   id: Int!
   string: String!
   property: Property!
@@ -283,7 +325,7 @@ type UserValue implements UserPropertySchema {
   value: Value!
 }
 
-type UserUser implements UserPropertySchema {
+type UserUser implements UserProperty {
   id: Int!
   string: String!
   property: Property!
@@ -298,6 +340,16 @@ type UserContactString implements UserContactProperty {
   string: String!
   property: Property!
   lang: Lang!
+}
+
+type UserGroupString implements UserGroupProperty {
+  id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  string: String!
+  property: Property!
+  lang: Lang
 }
 
 type Element {

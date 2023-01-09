@@ -1,16 +1,18 @@
-query GetUserUpdate($id: Int!) {
-  user {
+query GetUserGroupUpdate ($id: Int!) {
+  userGroup {
+    list {
+      id
+    }
     item(id: $id) {
       id
       created_at
       updated_at
       version
-      contact {
+      parent {
         id
-        contact {
-          id
-        }
-        value
+      }
+      children {
+        id
       }
       propertyList {
         id
@@ -18,34 +20,24 @@ query GetUserUpdate($id: Int!) {
         property {
           id
         }
-        ... on UserString {
-          lang {
-            id
-          }
-        }
       }
-
+      flagString
     }
   }
+
   property {
     list {
       id
     }
   }
 
-  flag {
-    list {
-      id
-    }
-  }
-
-  userContact {
-    list {
-      id
-    }
-  }
-
   lang {
+    list {
+      id
+    }
+  }
+
+  flag {
     list {
       id
     }
