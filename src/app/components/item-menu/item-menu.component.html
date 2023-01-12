@@ -1,6 +1,10 @@
-<button mat-menu-item (click)="onDelete()">
-  <mat-icon>delete</mat-icon>
-  <span>Delete</span>
+<button
+  *ngFor="let flag of flags"
+  mat-menu-item
+  (click)="onFlag(flag)"
+>
+  <mat-icon>edit</mat-icon>
+  <span> {{flag}} </span>
 </button>
 
 <button mat-menu-item (click)="onEdit()">
@@ -8,11 +12,9 @@
   <span>Edit</span>
 </button>
 
-<button
-  *ngFor="let flagItem of flags"
-  mat-menu-item
-  (click)="onFlag(flagItem.id)"
->
-  <mat-icon>edit</mat-icon>
-  <span>Edit</span>
+<button mat-menu-item (click)="onDelete()">
+  <mat-icon>delete</mat-icon>
+  <span>Delete</span>
 </button>
+
+

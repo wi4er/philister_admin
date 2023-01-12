@@ -3,6 +3,7 @@ query getUserList($limit: Int, $offset: Int) {
     list(limit: $limit, offset: $offset) {
       id
       login
+      flagString
       propertyList {
         string
         property {
@@ -16,5 +17,11 @@ query getUserList($limit: Int, $offset: Int) {
       }
     }
     count
+  }
+
+  flag {
+    list {
+      id
+    }
   }
 }

@@ -157,6 +157,9 @@ type UserMutation {
 
   """Updating existent user"""
   update(item: UserInput!): User!
+
+  """Updating flag of user"""
+  updateFlag(id: Int!, flag: String!): User!
 }
 
 input UserInput {
@@ -197,6 +200,9 @@ type UserContactMutation {
 
   """Updating existent user contact"""
   update(item: UserContactInput!): UserContact!
+
+  """Updating flag of user contact"""
+  updateFlag(id: String!, flag: String!): UserContact!
 }
 
 input UserContactInput {
@@ -273,7 +279,7 @@ type UserString implements UserProperty {
   id: Int!
   string: String!
   property: Property!
-  lang: Lang!
+  lang: Lang
 }
 
 type DirectoryString implements DirectoryProperty {
@@ -339,7 +345,7 @@ type UserContactString implements UserContactProperty {
   version: Int!
   string: String!
   property: Property!
-  lang: Lang!
+  lang: Lang
 }
 
 type UserGroupString implements UserGroupProperty {
@@ -349,6 +355,14 @@ type UserGroupString implements UserGroupProperty {
   version: Int!
   string: String!
   property: Property!
+  lang: Lang
+}
+
+type UserDescription implements UserProperty {
+  id: Int!
+  string: String!
+  property: Property!
+  description: String!
   lang: Lang
 }
 

@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { DeleteUserListGQL, GetUserListGQL, User } from "../../../graph/types";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DeleteUserListGQL, Flag, GetUserListGQL, UpdateUserFlagGQL, User } from "../../../graph/types";
 import { MatDialog } from "@angular/material/dialog";
-import { PageEvent } from "@angular/material/paginator";
-import { SelectionModel } from "@angular/cdk/collections";
 import { MatTable } from "@angular/material/table";
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { UserFormComponent } from "../user-form/user-form.component";
+import { CommonList } from "../../common/common-list/common-list";
 
 @Component({
   selector: 'app-user-list',
@@ -22,17 +21,13 @@ import { UserFormComponent } from "../user-form/user-form.component";
     ]),
   ],
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent extends CommonList implements OnInit {
 
-  list: { [key: string]: string }[] = [];
   properties: string[] = [];
-  selection = new SelectionModel<{ [key: string]: string }>(true, []);
+
   expandedElement: User | null = null;
 
-  pageEvent?: PageEvent;
-  totalCount: number = 0;
-  pageSize: number = 10;
-  currentPage: number = 0;
+  flagList: string[] = [];
 
   @ViewChild(MatTable)
   table?: MatTable<any>;
@@ -41,7 +36,10 @@ export class UserListComponent implements OnInit {
     private dialog: MatDialog,
     private getListQuery: GetUserListGQL,
     private deleteListQuery: DeleteUserListGQL,
+
+    private updateFlagMutation: UpdateUserFlagGQL
   ) {
+    super();
   }
 
   getColumns() {
@@ -80,14 +78,12 @@ export class UserListComponent implements OnInit {
       .subscribe(res => {
         this.formatData(res.data.user.list as User[]);
         this.totalCount = res.data.user.count;
+        this.flagList = res.data.flag.list.map(it => it.id);
 
         this.selection.clear();
         this.table?.renderRows();
       });
   }
-
-  @Input()
-  limit: number = 0;
 
   ngOnInit(): void {
     this.fetchList();
@@ -104,6 +100,13 @@ export class UserListComponent implements OnInit {
 
     dialog.afterClosed()
       .subscribe(() => this.fetchList());
+  }
+
+  updateFlag(id: number, flag: string) {
+    this.updateFlagMutation.mutate({ id, flag })
+      .subscribe(res => {
+        console.log(res.data)
+      });
   }
 
   updateItem(id: number) {
@@ -128,26 +131,6 @@ export class UserListComponent implements OnInit {
   deleteItem(id: string) {
     this.deleteListQuery.mutate({ id: +id })
       .subscribe(() => this.fetchList());
-  }
-
-  isAllSelected() {
-    return this.selection.selected.length === this.list.length;
-  }
-
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    } else {
-      this.selection.select(...this.list);
-    }
-  }
-
-  changePage(event: PageEvent) {
-    this.pageEvent = event;
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-
-    this.fetchList();
   }
 
 }

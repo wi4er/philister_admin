@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import {
   AddUserItemGQL, Flag,
   GetPropertyIdGQL, GetUserAdditionGQL, GetUserUpdateGQL, Lang, LangPropertyInput,
-  Property, UpdateUserGQL, User, UserInput, UserString,
+  Property, UpdateUserGQL, User, UserContact, UserInput, UserString,
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
@@ -22,8 +22,11 @@ export class UserFormComponent implements OnInit {
   propertyList: Property[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
+  contactList: UserContact[] = [];
+
   editProperties: { [property: string]: { [lang: string]: string } } = {};
   editFlags: { [field: string]: boolean } = {};
+  editContacts: { [field: string]: string } = {};
 
   constructor(
     private addItemMutation: AddUserItemGQL,
@@ -45,8 +48,9 @@ export class UserFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
+        this.contactList = res.data.userContact.list as UserContact[];
 
-        this.toValues(res.data.user.item as unknown as User);
+        this.toEdit(res.data.user.item as unknown as User);
       });
     } else {
       this.getAdditionQuery.fetch(
@@ -56,6 +60,7 @@ export class UserFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
+        this.contactList = res.data.userContact.list as UserContact[];
 
         this.initEditValues();
       });
@@ -78,15 +83,17 @@ export class UserFormComponent implements OnInit {
     for (const flag of this.flagList) {
       this.editFlags[flag.id] = false;
     }
+
+    for (const contact of this.contactList) {
+      this.editContacts[contact.id] = '';
+    }
   }
 
-  toValues(item: User) {
-    if (item) {
-      this.id = String(item.id);
-      this.login = item.login;
-      this.created_at = item.created_at;
-      this.updated_at = item.updated_at;
-    }
+  toEdit(item: User) {
+    this.id = String(item.id);
+    this.login = item.login;
+    this.created_at = item.created_at;
+    this.updated_at = item.updated_at;
 
     this.initEditValues();
 
@@ -103,8 +110,14 @@ export class UserFormComponent implements OnInit {
       }
     }
 
-    for (const flag of item?.flagString ?? []) {
+    console.log(item.flagString)
+
+    for (const flag of item.flagString ?? []) {
       this.editFlags[flag] = true;
+    }
+
+    for (const contact of item.contact) {
+      this.editContacts[contact.contact.id] = contact.value;
     }
   }
 
@@ -133,7 +146,16 @@ export class UserFormComponent implements OnInit {
 
     for (const flag in this.editFlags) {
       if (this.editFlags[flag]) {
-        input.flag.push(flag)
+        input.flag.push(flag);
+      }
+    }
+
+    for(const contact in this.editContacts) {
+      if (this.editContacts[contact]) {
+        input.contact.push({
+          contact,
+          value: this.editContacts[contact],
+        });
       }
     }
 

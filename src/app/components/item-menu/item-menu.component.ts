@@ -23,11 +23,12 @@ export class ItemMenuComponent implements OnInit {
     console.log('DELETE EXPECTED');
   }
 
-  flags: Flag[] = [];
+  @Input()
+  flags: string[] = [];
 
   @Input()
   onFlag(id: string) {
-
+    console.log(id)
   }
 
 }

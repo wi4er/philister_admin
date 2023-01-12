@@ -2,9 +2,11 @@ query GetUserUpdate($id: Int!) {
   user {
     item(id: $id) {
       id
+      login
       created_at
       updated_at
       version
+      flagString
       contact {
         id
         contact {

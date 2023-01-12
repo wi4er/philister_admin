@@ -1,31 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from "@angular/cdk/collections";
-import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import {
   DeleteUserContactListGQL,
-  GetUserContactListGQL,
+  GetUserContactListGQL, UpdateUserContactFlagGQL,
   UserContact
 } from "../../../graph/types";
 import { UserContactFormComponent } from "../user-contact-form/user-contact-form.component";
+import { CommonList } from "../../common/common-list/common-list";
 
 @Component({
   selector: 'app-user-contact-list',
   templateUrl: './user-contact-list.component.html',
-  styleUrls: ['./user-contact-list.component.css']
+  styleUrls: [ './user-contact-list.component.css' ]
 })
-export class UserContactListComponent implements OnInit {
+export class UserContactListComponent extends CommonList implements OnInit {
 
-  list: { [key: string]: string }[] = [];
   columns: string[] = [];
-  properties: string[] = [];
-  selection = new SelectionModel<{ [key: string]: string }>(true, []);
-
-  pageEvent?: PageEvent;
-  totalCount: number = 0;
-  pageSize: number = 10;
-  currentPage: number = 0;
+  propertyList: string[] = [];
+  flagList: string[] = [];
 
   @ViewChild(MatTable)
   table?: MatTable<any>;
@@ -34,7 +27,9 @@ export class UserContactListComponent implements OnInit {
     private dialog: MatDialog,
     private gerListQuery: GetUserContactListGQL,
     private deleteListMutation: DeleteUserContactListGQL,
+    private updateFlagMutation: UpdateUserContactFlagGQL,
   ) {
+    super();
   }
 
   formatData(data: UserContact[]) {
@@ -55,7 +50,7 @@ export class UserContactListComponent implements OnInit {
       list.push(line);
     }
 
-    this.properties = [ ...col ];
+    this.propertyList = [ ...col ];
     this.columns = [ 'select', 'action', 'id', 'type', ...col ];
     this.list = list;
   }
@@ -72,7 +67,8 @@ export class UserContactListComponent implements OnInit {
       fetchPolicy: 'network-only'
     })
       .subscribe(res => {
-        this.formatData(res.data.userContact.list as UserContact[]);
+        this.formatData(res.data.userContact.list as unknown as UserContact[]);
+        this.flagList = res.data.flag.list.map(it => it.id);
         this.totalCount = res.data.userContact.count;
 
         this.selection.clear();
@@ -106,6 +102,13 @@ export class UserContactListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
+  updateFlag(id: string, flag: string) {
+    this.updateFlagMutation.mutate({ id, flag })
+      .subscribe(res => {
+        console.log(res.data)
+      });
+  }
+
   deleteList() {
     this.deleteListMutation.mutate({
       id: this.selection.selected.map(item => item['id'])
@@ -113,28 +116,8 @@ export class UserContactListComponent implements OnInit {
   }
 
   deleteItem(id: string) {
-    this.deleteListMutation.mutate({id: id})
+    this.deleteListMutation.mutate({ id: id })
       .subscribe(() => this.fetchList());
-  }
-
-  isAllSelected() {
-    return this.selection.selected.length === this.list.length;
-  }
-
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    } else {
-      this.selection.select(...this.list);
-    }
-  }
-
-  changePage(event: PageEvent) {
-    this.pageEvent = event;
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-
-    this.fetchList();
   }
 
 }

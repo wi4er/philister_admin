@@ -10,10 +10,20 @@ query GetUserContactList($limit: Int, $offset: Int) {
         property {
           id
         }
+        ... on UserContactString {
+          lang {
+            id
+          }
+        }
       }
       flagString
     }
     count
   }
 
+  flag {
+    list {
+      id
+    }
+  }
 }

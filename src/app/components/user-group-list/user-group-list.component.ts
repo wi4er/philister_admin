@@ -28,8 +28,8 @@ export class UserGroupListComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private getList: GetUserListGQL,
-    private deleteList: DeleteUserListGQL,
+    private getListQuery: GetUserListGQL,
+    private deleteListQuery: DeleteUserListGQL,
   ) {
   }
 
@@ -60,7 +60,7 @@ export class UserGroupListComponent implements OnInit {
   }
 
   fetchList() {
-    this.getList.fetch({
+    this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
     }, {
@@ -95,7 +95,7 @@ export class UserGroupListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  updateUserItem(id: number) {
+  updateItem(id: number) {
     const dialog = this.dialog.open(
       UserFormComponent,
       { data: { id } },
@@ -105,14 +105,14 @@ export class UserGroupListComponent implements OnInit {
       .subscribe(() => this.fetchList());
   }
 
-  deleteUserList() {
-    this.deleteList.mutate({
+  deleteList() {
+    this.deleteListQuery.mutate({
       id: this.selection.selected.map(item => +item['id'])
     }).subscribe(() => this.fetchList());
   }
 
-  deleteUserItem(id: string) {
-    this.deleteList.mutate({
+  deleteItem(id: string) {
+    this.deleteListQuery.mutate({
       id: +id
     }).subscribe(() => this.fetchList());
   }

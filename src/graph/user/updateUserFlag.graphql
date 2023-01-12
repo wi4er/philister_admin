@@ -1,0 +1,8 @@
+
+mutation UpdateUserFlag($id: Int!, $flag: String!) {
+  user {
+    updateFlag(id: $id, flag: $flag) {
+      id
+    }
+  }
+}

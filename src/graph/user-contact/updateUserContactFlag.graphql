@@ -1,0 +1,9 @@
+
+mutation UpdateUserContactFlag($id: String!, $flag: String!) {
+  userContact {
+    updateFlag(id: $id, flag: $flag) {
+      id
+      flagString
+    }
+  }
+}

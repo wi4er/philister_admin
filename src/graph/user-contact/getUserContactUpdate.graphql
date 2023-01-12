@@ -12,6 +12,12 @@ query GetUserContactUpdate ($id: String!) {
         property {
           id
         }
+
+        ... on UserContactString {
+          lang {
+            id
+          }
+        }
       }
       flagString
     }

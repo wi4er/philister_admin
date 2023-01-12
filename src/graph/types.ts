@@ -727,6 +727,8 @@ export type UserContactMutation = {
   delete: Array<Scalars['String']>;
   /** Updating existent user contact */
   update: UserContact;
+  /** Updating flag of user contact */
+  updateFlag: UserContact;
 };
 
 
@@ -742,6 +744,12 @@ export type UserContactMutationDeleteArgs = {
 
 export type UserContactMutationUpdateArgs = {
   item: UserContactInput;
+};
+
+
+export type UserContactMutationUpdateFlagArgs = {
+  flag: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type UserContactProperty = {
@@ -787,7 +795,7 @@ export type UserContactString = UserContactProperty & {
   __typename?: 'UserContactString';
   created_at: Scalars['String'];
   id: Scalars['Int'];
-  lang: Lang;
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
   updated_at: Scalars['String'];
@@ -800,6 +808,15 @@ export enum UserContactType {
   Google = 'GOOGLE',
   Phone = 'PHONE'
 }
+
+export type UserDescription = UserProperty & {
+  __typename?: 'UserDescription';
+  description: Scalars['String'];
+  id: Scalars['Int'];
+  lang?: Maybe<Lang>;
+  property: Property;
+  string: Scalars['String'];
+};
 
 export type UserGroup = WithFlagSchema & {
   __typename?: 'UserGroup';
@@ -923,6 +940,8 @@ export type UserMutation = {
   delete: Array<Scalars['Int']>;
   /** Updating existent user */
   update: User;
+  /** Updating flag of user */
+  updateFlag: User;
 };
 
 
@@ -938,6 +957,12 @@ export type UserMutationDeleteArgs = {
 
 export type UserMutationUpdateArgs = {
   item: UserInput;
+};
+
+
+export type UserMutationUpdateFlagArgs = {
+  flag: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 export type UserProperty = {
@@ -980,7 +1005,7 @@ export type UserQueryListArgs = {
 export type UserString = UserProperty & {
   __typename?: 'UserString';
   id: Scalars['Int'];
-  lang: Lang;
+  lang?: Maybe<Lang>;
   property: Property;
   string: Scalars['String'];
 };
@@ -1132,7 +1157,7 @@ export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typen
 export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, propertyList: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> } | null } };
+export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, propertyList: Array<{ __typename?: 'UserDescription', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> } | null } };
 
 export type GetBlockListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1351,14 +1376,22 @@ export type GetUserContactListQueryVariables = Exact<{
 }>;
 
 
-export type GetUserContactListQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', count: number, list: Array<{ __typename?: 'UserContact', id: string, type: UserContactType, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetUserContactListQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', count: number, list: Array<{ __typename?: 'UserContact', id: string, type: UserContactType, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
 
 export type GetUserContactUpdateQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type GetUserContactUpdateQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', item?: { __typename?: 'UserContact', id: string, type: UserContactType, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetUserContactUpdateQuery = { __typename?: 'Query', userContact: { __typename?: 'UserContactQuery', item?: { __typename?: 'UserContact', id: string, type: UserContactType, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserContactString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type UpdateUserContactFlagMutationVariables = Exact<{
+  id: Scalars['String'];
+  flag: Scalars['String'];
+}>;
+
+
+export type UpdateUserContactFlagMutation = { __typename?: 'Mutation', userContact: { __typename?: 'UserContactMutation', updateFlag: { __typename?: 'UserContact', id: string, flagString: Array<string> } } };
 
 export type UpdateUserContactItemMutationVariables = Exact<{
   item: UserContactInput;
@@ -1418,14 +1451,22 @@ export type GetUserListQueryVariables = Exact<{
 }>;
 
 
-export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', count: number, list: Array<{ __typename?: 'User', id: number, login: string, propertyList: Array<{ __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, value: { __typename?: 'Value', id: string }, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetUserListQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', count: number, list: Array<{ __typename?: 'User', id: number, login: string, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserDescription', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, value: { __typename?: 'Value', id: string }, property: { __typename?: 'Property', id: string } }> }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
 
 export type GetUserUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetUserUpdateQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', item?: { __typename?: 'User', id: number, created_at: string, updated_at: string, version: number, contact: Array<{ __typename?: 'UserUserContact', id: number, value: string, contact: { __typename?: 'UserContact', id: string } }>, propertyList: Array<{ __typename?: 'UserString', id: number, string: string, lang: { __typename?: 'Lang', id: string }, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, userContact: { __typename?: 'UserContactQuery', list: Array<{ __typename?: 'UserContact', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetUserUpdateQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', item?: { __typename?: 'User', id: number, login: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, contact: Array<{ __typename?: 'UserUserContact', id: number, value: string, contact: { __typename?: 'UserContact', id: string } }>, propertyList: Array<{ __typename?: 'UserDescription', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, userContact: { __typename?: 'UserContactQuery', list: Array<{ __typename?: 'UserContact', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type UpdateUserFlagMutationVariables = Exact<{
+  id: Scalars['Int'];
+  flag: Scalars['String'];
+}>;
+
+
+export type UpdateUserFlagMutation = { __typename?: 'Mutation', user: { __typename?: 'UserMutation', updateFlag: { __typename?: 'User', id: number } } };
 
 export type UpdateUserMutationVariables = Exact<{
   item: UserInput;
@@ -2341,10 +2382,20 @@ export const GetUserContactListDocument = gql`
         property {
           id
         }
+        ... on UserContactString {
+          lang {
+            id
+          }
+        }
       }
       flagString
     }
     count
+  }
+  flag {
+    list {
+      id
+    }
   }
 }
     `;
@@ -2374,6 +2425,11 @@ export const GetUserContactUpdateDocument = gql`
         property {
           id
         }
+        ... on UserContactString {
+          lang {
+            id
+          }
+        }
       }
       flagString
     }
@@ -2401,6 +2457,27 @@ export const GetUserContactUpdateDocument = gql`
   })
   export class GetUserContactUpdateGQL extends Apollo.Query<GetUserContactUpdateQuery, GetUserContactUpdateQueryVariables> {
     document = GetUserContactUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateUserContactFlagDocument = gql`
+    mutation UpdateUserContactFlag($id: String!, $flag: String!) {
+  userContact {
+    updateFlag(id: $id, flag: $flag) {
+      id
+      flagString
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateUserContactFlagGQL extends Apollo.Mutation<UpdateUserContactFlagMutation, UpdateUserContactFlagMutationVariables> {
+    document = UpdateUserContactFlagDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2635,6 +2712,7 @@ export const GetUserListDocument = gql`
     list(limit: $limit, offset: $offset) {
       id
       login
+      flagString
       propertyList {
         string
         property {
@@ -2648,6 +2726,11 @@ export const GetUserListDocument = gql`
       }
     }
     count
+  }
+  flag {
+    list {
+      id
+    }
   }
 }
     `;
@@ -2667,9 +2750,11 @@ export const GetUserUpdateDocument = gql`
   user {
     item(id: $id) {
       id
+      login
       created_at
       updated_at
       version
+      flagString
       contact {
         id
         contact {
@@ -2719,6 +2804,26 @@ export const GetUserUpdateDocument = gql`
   })
   export class GetUserUpdateGQL extends Apollo.Query<GetUserUpdateQuery, GetUserUpdateQueryVariables> {
     document = GetUserUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateUserFlagDocument = gql`
+    mutation UpdateUserFlag($id: Int!, $flag: String!) {
+  user {
+    updateFlag(id: $id, flag: $flag) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateUserFlagGQL extends Apollo.Mutation<UpdateUserFlagMutation, UpdateUserFlagMutationVariables> {
+    document = UpdateUserFlagDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

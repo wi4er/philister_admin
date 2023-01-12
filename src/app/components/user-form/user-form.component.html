@@ -56,6 +56,21 @@
   </div>
 
   <mat-tab-group dynamicHeight>
+    <mat-tab label="Contacts">
+      <mat-form-field
+        *ngFor="let contact of contactList"
+        appearance="fill"
+      >
+        <mat-label>{{contact.id}}</mat-label>
+
+        <input
+          matInput
+          [name]="contact.id"
+          [(ngModel)]="editContacts[contact.id]"
+        />
+      </mat-form-field>
+    </mat-tab>
+
     <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
       <app-property-edit
         [edit]="editProperties"

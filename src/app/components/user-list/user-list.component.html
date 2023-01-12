@@ -73,6 +73,8 @@
         <app-item-menu
           [onDelete]="deleteItem.bind(this, element.id)"
           [onEdit]="updateItem.bind(this, element.id)"
+          [flags]="flagList"
+          [onFlag]="updateFlag.bind(this, element.id)"
         ></app-item-menu>
       </mat-menu>
     </td>
