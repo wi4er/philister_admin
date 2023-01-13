@@ -1,36 +1,29 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from "@angular/cdk/collections";
-import { DeleteUserListGQL, GetUserListGQL, User } from "../../../graph/types";
-import { PageEvent } from "@angular/material/paginator";
+import { DeleteUserListGQL, GetUserGroupListGQL, GetUserListGQL, User } from "../../../graph/types";
 import { MatTable } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
-import { UserFormComponent } from "../user-form/user-form.component";
+import { CommonList } from "../../common/common-list/common-list";
+import { UserGroupFormComponent } from "../user-group-form/user-group-form.component";
 
 @Component({
   selector: 'app-user-group-list',
   templateUrl: './user-group-list.component.html',
-  styleUrls: ['./user-group-list.component.css']
+  styleUrls: [ './user-group-list.component.css' ]
 })
-export class UserGroupListComponent implements OnInit {
+export class UserGroupListComponent extends CommonList implements OnInit {
 
   list: { [key: string]: string }[] = [];
   properties: string[] = [];
-  selection = new SelectionModel<{ [key: string]: string }>(true, []);
-  expandedElement: User | null = null;
-
-  pageEvent?: PageEvent;
-  totalCount: number = 0;
-  pageSize: number = 10;
-  currentPage: number = 0;
 
   @ViewChild(MatTable)
   table?: MatTable<any>;
 
   constructor(
     private dialog: MatDialog,
-    private getListQuery: GetUserListGQL,
+    private getListQuery: GetUserGroupListGQL,
     private deleteListQuery: DeleteUserListGQL,
   ) {
+    super();
   }
 
   getColumns() {
@@ -67,8 +60,8 @@ export class UserGroupListComponent implements OnInit {
       fetchPolicy: 'network-only'
     })
       .subscribe(res => {
-        this.formatData(res.data.user.list as User[]);
-        this.totalCount = res.data.user.count;
+        this.formatData(res.data.userGroup.list as User[]);
+        this.totalCount = res.data.userGroup.count;
 
         this.selection.clear();
         this.table?.renderRows();
@@ -84,7 +77,7 @@ export class UserGroupListComponent implements OnInit {
 
   addItem() {
     const dialog = this.dialog.open(
-      UserFormComponent,
+      UserGroupFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper'
@@ -97,7 +90,7 @@ export class UserGroupListComponent implements OnInit {
 
   updateItem(id: number) {
     const dialog = this.dialog.open(
-      UserFormComponent,
+      UserGroupFormComponent,
       { data: { id } },
     );
 
@@ -115,26 +108,6 @@ export class UserGroupListComponent implements OnInit {
     this.deleteListQuery.mutate({
       id: +id
     }).subscribe(() => this.fetchList());
-  }
-
-  isAllSelected() {
-    return this.selection.selected.length === this.list.length;
-  }
-
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    } else {
-      this.selection.select(...this.list);
-    }
-  }
-
-  changePage(event: PageEvent) {
-    this.pageEvent = event;
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-
-    this.fetchList();
   }
 
 }

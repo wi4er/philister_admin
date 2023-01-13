@@ -666,7 +666,7 @@ export type User = WithFlagSchema & {
   created_at: Scalars['String'];
   flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
-  group?: Maybe<Array<User>>;
+  group?: Maybe<Array<UserGroup>>;
   hash?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   login: Scalars['String'];
@@ -927,6 +927,7 @@ export type UserGroupString = UserGroupProperty & {
 export type UserInput = {
   contact: Array<UserUserContactInput>;
   flag: Array<Scalars['String']>;
+  group: Array<Scalars['Int']>;
   id?: InputMaybe<Scalars['Int']>;
   login: Scalars['String'];
   property: Array<UserPropertyInput>;
@@ -1152,7 +1153,7 @@ export type AuthByPasswordMutationVariables = Exact<{
 }>;
 
 
-export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByPassword?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'User', id: number }> | null } | null } | null };
+export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByPassword?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'UserGroup', id: number }> | null } | null } | null };
 
 export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1410,14 +1411,22 @@ export type AddUserGroupItemMutation = { __typename?: 'Mutation', userGroup: { _
 export type GetUserGroupAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserGroupAdditionQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
+export type GetUserGroupAdditionQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number, propertyString?: string | null, parent?: { __typename?: 'UserGroup', id: number } | null }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
+
+export type GetUserGroupListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetUserGroupListQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupQuery', count: number, list: Array<{ __typename?: 'UserGroup', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'UserGroupString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type GetUserGroupUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetUserGroupUpdateQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number }>, item?: { __typename?: 'UserGroup', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, parent?: { __typename?: 'UserGroup', id: number } | null, children: Array<{ __typename?: 'UserGroup', id: number }>, propertyList: Array<{ __typename?: 'UserGroupString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
+export type GetUserGroupUpdateQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number, propertyString?: string | null, parent?: { __typename?: 'UserGroup', id: number } | null }>, item?: { __typename?: 'UserGroup', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, parent?: { __typename?: 'UserGroup', id: number } | null, children: Array<{ __typename?: 'UserGroup', id: number }>, propertyList: Array<{ __typename?: 'UserGroupString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
 
 export type UpdateUserGroupItemMutationVariables = Exact<{
   item: UserGroupInput;
@@ -1443,7 +1452,7 @@ export type DeleteUserListMutation = { __typename?: 'Mutation', user: { __typena
 export type GetUserAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, userContact: { __typename?: 'UserContactQuery', list: Array<{ __typename?: 'UserContact', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetUserAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, userContact: { __typename?: 'UserContactQuery', list: Array<{ __typename?: 'UserContact', id: string }> }, userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number, propertyString?: string | null, parent?: { __typename?: 'UserGroup', id: number } | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type GetUserListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1458,7 +1467,7 @@ export type GetUserUpdateQueryVariables = Exact<{
 }>;
 
 
-export type GetUserUpdateQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', item?: { __typename?: 'User', id: number, login: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, contact: Array<{ __typename?: 'UserUserContact', id: number, value: string, contact: { __typename?: 'UserContact', id: string } }>, propertyList: Array<{ __typename?: 'UserDescription', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, userContact: { __typename?: 'UserContactQuery', list: Array<{ __typename?: 'UserContact', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetUserUpdateQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', item?: { __typename?: 'User', id: number, login: string, created_at: string, updated_at: string, version: number, flagString: Array<string>, contact: Array<{ __typename?: 'UserUserContact', id: number, value: string, contact: { __typename?: 'UserContact', id: string } }>, propertyList: Array<{ __typename?: 'UserDescription', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, userContact: { __typename?: 'UserContactQuery', list: Array<{ __typename?: 'UserContact', id: string }> }, userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number, propertyString?: string | null, parent?: { __typename?: 'UserGroup', id: number } | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type UpdateUserFlagMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -2528,6 +2537,10 @@ export const GetUserGroupAdditionDocument = gql`
   userGroup {
     list {
       id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
     }
   }
   property {
@@ -2558,11 +2571,47 @@ export const GetUserGroupAdditionDocument = gql`
       super(apollo);
     }
   }
+export const GetUserGroupListDocument = gql`
+    query GetUserGroupList($limit: Int, $offset: Int) {
+  userGroup {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagString
+    }
+    count
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUserGroupListGQL extends Apollo.Query<GetUserGroupListQuery, GetUserGroupListQueryVariables> {
+    document = GetUserGroupListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetUserGroupUpdateDocument = gql`
     query GetUserGroupUpdate($id: Int!) {
   userGroup {
     list {
       id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
     }
     item(id: $id) {
       id
@@ -2688,6 +2737,15 @@ export const GetUserAdditionDocument = gql`
       id
     }
   }
+  userGroup {
+    list {
+      id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
+    }
+  }
   lang {
     list {
       id
@@ -2789,6 +2847,15 @@ export const GetUserUpdateDocument = gql`
   userContact {
     list {
       id
+    }
+  }
+  userGroup {
+    list {
+      id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
     }
   }
   lang {

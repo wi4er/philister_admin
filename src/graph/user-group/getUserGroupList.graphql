@@ -1,0 +1,21 @@
+
+query GetUserGroupList($limit: Int, $offset: Int) {
+  userGroup {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      version
+
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagString
+    }
+    count
+  }
+}

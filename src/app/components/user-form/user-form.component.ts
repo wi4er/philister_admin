@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import {
   AddUserItemGQL, Flag,
   GetPropertyIdGQL, GetUserAdditionGQL, GetUserUpdateGQL, Lang, LangPropertyInput,
-  Property, UpdateUserGQL, User, UserContact, UserInput, UserString,
+  Property, UpdateUserGQL, User, UserContact, UserGroup, UserInput, UserString,
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
@@ -14,8 +14,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 export class UserFormComponent implements OnInit {
 
   id: string = '';
-
   login: string = '';
+  group: number[] = [];
   created_at: string = '';
   updated_at: string = '';
 
@@ -23,6 +23,7 @@ export class UserFormComponent implements OnInit {
   langList: Lang[] = [];
   flagList: Flag[] = [];
   contactList: UserContact[] = [];
+  groupList: UserGroup[] = [];
 
   editProperties: { [property: string]: { [lang: string]: string } } = {};
   editFlags: { [field: string]: boolean } = {};
@@ -49,7 +50,9 @@ export class UserFormComponent implements OnInit {
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
         this.contactList = res.data.userContact.list as UserContact[];
+        this.groupList = res.data.userGroup.list as UserGroup[];
 
+        this.initEditValues();
         this.toEdit(res.data.user.item as unknown as User);
       });
     } else {
@@ -61,6 +64,7 @@ export class UserFormComponent implements OnInit {
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
         this.contactList = res.data.userContact.list as UserContact[];
+        this.groupList = res.data.userGroup.list as UserGroup[];
 
         this.initEditValues();
       });
@@ -68,7 +72,9 @@ export class UserFormComponent implements OnInit {
   }
 
   getPropertyCount() {
-    return 10;
+    return Object.values(this.editProperties)
+      .flatMap(item => Object.values(item).filter(item => item))
+      .length;
   }
 
   initEditValues() {
@@ -95,8 +101,6 @@ export class UserFormComponent implements OnInit {
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    this.initEditValues();
-
     for (const prop of item?.propertyList ?? []) {
       // @ts-ignore
       if (prop['__typename'] === 'UserString') {
@@ -109,8 +113,6 @@ export class UserFormComponent implements OnInit {
         }
       }
     }
-
-    console.log(item.flagString)
 
     for (const flag of item.flagString ?? []) {
       this.editFlags[flag] = true;
@@ -125,6 +127,7 @@ export class UserFormComponent implements OnInit {
     const input: UserInput = {
       id: +this.id,
       login: this.login,
+      group: this.group,
       property: [],
       contact: [],
       flag: [],

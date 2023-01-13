@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import {
   AddUserGroupItemGQL,
   Flag,
-  GetPropertyIdGQL, GetUserGroupAdditionGQL, GetUserGroupUpdateGQL, GetUserUpdateGQL, Lang, LangString,
+  GetPropertyIdGQL, GetUserGroupAdditionGQL, GetUserGroupUpdateGQL, Lang, LangPropertyInput, LangString,
   Property,
-  UpdateUserGroupItemGQL, User, UserGroup, UserGroupInput
+  UpdateUserGroupItemGQL, UserGroup, UserGroupInput, UserPropertyInput
 } from "../../../graph/types";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
@@ -49,11 +49,15 @@ export class UserGroupFormComponent implements OnInit {
         this.toValues(res.data.userGroup.item as unknown as UserGroup);
       });
     } else {
-      this.getListQuery.fetch(
+      this.getAdditionQuery.fetch(
         {},
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.idList as Property[];
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
+
+        this.initEditValues();
       });
     }
   }
@@ -106,14 +110,33 @@ export class UserGroupFormComponent implements OnInit {
   }
 
   toInput(): UserGroupInput {
-    const addition: UserGroupInput = {
+    const input: UserGroupInput = {
       id: +this.id,
       property: [],
-      contact: [],
       flag: [],
     } as UserGroupInput;
 
-    return addition;
+    for (const prop in this.editProperties) {
+      for (const lang in this.editProperties[prop]) {
+        if (!this.editProperties[prop][lang]) {
+          continue;
+        }
+
+        input.property?.push({
+          string: this.editProperties[prop][lang],
+          property: prop,
+          lang: lang
+        } as UserPropertyInput);
+      }
+    }
+
+    for (const flag in this.editFlags) {
+      if (this.editFlags[flag]) {
+        input.flag.push(flag);
+      }
+    }
+
+    return input;
   }
 
   saveItem() {

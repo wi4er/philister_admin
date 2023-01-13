@@ -2,6 +2,10 @@ query GetUserGroupAddition {
   userGroup {
     list {
       id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
     }
   }
 

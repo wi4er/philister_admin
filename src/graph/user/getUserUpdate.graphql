@@ -29,6 +29,7 @@ query GetUserUpdate($id: Int!) {
 
     }
   }
+
   property {
     list {
       id
@@ -44,6 +45,16 @@ query GetUserUpdate($id: Int!) {
   userContact {
     list {
       id
+    }
+  }
+
+  userGroup {
+    list {
+      id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
     }
   }
 

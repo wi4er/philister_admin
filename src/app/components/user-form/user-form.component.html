@@ -56,7 +56,10 @@
   </div>
 
   <mat-tab-group dynamicHeight>
-    <mat-tab label="Contacts">
+    <mat-tab
+      label="Contacts"
+      *ngIf="contactList.length"
+    >
       <mat-form-field
         *ngFor="let contact of contactList"
         appearance="fill"
@@ -71,7 +74,19 @@
       </mat-form-field>
     </mat-tab>
 
-    <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
+    <mat-tab
+      label="Groups"
+      *ngIf="groupList.length"
+    >
+      <app-user-group-edit
+        [groupList]="groupList"
+      ></app-user-group-edit>
+    </mat-tab>
+
+    <mat-tab
+      [label]="'Properties ( ' + getPropertyCount() + ' )'"
+      *ngIf="propertyList.length"
+    >
       <app-property-edit
         [edit]="editProperties"
         [list]="propertyList"
@@ -79,7 +94,10 @@
       ></app-property-edit>
     </mat-tab>
 
-    <mat-tab label="Flags">
+    <mat-tab
+      label="Flags"
+      *ngIf="flagList.length"
+    >
       <app-flag-edit
         [list]="flagList"
         [edit]="editFlags"

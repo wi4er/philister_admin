@@ -17,6 +17,16 @@ query GetUserAddition {
     }
   }
 
+  userGroup {
+    list {
+      id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
+    }
+  }
+
   lang {
     list {
       id

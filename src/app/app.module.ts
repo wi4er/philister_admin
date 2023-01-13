@@ -62,6 +62,8 @@ import { UserGroupFormComponent } from './components/user-group-form/user-group-
 import { MatSelectModule } from "@angular/material/select";
 import { FlagEditComponent } from './components/flag-edit/flag-edit.component';
 import { PropertyEditComponent } from './components/property-edit/property-edit.component';
+import { UserGroupEditComponent } from './components/user-group-edit/user-group-edit.component';
+import { MatTreeModule } from "@angular/material/tree";
 
 @NgModule({
   declarations: [
@@ -101,6 +103,7 @@ import { PropertyEditComponent } from './components/property-edit/property-edit.
     UserGroupFormComponent,
     FlagEditComponent,
     PropertyEditComponent,
+    UserGroupEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -130,6 +133,7 @@ import { PropertyEditComponent } from './components/property-edit/property-edit.
     MatTabsModule,
     MatMenuModule,
     MatChipsModule,
+    MatTreeModule,
     GraphQLModule,
     HttpClientModule,
   ],

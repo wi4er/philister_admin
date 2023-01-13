@@ -2,6 +2,10 @@ query GetUserGroupUpdate ($id: Int!) {
   userGroup {
     list {
       id
+      parent {
+        id
+      }
+      propertyString(id: "NAME")
     }
     item(id: $id) {
       id
