@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import { UserService } from "../../services/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -6,17 +6,17 @@ import { User } from "../../../graph/types";
 
 @Component({
   selector: 'app-auth-popup',
-  templateUrl: './auth-popup.component.html',
-  styleUrls: [ './auth-popup.component.css' ]
+  templateUrl: './auth-form.component.html',
+  styleUrls: [ './auth-form.component.css' ]
 })
-export class AuthPopupComponent implements OnInit {
+export class AuthFormComponent implements OnInit {
 
   login: string = "admin";
   password: string = "qwerty";
   error: string = "";
 
   constructor(
-    public dialogRef: MatDialogRef<AuthPopupComponent>,
+    public dialogRef: MatDialogRef<AuthFormComponent>,
     private userService: UserService,
     private _snackBar: MatSnackBar,
   ) {

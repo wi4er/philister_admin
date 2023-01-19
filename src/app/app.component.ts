@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from "./services/user.service";
 import { MatDialog } from "@angular/material/dialog";
+import { AuthFormComponent } from "./components/auth-popup/auth-form.component";
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,14 @@ export class AppComponent implements OnInit{
   ) {
   }
 
-  ngOnInit() {
-    this.userService.fetchMyself()
+  async ngOnInit() {
+    const user = await this.userService.fetchMyself();
+
+    if (!user) {
+      this.dialog.open(
+        AuthFormComponent,
+      )
+    }
   }
 
 }

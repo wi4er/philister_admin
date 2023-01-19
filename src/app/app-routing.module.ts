@@ -7,7 +7,6 @@ import { DirectoryPageComponent } from "./pages/directory-page/directory-page.co
 import { BlockPageComponent } from "./pages/block-page/block-page.component";
 import { ContentPageComponent } from "./pages/content-page/content-page.component";
 import { LogPageComponent } from "./pages/log-page/log-page.component";
-import { ReportPageComponent } from "./pages/report-page/report-page.component";
 import { LangListComponent } from "./components/lang-list/lang-list.component";
 import { FlagListComponent } from "./components/flag-list/flag-list.component";
 
@@ -20,7 +19,6 @@ const routes: Routes = [
   { path: 'user', component: UserPageComponent },
   { path: 'flag', component: FlagListComponent },
   { path: 'log', component: LogPageComponent },
-  { path: 'report', component: ReportPageComponent },
   { path: '', component: RootPageComponent },
 ];
 

@@ -19,11 +19,26 @@ export type Scalars = {
 
 export type AuthMutation = {
   __typename?: 'AuthMutation';
-  authByPassword?: Maybe<User>;
+  authByContact?: Maybe<User>;
+  authByLogin?: Maybe<User>;
+  registerByLogin?: Maybe<User>;
 };
 
 
-export type AuthMutationAuthByPasswordArgs = {
+export type AuthMutationAuthByContactArgs = {
+  contact: Scalars['String'];
+  password: Scalars['String'];
+  value: Scalars['String'];
+};
+
+
+export type AuthMutationAuthByLoginArgs = {
+  login: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type AuthMutationRegisterByLoginArgs = {
   login: Scalars['String'];
   password: Scalars['String'];
 };
@@ -1153,7 +1168,7 @@ export type AuthByPasswordMutationVariables = Exact<{
 }>;
 
 
-export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByPassword?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'UserGroup', id: number }> | null } | null } | null };
+export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByLogin?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'UserGroup', id: number }> | null } | null } | null };
 
 export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1487,7 +1502,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation', user: { __typename?:
 export const AuthByPasswordDocument = gql`
     mutation AuthByPassword($login: String!, $password: String!) {
   auth {
-    authByPassword(login: $login, password: $password) {
+    authByLogin(login: $login, password: $password) {
       id
       login
       group {

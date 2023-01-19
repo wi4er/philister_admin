@@ -25,22 +25,23 @@ export class UserService {
     });
 
     const { data } = await firstValueFrom(res);
-    this.user = data?.auth?.authByPassword as User;
+    this.user = data?.auth?.authByLogin as User;
 
     return this.user;
   }
 
-  fetchMyself() {
-    const res = this.getMyselfQuery.fetch({}, {
-      fetchPolicy: 'network-only',
-    });
+  fetchMyself(): Promise<User | null> {
+    return firstValueFrom(
+      this.getMyselfQuery.fetch({}, { fetchPolicy: 'network-only' })
+    ).then(result => {
+      this.user = result.data?.user?.myself as User;
 
-    res.subscribe(resp => {
-      this.user = resp.data?.user?.myself as User;
+      return this.user;
     });
   }
 
   fetchList() {
     return this.getUserListQuery.fetch();
   }
+
 }

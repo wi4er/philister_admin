@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthPopupComponent } from './components/auth-popup/auth-popup.component';
+import { AuthFormComponent } from './components/auth-popup/auth-form.component';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from "@angular/material/button";
@@ -33,7 +33,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatTabsModule } from "@angular/material/tabs";
-import { TableSettingsComponent } from './components/table-settings/table-settings.component';
 import { DirectoryListComponent } from './components/directory-list/directory-list.component';
 import { DirectoryPageComponent } from './pages/directory-page/directory-page.component';
 import { MatChipsModule } from "@angular/material/chips";
@@ -51,7 +50,6 @@ import { ContentPageComponent } from './pages/content-page/content-page.componen
 import { ChangeLogListComponent } from './components/change-log-list/change-log-list.component';
 import { FetchLogListComponent } from './components/fetch-log-list/fetch-log-list.component';
 import { LogPageComponent } from './pages/log-page/log-page.component';
-import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { AddButtonComponent } from "./components/add-button/add-button.component";
 import { ItemMenuComponent } from './components/item-menu/item-menu.component';
 import { UserGroupListComponent } from './components/user-group-list/user-group-list.component';
@@ -68,7 +66,7 @@ import { MatTreeModule } from "@angular/material/tree";
 @NgModule({
   declarations: [
     AppComponent,
-    AuthPopupComponent,
+    AuthFormComponent,
     RootPageComponent,
     MainMenuComponent,
     UserListComponent,
@@ -76,7 +74,6 @@ import { MatTreeModule } from "@angular/material/tree";
     PropertyPageComponent,
     PropertyListComponent,
     PropertyFormComponent,
-    TableSettingsComponent,
     DirectoryListComponent,
     DirectoryPageComponent,
     DirectoryFormComponent,
@@ -93,7 +90,6 @@ import { MatTreeModule } from "@angular/material/tree";
     ChangeLogListComponent,
     FetchLogListComponent,
     LogPageComponent,
-    ReportPageComponent,
     AddButtonComponent,
     ItemMenuComponent,
     UserGroupListComponent,
