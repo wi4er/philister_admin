@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from "./services/user.service";
 import { MatDialog } from "@angular/material/dialog";
-import { AuthFormComponent } from "./components/auth-popup/auth-form.component";
+import { AuthFormComponent } from "./components/auth-form/auth-form.component";
 
 @Component({
   selector: 'app-root',

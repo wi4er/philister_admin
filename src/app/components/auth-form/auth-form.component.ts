@@ -30,6 +30,9 @@ export class AuthFormComponent implements OnInit {
       this._snackBar.open(
         `Wrong login or password`,
         "X",
+        {
+          duration: 3000,
+        }
       );
     } else {
       const snackRef = this._snackBar.open(
