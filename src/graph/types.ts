@@ -21,6 +21,7 @@ export type AuthMutation = {
   __typename?: 'AuthMutation';
   authByContact?: Maybe<User>;
   authByLogin?: Maybe<User>;
+  logout: Scalars['Boolean'];
   registerByLogin?: Maybe<User>;
 };
 
@@ -1162,18 +1163,23 @@ export type WithFlagSchema = {
   flagString: Array<Scalars['String']>;
 };
 
-export type AuthByPasswordMutationVariables = Exact<{
+export type AuthByLoginMutationVariables = Exact<{
   login: Scalars['String'];
   password: Scalars['String'];
 }>;
 
 
-export type AuthByPasswordMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByLogin?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'UserGroup', id: number }> | null } | null } | null };
+export type AuthByLoginMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', authByLogin?: { __typename?: 'User', id: number, login: string, group?: Array<{ __typename?: 'UserGroup', id: number }> | null } | null } | null };
 
 export type GetMyselfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetMyselfQuery = { __typename?: 'Query', user: { __typename?: 'UserQuery', myself?: { __typename?: 'User', id: number, login: string, propertyList: Array<{ __typename?: 'UserDescription', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserString', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserUser', string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'UserValue', string: string, property: { __typename?: 'Property', id: string } }> } | null } };
+
+export type LogoutMutationMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutationMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', logout: boolean } | null };
 
 export type GetBlockListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1499,8 +1505,8 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', user: { __typename?: 'UserMutation', update: { __typename?: 'User', id: number } } };
 
-export const AuthByPasswordDocument = gql`
-    mutation AuthByPassword($login: String!, $password: String!) {
+export const AuthByLoginDocument = gql`
+    mutation AuthByLogin($login: String!, $password: String!) {
   auth {
     authByLogin(login: $login, password: $password) {
       id
@@ -1516,8 +1522,8 @@ export const AuthByPasswordDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class AuthByPasswordGQL extends Apollo.Mutation<AuthByPasswordMutation, AuthByPasswordMutationVariables> {
-    document = AuthByPasswordDocument;
+  export class AuthByLoginGQL extends Apollo.Mutation<AuthByLoginMutation, AuthByLoginMutationVariables> {
+    document = AuthByLoginDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -1545,6 +1551,24 @@ export const GetMyselfDocument = gql`
   })
   export class GetMyselfGQL extends Apollo.Query<GetMyselfQuery, GetMyselfQueryVariables> {
     document = GetMyselfDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const LogoutMutationDocument = gql`
+    mutation LogoutMutation {
+  auth {
+    logout
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class LogoutMutationGQL extends Apollo.Mutation<LogoutMutationMutation, LogoutMutationMutationVariables> {
+    document = LogoutMutationDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

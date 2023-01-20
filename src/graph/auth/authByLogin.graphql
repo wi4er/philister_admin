@@ -1,4 +1,4 @@
-mutation AuthByPassword($login: String!, $password: String!){
+mutation AuthByLogin($login: String!, $password: String!){
   auth {
     authByLogin(login: $login, password: $password) {
       id

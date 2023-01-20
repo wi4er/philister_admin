@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthByPasswordGQL, GetMyselfGQL, GetUserListGQL, User } from "../../graph/types";
+import { AuthByLoginGQL, GetMyselfGQL, GetUserListGQL, LogoutMutationGQL, User } from "../../graph/types";
 import { firstValueFrom } from "rxjs";
 
 @Injectable({
@@ -10,7 +10,8 @@ export class UserService {
   user?: User
 
   constructor(
-    private authMutation: AuthByPasswordGQL,
+    private authMutation: AuthByLoginGQL,
+    private logoutMutation: LogoutMutationGQL,
     private getMyselfQuery: GetMyselfGQL,
     private getUserListQuery: GetUserListGQL,
   ) {
@@ -28,6 +29,19 @@ export class UserService {
     this.user = data?.auth?.authByLogin as User;
 
     return this.user;
+  }
+
+  async logout(): Promise<boolean> {
+    return firstValueFrom(this.logoutMutation.mutate())
+      .then(res => {
+        const logout = res.data?.auth?.logout ?? false;
+
+        if (logout) {
+          delete this.user;
+        }
+
+        return logout;
+      });
   }
 
   fetchMyself(): Promise<User | null> {

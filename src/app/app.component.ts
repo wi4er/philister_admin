@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { UserService } from './services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthFormComponent } from './components/auth-form/auth-form.component';
@@ -18,8 +18,8 @@ export class AppComponent implements OnInit {
   ) {
   }
 
-  logout() {
-    console.log('LOGOUT')
+  async logout() {
+    await this.userService.logout();
   }
 
   async ngOnInit() {
@@ -28,4 +28,7 @@ export class AppComponent implements OnInit {
     if (!user) this.dialog.open(AuthFormComponent);
   }
 
+  async ngDoCheck() {
+    console.log('UPDATE')
+  }
 }
