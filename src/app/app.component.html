@@ -14,18 +14,31 @@
 
   <button
     mat-icon-button
-    class="example-icon favorite-icon"
-    aria-label="Example icon-button with heart icon"
+    [matMenuTriggerFor]="personMenu"
   >
-    <mat-icon>favorite</mat-icon>
+    <mat-icon>person</mat-icon>
   </button>
 
-  <button
-    mat-icon-button
-    class="example-icon"
-    aria-label="Example icon-button with share icon"
-  >
-    <mat-icon>share</mat-icon>
+  <mat-menu #personMenu="matMenu">
+    <button mat-menu-item>
+      <a [routerLink]="['/personal']">
+        <mat-icon>settings</mat-icon>
+        <span>Personal settings</span>
+      </a>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="logout()"
+    >
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+
+
+  <button mat-icon-button>
+    <mat-icon>settings</mat-icon>
   </button>
 </mat-toolbar>
 

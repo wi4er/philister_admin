@@ -62,6 +62,7 @@ import { FlagEditComponent } from './components/flag-edit/flag-edit.component';
 import { PropertyEditComponent } from './components/property-edit/property-edit.component';
 import { UserGroupEditComponent } from './components/user-group-edit/user-group-edit.component';
 import { MatTreeModule } from "@angular/material/tree";
+import { PersonalPageComponent } from './pages/personal-page/personal-page.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { MatTreeModule } from "@angular/material/tree";
     FlagEditComponent,
     PropertyEditComponent,
     UserGroupEditComponent,
+    PersonalPageComponent,
   ],
   imports: [
     BrowserModule,

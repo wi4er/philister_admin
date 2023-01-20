@@ -20,6 +20,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 .wrapper {
   overflow: scroll;
 }

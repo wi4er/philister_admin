@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Block, GetBlockListGQL } from "../../../graph/types";
-
+import { Block, GetBlockListGQL } from '../../../graph/types';
 
 interface MenuBlock extends Block {
   name: string;
 }
-
 
 @Component({
   selector: 'app-main-menu',

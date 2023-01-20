@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from "./services/user.service";
-import { MatDialog } from "@angular/material/dialog";
-import { AuthFormComponent } from "./components/auth-form/auth-form.component";
+import { UserService } from './services/user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthFormComponent } from './components/auth-form/auth-form.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: [ './app.component.css' ]
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   title = 'Philister Admin';
 
@@ -18,14 +18,14 @@ export class AppComponent implements OnInit{
   ) {
   }
 
+  logout() {
+    console.log('LOGOUT')
+  }
+
   async ngOnInit() {
     const user = await this.userService.fetchMyself();
 
-    if (!user) {
-      this.dialog.open(
-        AuthFormComponent,
-      )
-    }
+    if (!user) this.dialog.open(AuthFormComponent);
   }
 
 }
