@@ -1,0 +1,7 @@
+mutation UpdateBlockItem($item: BlockInput!) {
+  block {
+    update(item: $item) {
+      id
+    }
+  }
+}

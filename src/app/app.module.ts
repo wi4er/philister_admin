@@ -63,6 +63,7 @@ import { PropertyEditComponent } from './components/property-edit/property-edit.
 import { UserGroupEditComponent } from './components/user-group-edit/user-group-edit.component';
 import { MatTreeModule } from "@angular/material/tree";
 import { PersonalPageComponent } from './pages/personal-page/personal-page.component';
+import { BlockFormComponent } from './components/block-form/block-form.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { PersonalPageComponent } from './pages/personal-page/personal-page.compo
     PropertyEditComponent,
     UserGroupEditComponent,
     PersonalPageComponent,
+    BlockFormComponent,
   ],
   imports: [
     BrowserModule,

@@ -3,15 +3,17 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
-import { Block, DeletePropertyListGQL, GetBlockListGQL, GetPropertyListGQL, Property } from "../../../graph/types";
+import { Block, DeletePropertyListGQL, GetBlockListGQL, GetPropertyListGQL } from "../../../graph/types";
 import { PropertyFormComponent } from "../property-form/property-form.component";
+import { CommonList } from "../../common/common-list/common-list";
+import { BlockFormComponent } from "../block-form/block-form.component";
 
 @Component({
   selector: 'app-block-list',
   templateUrl: './block-list.component.html',
   styleUrls: ['./block-list.component.css']
 })
-export class BlockListComponent implements OnInit {
+export class BlockListComponent extends CommonList implements OnInit {
 
   list: { [key: string]: string }[] = [];
   columns: string[] = [];
@@ -32,6 +34,7 @@ export class BlockListComponent implements OnInit {
     private getBlockListQuery: GetBlockListGQL,
     private deleteListMutation: DeletePropertyListGQL,
   ) {
+    super();
   }
 
   formatData(data: Block[]) {
@@ -76,7 +79,7 @@ export class BlockListComponent implements OnInit {
 
   addItem() {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      BlockFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper'
@@ -89,7 +92,7 @@ export class BlockListComponent implements OnInit {
 
   updateProperty(id: number) {
     const dialog = this.dialog.open(
-      PropertyFormComponent,
+      BlockFormComponent,
       {
         width: '1000px',
         data: { id }
@@ -110,26 +113,6 @@ export class BlockListComponent implements OnInit {
     this.deleteListMutation.mutate({
       id: id
     }).subscribe(() => this.fetchList());
-  }
-
-  isAllSelected() {
-    return this.selection.selected.length === this.list.length;
-  }
-
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    } else {
-      this.selection.select(...this.list);
-    }
-  }
-
-  changePage(event: PageEvent) {
-    this.pageEvent = event;
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-
-    this.fetchList();
   }
 
 }

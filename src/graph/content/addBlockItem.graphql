@@ -1,0 +1,7 @@
+mutation AddBlockItem($item: BlockInput!) {
+  block {
+    add(item: $item) {
+      id
+    }
+  }
+}

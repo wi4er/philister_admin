@@ -31,4 +31,5 @@ export class AppComponent implements OnInit {
   async ngDoCheck() {
     console.log('UPDATE')
   }
+
 }

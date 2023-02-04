@@ -70,8 +70,9 @@ export type BlockPropertyStringArgs = {
 };
 
 export type BlockInput = {
+  flag: Array<Scalars['String']>;
   id?: InputMaybe<Scalars['Float']>;
-  property?: InputMaybe<Array<BlockPropertyInput>>;
+  property: Array<BlockPropertyInput>;
 };
 
 export type BlockMutation = {
@@ -79,13 +80,23 @@ export type BlockMutation = {
   /** Adding new content block */
   add: Block;
   /** Deletion existent content block */
-  delete: Array<Scalars['String']>;
+  delete: Array<Scalars['Int']>;
   /** Updating existent content block */
   update: Block;
 };
 
 
 export type BlockMutationAddArgs = {
+  item: BlockInput;
+};
+
+
+export type BlockMutationDeleteArgs = {
+  id: Array<Scalars['Int']>;
+};
+
+
+export type BlockMutationUpdateArgs = {
   item: BlockInput;
 };
 
@@ -1181,6 +1192,13 @@ export type LogoutMutationMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutationMutation = { __typename?: 'Mutation', auth?: { __typename?: 'AuthMutation', logout: boolean } | null };
 
+export type AddBlockItemMutationVariables = Exact<{
+  item: BlockInput;
+}>;
+
+
+export type AddBlockItemMutation = { __typename?: 'Mutation', block: { __typename?: 'BlockMutation', add: { __typename?: 'Block', id: number } } };
+
 export type GetBlockListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -1188,6 +1206,20 @@ export type GetBlockListQueryVariables = Exact<{
 
 
 export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+
+export type DeleteBlockListMutationVariables = Exact<{
+  id: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type DeleteBlockListMutation = { __typename?: 'Mutation', block: { __typename?: 'BlockMutation', delete: Array<number> } };
+
+export type UpdateBlockItemMutationVariables = Exact<{
+  item: BlockInput;
+}>;
+
+
+export type UpdateBlockItemMutation = { __typename?: 'Mutation', block: { __typename?: 'BlockMutation', update: { __typename?: 'Block', id: number } } };
 
 export type AddDirectoryItemMutationVariables = Exact<{
   item: DirectoryInput;
@@ -1574,6 +1606,26 @@ export const LogoutMutationDocument = gql`
       super(apollo);
     }
   }
+export const AddBlockItemDocument = gql`
+    mutation AddBlockItem($item: BlockInput!) {
+  block {
+    add(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddBlockItemGQL extends Apollo.Mutation<AddBlockItemMutation, AddBlockItemMutationVariables> {
+    document = AddBlockItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetBlockListDocument = gql`
     query GetBlockList($limit: Int, $offset: Int) {
   block {
@@ -1601,6 +1653,44 @@ export const GetBlockListDocument = gql`
   })
   export class GetBlockListGQL extends Apollo.Query<GetBlockListQuery, GetBlockListQueryVariables> {
     document = GetBlockListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteBlockListDocument = gql`
+    mutation DeleteBlockList($id: [Int!]!) {
+  block {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteBlockListGQL extends Apollo.Mutation<DeleteBlockListMutation, DeleteBlockListMutationVariables> {
+    document = DeleteBlockListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateBlockItemDocument = gql`
+    mutation UpdateBlockItem($item: BlockInput!) {
+  block {
+    update(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateBlockItemGQL extends Apollo.Mutation<UpdateBlockItemMutation, UpdateBlockItemMutationVariables> {
+    document = UpdateBlockItemDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
