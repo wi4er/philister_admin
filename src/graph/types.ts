@@ -1214,6 +1214,18 @@ export type DeleteBlockListMutationVariables = Exact<{
 
 export type DeleteBlockListMutation = { __typename?: 'Mutation', block: { __typename?: 'BlockMutation', delete: Array<number> } };
 
+export type GetBlockAdditionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBlockAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type GetBlockUpdateQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
 export type UpdateBlockItemMutationVariables = Exact<{
   item: BlockInput;
 }>;
@@ -1671,6 +1683,87 @@ export const DeleteBlockListDocument = gql`
   })
   export class DeleteBlockListGQL extends Apollo.Mutation<DeleteBlockListMutation, DeleteBlockListMutationVariables> {
     document = DeleteBlockListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetBlockAdditionDocument = gql`
+    query GetBlockAddition {
+  property {
+    list {
+      id
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetBlockAdditionGQL extends Apollo.Query<GetBlockAdditionQuery, GetBlockAdditionQueryVariables> {
+    document = GetBlockAdditionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetBlockUpdateDocument = gql`
+    query GetBlockUpdate($id: Int!) {
+  block {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      flagString
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+        ... on BlockString {
+          lang {
+            id
+          }
+        }
+      }
+    }
+  }
+  property {
+    list {
+      id
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetBlockUpdateGQL extends Apollo.Query<GetBlockUpdateQuery, GetBlockUpdateQueryVariables> {
+    document = GetBlockUpdateDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

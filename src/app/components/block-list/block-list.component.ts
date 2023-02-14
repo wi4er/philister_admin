@@ -3,15 +3,19 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { PageEvent } from "@angular/material/paginator";
 import { MatTable } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
-import { Block, DeletePropertyListGQL, GetBlockListGQL, GetPropertyListGQL } from "../../../graph/types";
-import { PropertyFormComponent } from "../property-form/property-form.component";
+import {
+  Block,
+  DeleteBlockListGQL,
+  GetBlockListGQL,
+  GetPropertyListGQL
+} from "../../../graph/types";
 import { CommonList } from "../../common/common-list/common-list";
 import { BlockFormComponent } from "../block-form/block-form.component";
 
 @Component({
   selector: 'app-block-list',
   templateUrl: './block-list.component.html',
-  styleUrls: ['./block-list.component.css']
+  styleUrls: [ './block-list.component.css' ]
 })
 export class BlockListComponent extends CommonList implements OnInit {
 
@@ -32,7 +36,7 @@ export class BlockListComponent extends CommonList implements OnInit {
     private dialog: MatDialog,
     private getPropertyListQuery: GetPropertyListGQL,
     private getBlockListQuery: GetBlockListGQL,
-    private deleteListMutation: DeletePropertyListGQL,
+    private deleteListMutation: DeleteBlockListGQL,
   ) {
     super();
   }
@@ -105,13 +109,13 @@ export class BlockListComponent extends CommonList implements OnInit {
 
   deleteList() {
     this.deleteListMutation.mutate({
-      id: this.selection.selected.map(item => item['id'])
+      id: this.selection.selected.map(item => +item['id'])
     }).subscribe(() => this.fetchList());
   }
 
   deleteItem(id: string) {
     this.deleteListMutation.mutate({
-      id: id
+      id: [ +id ]
     }).subscribe(() => this.fetchList());
   }
 

@@ -1,21 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddBlockItemGQL,
-  AddUserItemGQL, BlockInput, BlockPropertyInput,
-  Flag,
-  GetPropertyIdGQL, GetUserAdditionGQL, GetUserUpdateGQL,
+  AddBlockItemGQL, Block,
+  BlockInput, BlockPropertyInput, BlockString,
+  Flag, GetBlockAdditionGQL, GetBlockUpdateGQL,
+  GetPropertyIdGQL,
   Lang,
   Property, UpdateBlockItemGQL,
-  UpdateUserGQL, User,
-  UserContact,
-  UserGroup, UserInput, UserString
-} from "../../../graph/types";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+} from '../../../graph/types';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-block-form',
   templateUrl: './block-form.component.html',
-  styleUrls: ['./block-form.component.css']
+  styleUrls: [ './block-form.component.css' ]
 })
 export class BlockFormComponent implements OnInit {
 
@@ -35,8 +32,8 @@ export class BlockFormComponent implements OnInit {
     private updateItemMutation: UpdateBlockItemGQL,
     private dialogRef: MatDialogRef<BlockFormComponent>,
     private getListQuery: GetPropertyIdGQL,
-    private getAdditionQuery: GetUserAdditionGQL,
-    private getUpdateQuery: GetUserUpdateGQL,
+    private getAdditionQuery: GetBlockAdditionGQL,
+    private getUpdateQuery: GetBlockUpdateGQL,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
   ) {
   }
@@ -52,7 +49,7 @@ export class BlockFormComponent implements OnInit {
         this.flagList = res.data.flag.list as Flag[];
 
         this.initEditValues();
-        this.toEdit(res.data.user.item as unknown as User);
+        this.toEdit(res.data.block.item as unknown as Block);
       });
     } else {
       this.getAdditionQuery.fetch(
@@ -88,15 +85,15 @@ export class BlockFormComponent implements OnInit {
     }
   }
 
-  toEdit(item: User) {
+  toEdit(item: Block) {
     this.id = String(item.id);
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
     for (const prop of item?.propertyList ?? []) {
       // @ts-ignore
-      if (prop['__typename'] === 'UserString') {
-        const strProp = prop as UserString;
+      if (prop['__typename'] === 'BlockString') {
+        const strProp = prop as BlockString;
 
         if (!strProp?.lang?.id) {
           this.editProperties[strProp.property.id][''] = prop.string;

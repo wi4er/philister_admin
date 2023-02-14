@@ -1,0 +1,20 @@
+query GetBlockAddition {
+  property {
+    list {
+      id
+    }
+  }
+
+  flag {
+    list {
+      id
+    }
+  }
+
+
+  lang {
+    list {
+      id
+    }
+  }
+}
