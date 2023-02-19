@@ -1,0 +1,5 @@
+mutation DeleteElementList($id: [Int!]!) {
+  element {
+    delete(id: $id)
+  }
+}

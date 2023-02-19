@@ -1,0 +1,18 @@
+query getElementList($limit: Int, $offset: Int, $filter: [ElementFilter!]) {
+  element {
+    list(limit: $limit, offset: $offset, filter: $filter) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+    count(filter: $filter)
+  }
+}

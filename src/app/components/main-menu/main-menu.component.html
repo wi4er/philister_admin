@@ -11,7 +11,7 @@
     <mat-icon>category</mat-icon>
 
     <a [routerLink]="['/content', block.id]">
-      {{block.name}}
+      {{block.name ?? block.id}}
     </a>
   </mat-list-item>
 

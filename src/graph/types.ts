@@ -48,7 +48,7 @@ export type Block = Content & {
   __typename?: 'Block';
   created_at: Scalars['String'];
   element: Array<Element>;
-  flagList: Array<LangFlag>;
+  flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
   propertyItem?: Maybe<ContentProperty>;
@@ -101,6 +101,7 @@ export type BlockMutationUpdateArgs = {
 };
 
 export type BlockPropertyInput = {
+  lang?: InputMaybe<Scalars['String']>;
   property: Scalars['String'];
   string: Scalars['String'];
 };
@@ -172,7 +173,7 @@ export type ChangeLogQueryListArgs = {
 
 export type Content = {
   created_at: Scalars['String'];
-  flagList: Array<LangFlag>;
+  flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
   propertyItem?: Maybe<ContentProperty>;
@@ -299,9 +300,67 @@ export type Element = {
   __typename?: 'Element';
   block: Block;
   created_at: Scalars['String'];
+  flagList: Array<Flag>;
+  flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
+  propertyItem?: Maybe<ContentProperty>;
+  propertyList: Array<ContentProperty>;
+  propertyString?: Maybe<Scalars['String']>;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
+};
+
+
+export type ElementPropertyItemArgs = {
+  id: Scalars['String'];
+};
+
+
+export type ElementPropertyStringArgs = {
+  id: Scalars['String'];
+};
+
+export type ElementFilter = {
+  field: Scalars['String'];
+  operation?: InputMaybe<Scalars['String']>;
+  value: Scalars['String'];
+};
+
+export type ElementInput = {
+  flag: Array<Scalars['String']>;
+  id?: InputMaybe<Scalars['Float']>;
+  property: Array<ElementInputProperty>;
+};
+
+export type ElementInputProperty = {
+  lang?: InputMaybe<Scalars['String']>;
+  property: Scalars['String'];
+  string: Scalars['String'];
+};
+
+export type ElementMutation = {
+  __typename?: 'ElementMutation';
+  /** Adding new content element */
+  add: ElementMutation;
+  /** Deletion existent content element */
+  delete: Array<Scalars['Int']>;
+  /** Updating existent content element */
+  update: ElementMutation;
+};
+
+
+export type ElementMutationAddArgs = {
+  item: ElementInput;
+};
+
+
+export type ElementMutationDeleteArgs = {
+  id: Array<Scalars['Int']>;
+};
+
+
+export type ElementMutationUpdateArgs = {
+  item: ElementInput;
 };
 
 export type ElementQuery = {
@@ -309,6 +368,36 @@ export type ElementQuery = {
   count: Scalars['Int'];
   item?: Maybe<Element>;
   list: Array<Element>;
+};
+
+
+export type ElementQueryCountArgs = {
+  filter?: InputMaybe<Array<ElementFilter>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type ElementQueryItemArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type ElementQueryListArgs = {
+  filter?: InputMaybe<Array<ElementFilter>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type ElementString = ContentProperty & {
+  __typename?: 'ElementString';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  lang?: Maybe<Lang>;
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type FetchLog = {
@@ -571,6 +660,7 @@ export type Mutation = {
   auth?: Maybe<AuthMutation>;
   block: BlockMutation;
   directory: DirectoryMutation;
+  element: ElementMutation;
   flag: FlagMutation;
   lang: LangMutation;
   property: PropertyMutation;
@@ -1205,7 +1295,7 @@ export type GetBlockListQueryVariables = Exact<{
 }>;
 
 
-export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type DeleteBlockListMutationVariables = Exact<{
   id: Array<Scalars['Int']> | Scalars['Int'];
@@ -1224,7 +1314,7 @@ export type GetBlockUpdateQueryVariables = Exact<{
 }>;
 
 
-export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type UpdateBlockItemMutationVariables = Exact<{
   item: BlockInput;
@@ -1282,6 +1372,22 @@ export type UpdateDirectoryItemMutationVariables = Exact<{
 
 
 export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null } } };
+
+export type DeleteElementListMutationVariables = Exact<{
+  id: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type DeleteElementListMutation = { __typename?: 'Mutation', element: { __typename?: 'ElementMutation', delete: Array<number> } };
+
+export type GetElementListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  filter?: InputMaybe<Array<ElementFilter> | ElementFilter>;
+}>;
+
+
+export type GetElementListQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', count: number, list: Array<{ __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type AddFlagMutationVariables = Exact<{
   item: FlagInput;
@@ -1984,6 +2090,55 @@ export const UpdateDirectoryItemDocument = gql`
   })
   export class UpdateDirectoryItemGQL extends Apollo.Mutation<UpdateDirectoryItemMutation, UpdateDirectoryItemMutationVariables> {
     document = UpdateDirectoryItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteElementListDocument = gql`
+    mutation DeleteElementList($id: [Int!]!) {
+  element {
+    delete(id: $id)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteElementListGQL extends Apollo.Mutation<DeleteElementListMutation, DeleteElementListMutationVariables> {
+    document = DeleteElementListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetElementListDocument = gql`
+    query getElementList($limit: Int, $offset: Int, $filter: [ElementFilter!]) {
+  element {
+    list(limit: $limit, offset: $offset, filter: $filter) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+    count(filter: $filter)
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetElementListGQL extends Apollo.Query<GetElementListQuery, GetElementListQueryVariables> {
+    document = GetElementListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

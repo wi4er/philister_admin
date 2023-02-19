@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-content-page',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContentPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+  ) {
+    this.blockId = +this.route.snapshot.paramMap.get('id')!;
+  }
+
+  blockId: number;
 
   ngOnInit(): void {
+    // this.blockId = +this.route.snapshot.paramMap.get('id')!;
   }
 
 }

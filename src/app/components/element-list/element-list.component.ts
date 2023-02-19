@@ -1,23 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from "@angular/cdk/collections";
-import { PageEvent } from "@angular/material/paginator";
-import { MatTable } from "@angular/material/table";
-import { MatDialog } from "@angular/material/dialog";
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { PageEvent } from '@angular/material/paginator';
+import { MatTable } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import {
-  Block,
-  DeleteBlockListGQL,
-  GetBlockListGQL,
-  GetPropertyListGQL
-} from "../../../graph/types";
-import { CommonList } from "../../common/common-list/common-list";
-import { BlockFormComponent } from "../block-form/block-form.component";
+  DeleteElementListGQL, Element,
+  GetElementListGQL,
+  GetPropertyListGQL,
+} from '../../../graph/types';
+import { BlockFormComponent } from '../block-form/block-form.component';
+import { ElementFormComponent } from '../element-form/element-form.component';
+import { CommonList } from '../../common/common-list/common-list';
 
 @Component({
-  selector: 'app-block-list',
-  templateUrl: './block-list.component.html',
-  styleUrls: [ './block-list.component.css' ]
+  selector: 'app-element-list',
+  templateUrl: './element-list.component.html',
+  styleUrls: [ './element-list.component.css' ],
 })
-export class BlockListComponent extends CommonList implements OnInit {
+export class ElementListComponent extends CommonList implements OnInit {
 
   list: { [key: string]: string }[] = [];
   columns: string[] = [];
@@ -35,15 +35,18 @@ export class BlockListComponent extends CommonList implements OnInit {
   constructor(
     private dialog: MatDialog,
     private getPropertyListQuery: GetPropertyListGQL,
-    private getListQuery: GetBlockListGQL,
-    private deleteListMutation: DeleteBlockListGQL,
+    private getListQuery: GetElementListGQL,
+    private deleteListMutation: DeleteElementListGQL,
   ) {
     super();
   }
 
-  formatData(data: Block[]) {
+  @Input()
+  blockId: number = 0;
+
+  formatData(data: Element[]) {
     const col = new Set<string>();
-    const list = []
+    const list = [];
 
     for (const item of data) {
       const line: { [key: string]: string } = { 'id': String(item.id) };
@@ -69,12 +72,16 @@ export class BlockListComponent extends CommonList implements OnInit {
     this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
+      filter: [{
+        field: 'block',
+        value: this.blockId.toString(),
+      }]
     }, {
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
     })
       .subscribe(res => {
-        this.formatData(res.data.block.list as unknown as Block[]);
-        this.totalCount = res.data.block.count;
+        this.formatData(res.data.element.list as unknown as Element[]);
+        this.totalCount = res.data.element.count;
 
         this.selection.clear();
         this.table?.renderRows();
@@ -86,8 +93,8 @@ export class BlockListComponent extends CommonList implements OnInit {
       BlockFormComponent,
       {
         width: '1000px',
-        panelClass: 'wrapper'
-      }
+        panelClass: 'wrapper',
+      },
     );
 
     dialog.afterClosed()
@@ -96,10 +103,10 @@ export class BlockListComponent extends CommonList implements OnInit {
 
   updateItem(id: number) {
     const dialog = this.dialog.open(
-      BlockFormComponent,
+      ElementFormComponent,
       {
         width: '1000px',
-        data: { id }
+        data: { id },
       },
     );
 
@@ -109,13 +116,13 @@ export class BlockListComponent extends CommonList implements OnInit {
 
   deleteList() {
     this.deleteListMutation.mutate({
-      id: this.selection.selected.map(item => +item['id'])
+      id: this.selection.selected.map(item => +item['id']),
     }).subscribe(() => this.fetchList());
   }
 
   deleteItem(id: string) {
     this.deleteListMutation.mutate({
-      id: [ +id ]
+      id: [ +id ],
     }).subscribe(() => this.fetchList());
   }
 

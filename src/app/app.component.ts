@@ -28,8 +28,4 @@ export class AppComponent implements OnInit {
     if (!user) this.dialog.open(AuthFormComponent);
   }
 
-  async ngDoCheck() {
-    console.log('UPDATE')
-  }
-
 }

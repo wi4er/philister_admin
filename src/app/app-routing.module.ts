@@ -8,8 +8,8 @@ import { ContentPageComponent } from './pages/content-page/content-page.componen
 import { LogPageComponent } from './pages/log-page/log-page.component';
 import { LangListComponent } from './components/lang-list/lang-list.component';
 import { FlagListComponent } from './components/flag-list/flag-list.component';
-import { PersonalPageComponent } from "./pages/personal-page/personal-page.component";
-import { BlockListComponent } from "./components/block-list/block-list.component";
+import { PersonalPageComponent } from './pages/personal-page/personal-page.component';
+import { BlockListComponent } from './components/block-list/block-list.component';
 
 const routes: Routes = [
   { path: 'personal', component: PersonalPageComponent },
@@ -26,7 +26,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  exports: [ RouterModule ],
 })
 export class AppRoutingModule {
 }

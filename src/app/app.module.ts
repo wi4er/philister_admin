@@ -64,6 +64,10 @@ import { UserGroupEditComponent } from './components/user-group-edit/user-group-
 import { MatTreeModule } from "@angular/material/tree";
 import { PersonalPageComponent } from './pages/personal-page/personal-page.component';
 import { BlockFormComponent } from './components/block-form/block-form.component';
+import { ElementListComponent } from './components/element-list/element-list.component';
+import { ElementFormComponent } from './components/element-form/element-form.component';
+import { SectionListComponent } from './components/section-list/section-list.component';
+import { SectionFormComponent } from './components/section-form/section-form.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +108,10 @@ import { BlockFormComponent } from './components/block-form/block-form.component
     UserGroupEditComponent,
     PersonalPageComponent,
     BlockFormComponent,
+    ElementListComponent,
+    ElementFormComponent,
+    SectionListComponent,
+    SectionFormComponent,
   ],
   imports: [
     BrowserModule,
