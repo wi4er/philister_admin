@@ -327,6 +327,7 @@ export type ElementFilter = {
 };
 
 export type ElementInput = {
+  block: Scalars['Float'];
   flag: Array<Scalars['String']>;
   id?: InputMaybe<Scalars['Float']>;
   property: Array<ElementInputProperty>;
@@ -341,11 +342,11 @@ export type ElementInputProperty = {
 export type ElementMutation = {
   __typename?: 'ElementMutation';
   /** Adding new content element */
-  add: ElementMutation;
+  add: Element;
   /** Deletion existent content element */
   delete: Array<Scalars['Int']>;
   /** Updating existent content element */
-  update: ElementMutation;
+  update: Element;
 };
 
 
@@ -1373,6 +1374,13 @@ export type UpdateDirectoryItemMutationVariables = Exact<{
 
 export type UpdateDirectoryItemMutation = { __typename?: 'Mutation', directory: { __typename?: 'DirectoryMutation', update: { __typename?: 'Directory', id: string, value?: Array<{ __typename?: 'Value', id: string }> | null, property?: Array<{ __typename?: 'DirectoryString', string: string, property: { __typename?: 'Property', id: string } }> | null } } };
 
+export type AddElementItemMutationVariables = Exact<{
+  item: ElementInput;
+}>;
+
+
+export type AddElementItemMutation = { __typename?: 'Mutation', element: { __typename?: 'ElementMutation', add: { __typename?: 'Element', id: number } } };
+
 export type DeleteElementListMutationVariables = Exact<{
   id: Array<Scalars['Int']> | Scalars['Int'];
 }>;
@@ -1388,6 +1396,25 @@ export type GetElementListQueryVariables = Exact<{
 
 
 export type GetElementListQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', count: number, list: Array<{ __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+
+export type GetElementAdditionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetElementAdditionQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', list: Array<{ __typename?: 'Block', id: number }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type GetElementUpdateQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetElementUpdateQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', item?: { __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, block: { __typename?: 'BlockQuery', list: Array<{ __typename?: 'Block', id: number }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type UpdateElementItemMutationVariables = Exact<{
+  item: ElementInput;
+}>;
+
+
+export type UpdateElementItemMutation = { __typename?: 'Mutation', element: { __typename?: 'ElementMutation', update: { __typename?: 'Element', id: number } } };
 
 export type AddFlagMutationVariables = Exact<{
   item: FlagInput;
@@ -2095,6 +2122,26 @@ export const UpdateDirectoryItemDocument = gql`
       super(apollo);
     }
   }
+export const AddElementItemDocument = gql`
+    mutation AddElementItem($item: ElementInput!) {
+  element {
+    add(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddElementItemGQL extends Apollo.Mutation<AddElementItemMutation, AddElementItemMutationVariables> {
+    document = AddElementItemDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteElementListDocument = gql`
     mutation DeleteElementList($id: [Int!]!) {
   element {
@@ -2139,6 +2186,120 @@ export const GetElementListDocument = gql`
   })
   export class GetElementListGQL extends Apollo.Query<GetElementListQuery, GetElementListQueryVariables> {
     document = GetElementListDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetElementAdditionDocument = gql`
+    query GetElementAddition {
+  block {
+    list {
+      id
+    }
+  }
+  property {
+    list {
+      id
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetElementAdditionGQL extends Apollo.Query<GetElementAdditionQuery, GetElementAdditionQueryVariables> {
+    document = GetElementAdditionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetElementUpdateDocument = gql`
+    query GetElementUpdate($id: Int!) {
+  element {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      flagString
+      block {
+        id
+      }
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+        ... on ElementString {
+          lang {
+            id
+          }
+        }
+      }
+    }
+  }
+  block {
+    list {
+      id
+    }
+  }
+  property {
+    list {
+      id
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetElementUpdateGQL extends Apollo.Query<GetElementUpdateQuery, GetElementUpdateQueryVariables> {
+    document = GetElementUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateElementItemDocument = gql`
+    mutation UpdateElementItem($item: ElementInput!) {
+  element {
+    update(item: $item) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateElementItemGQL extends Apollo.Mutation<UpdateElementItemMutation, UpdateElementItemMutationVariables> {
+    document = UpdateElementItemDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

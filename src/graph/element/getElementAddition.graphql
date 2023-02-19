@@ -1,0 +1,26 @@
+query GetElementAddition {
+  block {
+    list {
+      id
+    }
+  }
+
+  property {
+    list {
+      id
+    }
+  }
+
+  flag {
+    list {
+      id
+    }
+  }
+
+
+  lang {
+    list {
+      id
+    }
+  }
+}

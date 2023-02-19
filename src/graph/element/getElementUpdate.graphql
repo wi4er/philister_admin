@@ -1,0 +1,50 @@
+query GetElementUpdate($id: Int!) {
+  element {
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      version
+      flagString
+      block {
+        id
+      }
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+        ... on ElementString {
+          lang {
+            id
+          }
+        }
+      }
+    }
+  }
+
+  block {
+    list {
+      id
+    }
+  }
+
+  property {
+    list {
+      id
+    }
+  }
+
+  flag {
+    list {
+      id
+    }
+  }
+
+  lang {
+    list {
+      id
+    }
+  }
+}

@@ -8,7 +8,6 @@ import {
   GetElementListGQL,
   GetPropertyListGQL,
 } from '../../../graph/types';
-import { BlockFormComponent } from '../block-form/block-form.component';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { CommonList } from '../../common/common-list/common-list';
 
@@ -72,10 +71,10 @@ export class ElementListComponent extends CommonList implements OnInit {
     this.getListQuery.fetch({
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
-      filter: [{
+      filter: [ {
         field: 'block',
         value: this.blockId.toString(),
-      }]
+      } ],
     }, {
       fetchPolicy: 'network-only',
     })
@@ -90,10 +89,11 @@ export class ElementListComponent extends CommonList implements OnInit {
 
   addItem() {
     const dialog = this.dialog.open(
-      BlockFormComponent,
+      ElementFormComponent,
       {
         width: '1000px',
         panelClass: 'wrapper',
+        data: { block: this.blockId },
       },
     );
 
@@ -106,7 +106,7 @@ export class ElementListComponent extends CommonList implements OnInit {
       ElementFormComponent,
       {
         width: '1000px',
-        data: { id },
+        data: { id, block: this.blockId },
       },
     );
 
