@@ -1,0 +1,18 @@
+query GetSectionList($limit: Int, $offset: Int) {
+  section {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      version
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+    count
+  }
+}

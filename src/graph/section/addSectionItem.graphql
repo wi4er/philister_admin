@@ -1,0 +1,7 @@
+mutation AddSectionItem($item: SectionInput!) {
+  section {
+    add(item: $item) {
+      id
+    }
+  }
+}

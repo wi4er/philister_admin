@@ -1,4 +1,4 @@
-query GetElementAddition {
+query GetSectionAddition {
   property {
     list {
       id

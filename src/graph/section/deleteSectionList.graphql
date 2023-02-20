@@ -1,0 +1,5 @@
+mutation DeleteSectionList($id: [Int!]!) {
+  section {
+    delete(id: $id)
+  }
+}

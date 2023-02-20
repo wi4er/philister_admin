@@ -24,7 +24,6 @@ export class ElementFormComponent implements OnInit {
   propertyList: Property[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
-  blockList: Block[] = [];
 
   editProperties: { [property: string]: { [lang: string]: string } } = {};
   editFlags: { [field: string]: boolean } = {};
@@ -49,7 +48,6 @@ export class ElementFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
-        this.blockList = res.data.block.list as Block[];
 
         this.initEditValues();
         this.toEdit(res.data.element.item as unknown as Element);
@@ -62,7 +60,6 @@ export class ElementFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
-        this.blockList = res.data.block.list as Block[];
 
         this.initEditValues();
       });

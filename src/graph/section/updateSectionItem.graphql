@@ -1,0 +1,7 @@
+mutation UpdateSectionItem($item: SectionInput!) {
+  section {
+    update(item: $item) {
+      id
+    }
+  }
+}
