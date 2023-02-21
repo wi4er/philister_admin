@@ -45,8 +45,17 @@
     </mat-form-field>
   </div>
 
-
   <mat-tab-group dynamicHeight>
+    <mat-tab
+      label="parent"
+    >
+      <app-section-edit
+        [list]="sectionList"
+        [onChange]="handleParent"
+        [id]="editParent"
+      ></app-section-edit>
+    </mat-tab>
+
     <mat-tab
       [label]="'Properties ( ' + getPropertyCount() + ' )'"
       *ngIf="propertyList.length"

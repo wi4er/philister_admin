@@ -1,12 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddElementItemGQL, AddSectionItemGQL, BlockPropertyInput, BlockString, Element, ElementInput,
+  AddSectionItemGQL, BlockPropertyInput, BlockString,
   Flag,
-  GetElementAdditionGQL, GetElementUpdateGQL,
   GetPropertyIdGQL, GetSectionAdditionGQL, GetSectionUpdateGQL,
   Lang,
   Property, Section, SectionInput,
-  UpdateElementItemGQL, UpdateSectionItemGQL,
+  UpdateSectionItemGQL,
 } from '../../../graph/types';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -24,9 +23,11 @@ export class SectionFormComponent implements OnInit {
   propertyList: Property[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
+  sectionList: Section[] = [];
 
   editProperties: { [property: string]: { [lang: string]: string } } = {};
   editFlags: { [field: string]: boolean } = {};
+  editParent?: number;
 
   constructor(
     private addItemMutation: AddSectionItemGQL,
@@ -39,6 +40,10 @@ export class SectionFormComponent implements OnInit {
   ) {
   }
 
+  handleParent = (id: number) => {
+    this.editParent = id;
+  }
+
   ngOnInit(): void {
     if (this.data?.id) {
       this.getUpdateQuery.fetch(
@@ -48,6 +53,7 @@ export class SectionFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
+        this.sectionList = res.data.section.list as Section[];
 
         this.initEditValues();
         this.toEdit(res.data.section.item as unknown as Section);
@@ -60,6 +66,7 @@ export class SectionFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
+        this.sectionList = res.data.section.list as Section[];
 
         this.initEditValues();
       });
@@ -90,6 +97,7 @@ export class SectionFormComponent implements OnInit {
     this.id = String(item.id);
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
+    this.editParent = item.parent?.id;
 
     for (const prop of item?.propertyList ?? []) {
       // @ts-ignore
@@ -113,6 +121,7 @@ export class SectionFormComponent implements OnInit {
     const input: SectionInput = {
       id: +this.id,
       block: this.data?.block,
+      parent: this.editParent,
       property: [],
       flag: [],
     } as SectionInput;

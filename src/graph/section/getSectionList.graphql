@@ -5,6 +5,9 @@ query GetSectionList($limit: Int, $offset: Int) {
       created_at
       updated_at
       version
+      parent {
+        id
+      }
       propertyList {
         id
         string

@@ -1,0 +1,13 @@
+<mat-selection-list
+  [multiple]="false"
+  (selectionChange)="onChange($event.source.selectedOptions.selected[0].value['id'])"
+>
+  <mat-list-option
+    *ngFor="let item of list"
+    [value]="item"
+    [selected]="isSelected(item)"
+  >
+    {{item.id}}
+  </mat-list-option>
+</mat-selection-list>
+

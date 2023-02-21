@@ -1,4 +1,10 @@
 query GetSectionAddition {
+  section {
+    list {
+      id
+    }
+  }
+  
   property {
     list {
       id

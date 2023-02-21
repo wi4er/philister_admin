@@ -2,6 +2,8 @@
   animationDuration="0ms"
   *ngIf="!!blockId"
   class="tab-group"
+  [selectedIndex]="selected.value"
+  (selectedIndexChange)="handleChange($event)"
 >
   <mat-tab label="Elements">
     <app-element-list [blockId]="blockId"></app-element-list>

@@ -48,7 +48,10 @@ export class SectionListComponent extends CommonList implements OnInit {
     const list = [];
 
     for (const item of data) {
-      const line: { [key: string]: string } = { 'id': String(item.id) };
+      const line: { [key: string]: string } = {
+        'id': String(item.id),
+        'parent': String(item.parent?.id || ''),
+      };
 
       for (const prop of item?.propertyList ?? []) {
         col.add('property_' + prop.property.id);
@@ -59,7 +62,7 @@ export class SectionListComponent extends CommonList implements OnInit {
     }
 
     this.properties = [ ...col ];
-    this.columns = [ 'select', 'action', 'id', ...col ];
+    this.columns = [ 'select', 'action', 'id', 'parent', ...col ];
     this.list = list;
   }
 

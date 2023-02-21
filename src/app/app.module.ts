@@ -68,6 +68,7 @@ import { ElementListComponent } from './components/element-list/element-list.com
 import { ElementFormComponent } from './components/element-form/element-form.component';
 import { SectionListComponent } from './components/section-list/section-list.component';
 import { SectionFormComponent } from './components/section-form/section-form.component';
+import { SectionEditComponent } from './components/section-edit/section-edit.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +113,7 @@ import { SectionFormComponent } from './components/section-form/section-form.com
     ElementFormComponent,
     SectionListComponent,
     SectionFormComponent,
+    SectionEditComponent,
   ],
   imports: [
     BrowserModule,

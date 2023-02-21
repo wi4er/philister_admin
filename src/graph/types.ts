@@ -789,6 +789,7 @@ export type Section = {
   flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
+  parent?: Maybe<Section>;
   propertyItem?: Maybe<SectionProperty>;
   propertyList: Array<SectionProperty>;
   propertyString?: Maybe<Scalars['String']>;
@@ -810,6 +811,7 @@ export type SectionInput = {
   block: Scalars['Float'];
   flag: Array<Scalars['String']>;
   id?: InputMaybe<Scalars['Float']>;
+  parent?: InputMaybe<Scalars['Float']>;
   property: Array<SectionInputProperty>;
 };
 
@@ -1677,7 +1679,7 @@ export type DeleteSectionListMutation = { __typename?: 'Mutation', section: { __
 export type GetSectionAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSectionAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetSectionAdditionQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', list: Array<{ __typename?: 'Section', id: number }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type GetSectionListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1685,14 +1687,14 @@ export type GetSectionListQueryVariables = Exact<{
 }>;
 
 
-export type GetSectionListQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', count: number, list: Array<{ __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetSectionListQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', count: number, list: Array<{ __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, parent?: { __typename?: 'Section', id: number } | null, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type GetSectionUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetSectionUpdateQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', item?: { __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetSectionUpdateQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', item?: { __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, parent?: { __typename?: 'Section', id: number } | null, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null, list: Array<{ __typename?: 'Section', id: number }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type UpdateSectionItemMutationVariables = Exact<{
   item: SectionInput;
@@ -3030,6 +3032,11 @@ export const DeleteSectionListDocument = gql`
   }
 export const GetSectionAdditionDocument = gql`
     query GetSectionAddition {
+  section {
+    list {
+      id
+    }
+  }
   property {
     list {
       id
@@ -3066,6 +3073,9 @@ export const GetSectionListDocument = gql`
       created_at
       updated_at
       version
+      parent {
+        id
+      }
       propertyList {
         id
         string
@@ -3098,6 +3108,9 @@ export const GetSectionUpdateDocument = gql`
       updated_at
       version
       flagString
+      parent {
+        id
+      }
       block {
         id
       }
@@ -3113,6 +3126,11 @@ export const GetSectionUpdateDocument = gql`
           }
         }
       }
+    }
+  }
+  section {
+    list {
+      id
     }
   }
   property {

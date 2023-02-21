@@ -6,6 +6,9 @@ query GetSectionUpdate($id: Int!) {
       updated_at
       version
       flagString
+      parent {
+        id
+      }
       block {
         id
       }
@@ -21,6 +24,12 @@ query GetSectionUpdate($id: Int!) {
           }
         }
       }
+    }
+  }
+
+  section {
+    list {
+      id
     }
   }
 
