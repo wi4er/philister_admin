@@ -71,7 +71,7 @@
       <mat-menu #menu="matMenu">
         <app-item-menu
           [flags]="flagList"
-          [active]="element['flags']"
+          [active]="activeFlags[element.id]"
           [onDelete]="deleteItem.bind(this, element.id)"
           [onEdit]="updateItem.bind(this, element.id)"
           [onFlag]="toggleFlag.bind(this, +element.id)"

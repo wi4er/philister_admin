@@ -880,6 +880,12 @@ export type SectionMutation = {
   add: Section;
   /** Deletion existent content section */
   delete: Array<Scalars['Int']>;
+  /**
+   *
+   *         Updating existing content section flags. New content flag will be added, existent flag will be removed.
+   *
+   */
+  toggleFlag: Section;
   /** Updating existent content section */
   update: Section;
 };
@@ -892,6 +898,12 @@ export type SectionMutationAddArgs = {
 
 export type SectionMutationDeleteArgs = {
   id: Array<Scalars['Int']>;
+};
+
+
+export type SectionMutationToggleFlagArgs = {
+  flag: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 

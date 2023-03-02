@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
-import { PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -20,15 +18,10 @@ import { BlockFormComponent } from '../block-form/block-form.component';
 export class BlockListComponent extends CommonList implements OnInit {
 
   list: { [key: string]: string }[] = [];
+  activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
   propertyList: string[] = [];
   flagList: string[] = [];
-  selection = new SelectionModel<{ [key: string]: string }>(true, []);
-
-  pageEvent?: PageEvent;
-  totalCount: number = 0;
-  pageSize: number = 10;
-  currentPage: number = 0;
 
   @ViewChild(MatTable)
   table?: MatTable<any>;
@@ -45,7 +38,8 @@ export class BlockListComponent extends CommonList implements OnInit {
 
   formatData(data: Block[]) {
     const col = new Set<string>();
-    const list = [];
+    this.activeFlags = {};
+    this.list = [];
 
     for (const item of data) {
       const line: { [key: string]: string } = { 'id': String(item.id) };
@@ -56,19 +50,17 @@ export class BlockListComponent extends CommonList implements OnInit {
       }
 
       for (const fl of item.flagString) {
-        col.add('flag_' + fl)
+        col.add('flag_' + fl);
         line['flag_' + fl] = fl;
       }
 
-      // @ts-ignore
-      line['flags'] = item.flagString;
+      this.activeFlags[item.id] = item.flagString;
 
-      list.push(line);
+      this.list.push(line);
     }
 
     this.propertyList = [ ...col ];
     this.columns = [ 'select', 'action', 'id', ...col ];
-    this.list = list;
   }
 
   ngOnInit(): void {

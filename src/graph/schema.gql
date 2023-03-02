@@ -545,6 +545,9 @@ type SectionMutation {
 
   """Updating existent content section"""
   update(item: SectionInput!): Section!
+
+  "\n        Updating existing content section flags. New content flag will be added, existent flag will be removed. \n      "
+  toggleFlag(id: Int!, flag: String!): Section!
 }
 
 input SectionInput {
