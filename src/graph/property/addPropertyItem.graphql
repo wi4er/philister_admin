@@ -2,8 +2,8 @@ mutation AddPropertyItem($item: PropertyInput!) {
   property {
     add(item: $item) {
       id
-      property {
-        value
+      propertyList {
+        string
         property {
           id
         }

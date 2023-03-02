@@ -79,6 +79,8 @@ export class DirectoryFormComponent implements OnInit {
     const addition: DirectoryInput = {
       id: this.id,
       property: [],
+      flag: [],
+      value: [],
     } as DirectoryInput;
 
     for (const key in this.propertyEdit) {

@@ -1,4 +1,4 @@
-query GetPropertyEdit($id: String!) {
+query GetPropertyUpdate($id: String!) {
   property {
     list {
       id
@@ -7,13 +7,25 @@ query GetPropertyEdit($id: String!) {
       id
       created_at
       updated_at
-      property {
+      propertyList {
         id
-        value
+        string
         property {
           id
         }
       }
+    }
+  }
+
+  flag {
+    list {
+      id
+    }
+  }
+
+  lang {
+    list {
+      id
     }
   }
 }

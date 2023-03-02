@@ -13,7 +13,14 @@ query GetBlockList($limit: Int, $offset: Int) {
           id
         }
       }
+      flagString
     }
     count
+  }
+
+  flag {
+    list {
+      id
+    }
   }
 }

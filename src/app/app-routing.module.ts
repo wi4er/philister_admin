@@ -10,13 +10,14 @@ import { LangListComponent } from './components/lang-list/lang-list.component';
 import { FlagListComponent } from './components/flag-list/flag-list.component';
 import { PersonalPageComponent } from './pages/personal-page/personal-page.component';
 import { BlockListComponent } from './components/block-list/block-list.component';
+import { PropertyListComponent } from './components/property-list/property-list.component';
 
 const routes: Routes = [
   { path: 'personal', component: PersonalPageComponent },
   { path: 'directory', component: DirectoryPageComponent },
   { path: 'content', component: BlockListComponent },
   { path: 'content/:id', component: ContentPageComponent },
-  { path: 'property', component: PropertyPageComponent },
+  { path: 'property', component: PropertyListComponent },
   { path: 'lang', component: LangListComponent },
   { path: 'user', component: UserPageComponent },
   { path: 'flag', component: FlagListComponent },

@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Flag } from "../../../graph/types";
 
 @Component({
   selector: 'app-item-menu',
   templateUrl: './item-menu.component.html',
-  styleUrls: ['./item-menu.component.css']
+  styleUrls: [ './item-menu.component.css' ],
 })
 export class ItemMenuComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
@@ -27,8 +27,11 @@ export class ItemMenuComponent implements OnInit {
   flags: string[] = [];
 
   @Input()
+  active: string[] = [];
+
+  @Input()
   onFlag(id: string) {
-    console.log(id)
+    console.log(id);
   }
 
 }

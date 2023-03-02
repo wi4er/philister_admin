@@ -1,4 +1,4 @@
-<mat-toolbar  *ngIf="list.length">
+<mat-toolbar *ngIf="list.length">
   <span>Content blocks</span>
 
   <span class="spacer"></span>
@@ -69,15 +69,13 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="deleteItem(element.id)">
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-
-        <button mat-menu-item (click)="updateItem(element.id)">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
+        <app-item-menu
+          [flags]="flagList"
+          [active]="element['flags']"
+          [onDelete]="deleteItem.bind(this, element.id)"
+          [onEdit]="updateItem.bind(this, element.id)"
+          [onFlag]="toggleFlag.bind(this, +element.id)"
+        ></app-item-menu>
       </mat-menu>
     </td>
   </ng-container>
@@ -92,7 +90,7 @@
   </ng-container>
 
   <ng-container
-    *ngFor="let prop of properties"
+    *ngFor="let prop of propertyList"
     [matColumnDef]="prop"
   >
     <th mat-header-cell *matHeaderCellDef>
@@ -118,7 +116,6 @@
   aria-label="Select page"
 >
 </mat-paginator>
-
 
 <app-add-button
   [onClick]="addItem.bind(this)"

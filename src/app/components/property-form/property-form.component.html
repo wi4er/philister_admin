@@ -1,7 +1,10 @@
 <form (submit)="saveItem()">
-
-  <h2 mat-dialog-title>
+  <h2 *ngIf="!data?.id" mat-dialog-title>
     Create new property
+  </h2>
+
+  <h2 *ngIf="data?.id" mat-dialog-title>
+    Update property #{{data?.id}}
   </h2>
 
   <mat-form-field appearance="fill">
@@ -40,26 +43,25 @@
   </div>
 
   <mat-tab-group dynamicHeight>
-    <mat-tab [label]="'Properties ( ' + getPropertyCount() + ' )'">
-      <mat-grid-list cols="4" rowHeight="4:1" class="property_wrap">
-        <mat-grid-tile *ngFor="let item of propertyList">
-          <mat-form-field appearance="fill">
-            <mat-label>
-              {{item.id}}
-            </mat-label>
-
-            <input
-              matInput
-              [name]="item.id"
-              [(ngModel)]="editValues[item.id]"
-            >
-          </mat-form-field>
-        </mat-grid-tile>
-      </mat-grid-list>
+    <mat-tab
+      [label]="'Properties ( ' + getPropertyCount() + ' )'"
+      *ngIf="propertyList.length"
+    >
+      <app-property-edit
+        [edit]="editProperties"
+        [list]="propertyList"
+        [lang]="langList"
+      ></app-property-edit>
     </mat-tab>
 
-    <mat-tab label="Flags">
-      <div class="flag_wrap"></div>
+    <mat-tab
+      label="Flags"
+      *ngIf="flagList.length"
+    >
+      <app-flag-edit
+        [list]="flagList"
+        [edit]="editFlags"
+      ></app-flag-edit>
     </mat-tab>
   </mat-tab-group>
 

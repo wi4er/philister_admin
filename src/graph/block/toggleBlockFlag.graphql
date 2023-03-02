@@ -1,0 +1,7 @@
+mutation ToggleBlockFlag($id: Int!, $flag: String!) {
+  block {
+    toggleFlag(id: $id, flag: $flag) {
+      id
+    }
+  }
+}

@@ -1,10 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  AddPropertyItemGQL, GetPropertyEditGQL, GetPropertyIdGQL,
+  AddPropertyItemGQL, Block,
+  BlockPropertyInput, BlockString,
+  Flag,
+  GetPropertyAdditionGQL,
+  GetPropertyIdGQL,
+  GetPropertyUpdateGQL,
+  Lang,
   Property,
   PropertyInput,
-  PropertyPropertyInput, UpdatePropertyItemGQL
-} from "../../../graph/types";
+  PropertyPropertyInput,
+  UpdatePropertyItemGQL,
+} from '../../../graph/types';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
@@ -19,66 +26,121 @@ export class PropertyFormComponent implements OnInit {
   updated_at: string = '';
 
   propertyList: Property[] = [];
-  editValues: { [field: string]: string } = {};
+  langList: Lang[] = [];
+  flagList: Flag[] = [];
+
+  editProperties: { [property: string]: { [lang: string]: string } } = {};
+  editFlags: { [field: string]: boolean } = {};
 
   constructor(
     private addItemMutation: AddPropertyItemGQL,
     private updateItemMutation: UpdatePropertyItemGQL,
     private dialogRef: MatDialogRef<PropertyFormComponent>,
     private getListQuery: GetPropertyIdGQL,
-    private getPropertyEditQuery: GetPropertyEditGQL,
+    private getPropertyAddition: GetPropertyAdditionGQL,
+    private getPropertyUpdate: GetPropertyUpdateGQL,
     @Inject(MAT_DIALOG_DATA) public data: { id: string } | null,
   ) {
   }
 
   ngOnInit(): void {
     if (this.data?.id) {
-      this.getPropertyEditQuery.fetch(
+      this.getPropertyUpdate.fetch(
         { id: this.data?.id },
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.list as Property[];
-        this.toValues(res.data.property.item as Property);
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
+
+        this.initEditValues();
+        this.toEdit(res.data.property.item as unknown as Property);
       });
     } else {
-      this.getListQuery.fetch(
+      this.getPropertyAddition.fetch(
         {},
         { fetchPolicy: 'no-cache' }
       ).subscribe(res => {
-        this.propertyList = res.data?.property?.idList as Property[];
+        this.propertyList = res.data.property.list as Property[];
+        this.langList = res.data.lang.list as Lang[];
+        this.flagList = res.data.flag.list as Flag[];
+
+        this.initEditValues();
       });
     }
   }
 
+  initEditValues() {
+    for (const prop of this.propertyList) {
+      this.editProperties[prop.id] = {};
 
-  getPropertyCount() {
-    return Object.keys(this.editValues).length
+      for (const lang of this.langList) {
+        this.editProperties[prop.id][lang.id] = '';
+      }
+    }
+
+    for (const flag of this.flagList) {
+      this.editFlags[flag.id] = false;
+    }
   }
 
-  toValues(item: Property) {
-    this.id = item.id;
+  getPropertyCount() {
+    return Object.values(this.editProperties)
+      .flatMap(item => Object.values(item).filter(item => item))
+      .length;
+  }
+
+  toEdit(item: Property) {
+    this.id = String(item.id);
     this.created_at = item.created_at;
     this.updated_at = item.updated_at;
 
-    for (const prop of item?.property ?? []) {
-      this.editValues[prop.property.id] = prop.value;
+    for (const prop of item?.propertyList ?? []) {
+      // @ts-ignore
+      if (prop['__typename'] === 'PropertyString') {
+        const strProp = prop as BlockString;
+
+        if (!strProp?.lang?.id) {
+          this.editProperties[strProp.property.id][''] = prop.string;
+        } else {
+          this.editProperties[strProp.property.id][strProp.lang.id] = prop.string;
+        }
+      }
+    }
+
+    for (const flag of item.flagString ?? []) {
+      this.editFlags[flag] = true;
     }
   }
 
   toInput(): PropertyInput {
-    const addition: PropertyInput = {
+    const input: PropertyInput = {
       id: this.id,
       property: [],
+      flag: [],
     } as PropertyInput;
 
-    for (const key in this.editValues) {
-      addition.property?.push({
-        value: this.editValues[key],
-        property: key
-      } as PropertyPropertyInput);
+    for (const prop in this.editProperties) {
+      for (const lang in this.editProperties[prop]) {
+        if (!this.editProperties[prop][lang]) {
+          continue;
+        }
+
+        input.property?.push({
+          string: this.editProperties[prop][lang],
+          property: prop,
+          lang: lang
+        } as BlockPropertyInput);
+      }
     }
 
-    return addition;
+    for (const flag in this.editFlags) {
+      if (this.editFlags[flag]) {
+        input.flag.push(flag);
+      }
+    }
+
+    return input;
   }
 
   saveItem() {

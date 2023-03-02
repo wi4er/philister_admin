@@ -3,7 +3,8 @@
   mat-menu-item
   (click)="onFlag(flag)"
 >
-  <mat-icon>edit</mat-icon>
+  <mat-icon *ngIf="active.includes(flag)">check</mat-icon>
+  <mat-icon *ngIf="!active.includes(flag)"></mat-icon>
   <span> {{flag}} </span>
 </button>
 

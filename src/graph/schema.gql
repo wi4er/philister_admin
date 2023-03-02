@@ -2,8 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-interface UserProperty {
+interface PropertyProperty {
   id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
   string: String!
   property: Property!
 }
@@ -13,6 +16,12 @@ interface FlagProperty {
   created_at: String!
   updated_at: String!
   version: Int!
+  string: String!
+  property: Property!
+}
+
+interface UserProperty {
+  id: Int!
   string: String!
   property: Property!
 }
@@ -62,6 +71,15 @@ interface ContentProperty {
   property: Property!
 }
 
+interface ElementProperty implements ContentProperty {
+  id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  string: String!
+  property: Property!
+}
+
 interface SectionProperty implements ContentProperty {
   id: Int!
   created_at: String!
@@ -80,29 +98,6 @@ interface BlockProperty implements ContentProperty {
   property: Property!
 }
 
-interface ElementProperty implements ContentProperty {
-  id: Int!
-  created_at: String!
-  updated_at: String!
-  version: Int!
-  string: String!
-  property: Property!
-}
-
-type PropertyProperty {
-  id: String!
-  value: String!
-  property: Property!
-}
-
-type Property {
-  id: String!
-  created_at: String!
-  updated_at: String!
-  version: Int!
-  property: [PropertyProperty!]
-}
-
 type FlagFlag {
   id: Float!
   flag: Flag!
@@ -118,6 +113,18 @@ type Flag {
   propertyItem(id: String!): FlagProperty
   propertyString(id: String!): String
   flagList: [FlagFlag!]!
+  flagString: [String!]!
+}
+
+type Property {
+  id: String!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  propertyList: [PropertyProperty!]!
+  propertyItem(id: String!): PropertyProperty
+  propertyString(id: String!): String
+  flagList: [Flag!]!
   flagString: [String!]!
 }
 
@@ -341,6 +348,8 @@ type Value {
   propertyList: [ValueProperty!]!
   propertyItem(id: String!): ValueProperty!
   propertyString(id: String!): String!
+  flagList: [Flag!]!
+  flagString: [String!]!
 }
 
 type Directory {
@@ -403,8 +412,8 @@ type Element {
   updated_at: String!
   version: Int!
   block: Block!
-  propertyList: [ContentProperty!]!
-  propertyItem(id: String!): ContentProperty
+  propertyList: [ElementProperty!]!
+  propertyItem(id: String!): ElementProperty
   propertyString(id: String!): String
   flagList: [Flag!]!
   flagString: [String!]!
@@ -430,7 +439,7 @@ type Block implements Content {
   updated_at: String!
   version: Int!
   propertyList: [ContentProperty!]!
-  propertyItem(id: String!): ContentProperty
+  propertyItem(id: String!): BlockProperty
   propertyString(id: String!): String
   flagList: [Flag!]!
   flagString: [String!]!
@@ -483,6 +492,9 @@ type BlockMutation {
 
   """Updating existent content block"""
   update(item: BlockInput!): Block!
+
+  """Toggle flag in content block"""
+  toggleFlag(id: Int!, flag: String!): Block!
 }
 
 input BlockInput {
@@ -504,8 +516,11 @@ type ElementMutation {
   """Deletion existent content element"""
   delete(id: [Int!]!): [Int!]!
 
-  """Updating existent content element"""
+  "\n        Updating existing content element with new data. All previous data will be lost and replaced with new. \n      "
   update(item: ElementInput!): Element!
+
+  "\n        Updating existing content element flags. New content flag will be added, existent flag will be removed. \n      "
+  toggleFlag(id: Int!, flag: String!): Element!
 }
 
 input ElementInput {
@@ -595,12 +610,24 @@ type PropertyMutation {
 
 input PropertyInput {
   id: String!
-  property: [PropertyPropertyInput!]
+  property: [PropertyPropertyInput!]!
+  flag: [String!]!
 }
 
 input PropertyPropertyInput {
   property: String!
-  value: String!
+  string: String!
+  lang: String
+}
+
+type PropertyString implements PropertyProperty {
+  id: Int!
+  created_at: String!
+  updated_at: String!
+  version: Int!
+  string: String!
+  property: Property!
+  lang: Lang
 }
 
 type ChangeLog {
@@ -659,9 +686,9 @@ type DirectoryMutation {
 
 input DirectoryInput {
   id: String!
-  property: [DirectoryPropertyInput!]
-  value: [String!]
-  flag: [String!]
+  property: [DirectoryPropertyInput!]!
+  value: [String!]!
+  flag: [String!]!
 }
 
 input DirectoryPropertyInput {
@@ -691,12 +718,14 @@ type ValueMutation {
 input ValueInput {
   id: String!
   directory: String!
-  property: [ValuePropertyInput!]
+  property: [ValuePropertyInput!]!
+  flag: [String!]!
 }
 
 input ValuePropertyInput {
   property: String!
-  value: String!
+  string: String!
+  lang: String
 }
 
 type ValueString implements ValueProperty {

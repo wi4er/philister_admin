@@ -2,9 +2,9 @@ query GetPropertyList($limit: Int, $offset: Int) {
   property {
     list(limit: $limit, offset: $offset) {
       id
-      property {
+      propertyList {
         id
-        value
+        string
         property {
           id
         }

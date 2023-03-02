@@ -42,9 +42,9 @@ export class PropertyListComponent implements OnInit {
     for (const item of data) {
       const line: { [key: string]: string } = { 'id': item.id };
 
-      for (const prop of item?.property ?? []) {
+      for (const prop of item?.propertyList ?? []) {
         col.add('property_' + prop.property.id);
-        line['property_' + prop.property.id] = prop.value;
+        line['property_' + prop.property.id] = prop.string;
       }
 
       list.push(line);

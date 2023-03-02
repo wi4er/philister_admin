@@ -51,7 +51,7 @@ export type Block = Content & {
   flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
-  propertyItem?: Maybe<ContentProperty>;
+  propertyItem?: Maybe<BlockProperty>;
   propertyList: Array<ContentProperty>;
   propertyString?: Maybe<Scalars['String']>;
   section: Array<Section>;
@@ -81,6 +81,8 @@ export type BlockMutation = {
   add: Block;
   /** Deletion existent content block */
   delete: Array<Scalars['Int']>;
+  /** Toggle flag in content block */
+  toggleFlag: Block;
   /** Updating existent content block */
   update: Block;
 };
@@ -93,6 +95,12 @@ export type BlockMutationAddArgs = {
 
 export type BlockMutationDeleteArgs = {
   id: Array<Scalars['Int']>;
+};
+
+
+export type BlockMutationToggleFlagArgs = {
+  flag: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 
@@ -224,10 +232,10 @@ export type Directory = {
 };
 
 export type DirectoryInput = {
-  flag?: InputMaybe<Array<Scalars['String']>>;
+  flag: Array<Scalars['String']>;
   id: Scalars['String'];
-  property?: InputMaybe<Array<DirectoryPropertyInput>>;
-  value?: InputMaybe<Array<Scalars['String']>>;
+  property: Array<DirectoryPropertyInput>;
+  value: Array<Scalars['String']>;
 };
 
 export type DirectoryMutation = {
@@ -312,8 +320,8 @@ export type Element = {
   flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
-  propertyItem?: Maybe<ContentProperty>;
-  propertyList: Array<ContentProperty>;
+  propertyItem?: Maybe<ElementProperty>;
+  propertyList: Array<ElementProperty>;
   propertyString?: Maybe<Scalars['String']>;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
@@ -354,7 +362,17 @@ export type ElementMutation = {
   add: Element;
   /** Deletion existent content element */
   delete: Array<Scalars['Int']>;
-  /** Updating existent content element */
+  /**
+   *
+   *         Updating existing content element flags. New content flag will be added, existent flag will be removed.
+   *
+   */
+  toggleFlag: Element;
+  /**
+   *
+   *         Updating existing content element with new data. All previous data will be lost and replaced with new.
+   *
+   */
   update: Element;
 };
 
@@ -366,6 +384,12 @@ export type ElementMutationAddArgs = {
 
 export type ElementMutationDeleteArgs = {
   id: Array<Scalars['Int']>;
+};
+
+
+export type ElementMutationToggleFlagArgs = {
+  flag: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 
@@ -693,15 +717,30 @@ export type Mutation = {
 export type Property = {
   __typename?: 'Property';
   created_at: Scalars['String'];
+  flagList: Array<Flag>;
+  flagString: Array<Scalars['String']>;
   id: Scalars['String'];
-  property?: Maybe<Array<PropertyProperty>>;
+  propertyItem?: Maybe<PropertyProperty>;
+  propertyList: Array<PropertyProperty>;
+  propertyString?: Maybe<Scalars['String']>;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
 };
 
-export type PropertyInput = {
+
+export type PropertyPropertyItemArgs = {
   id: Scalars['String'];
-  property?: InputMaybe<Array<PropertyPropertyInput>>;
+};
+
+
+export type PropertyPropertyStringArgs = {
+  id: Scalars['String'];
+};
+
+export type PropertyInput = {
+  flag: Array<Scalars['String']>;
+  id: Scalars['String'];
+  property: Array<PropertyPropertyInput>;
 };
 
 export type PropertyMutation = {
@@ -730,15 +769,18 @@ export type PropertyMutationUpdateArgs = {
 };
 
 export type PropertyProperty = {
-  __typename?: 'PropertyProperty';
-  id: Scalars['String'];
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
   property: Property;
-  value: Scalars['String'];
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type PropertyPropertyInput = {
+  lang?: InputMaybe<Scalars['String']>;
   property: Scalars['String'];
-  value: Scalars['String'];
+  string: Scalars['String'];
 };
 
 export type PropertyQuery = {
@@ -763,6 +805,17 @@ export type PropertyQueryItemArgs = {
 export type PropertyQueryListArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type PropertyString = PropertyProperty & {
+  __typename?: 'PropertyString';
+  created_at: Scalars['String'];
+  id: Scalars['Int'];
+  lang?: Maybe<Lang>;
+  property: Property;
+  string: Scalars['String'];
+  updated_at: Scalars['String'];
+  version: Scalars['Int'];
 };
 
 export type Query = {
@@ -1274,6 +1327,8 @@ export type Value = {
   __typename?: 'Value';
   created_at: Scalars['String'];
   directory: Directory;
+  flagList: Array<Flag>;
+  flagString: Array<Scalars['String']>;
   id: Scalars['String'];
   propertyItem: ValueProperty;
   propertyList: Array<ValueProperty>;
@@ -1294,8 +1349,9 @@ export type ValuePropertyStringArgs = {
 
 export type ValueInput = {
   directory: Scalars['String'];
+  flag: Array<Scalars['String']>;
   id: Scalars['String'];
-  property?: InputMaybe<Array<ValuePropertyInput>>;
+  property: Array<ValuePropertyInput>;
 };
 
 export type ValueMutation = {
@@ -1333,8 +1389,9 @@ export type ValueProperty = {
 };
 
 export type ValuePropertyInput = {
+  lang?: InputMaybe<Scalars['String']>;
   property: Scalars['String'];
-  value: Scalars['String'];
+  string: Scalars['String'];
 };
 
 export type ValueQuery = {
@@ -1402,14 +1459,6 @@ export type AddBlockItemMutationVariables = Exact<{
 
 export type AddBlockItemMutation = { __typename?: 'Mutation', block: { __typename?: 'BlockMutation', add: { __typename?: 'Block', id: number } } };
 
-export type GetBlockListQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
-
 export type DeleteBlockListMutationVariables = Exact<{
   id: Array<Scalars['Int']> | Scalars['Int'];
 }>;
@@ -1422,12 +1471,28 @@ export type GetBlockAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetBlockAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
+export type GetBlockListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
+
 export type GetBlockUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
 export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type ToggleBlockFlagMutationVariables = Exact<{
+  id: Scalars['Int'];
+  flag: Scalars['String'];
+}>;
+
+
+export type ToggleBlockFlagMutation = { __typename?: 'Mutation', block: { __typename?: 'BlockMutation', toggleFlag: { __typename?: 'Block', id: number } } };
 
 export type UpdateBlockItemMutationVariables = Exact<{
   item: BlockInput;
@@ -1512,14 +1577,14 @@ export type GetElementListQueryVariables = Exact<{
 }>;
 
 
-export type GetElementListQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', count: number, list: Array<{ __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetElementListQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', count: number, list: Array<{ __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
 
 export type GetElementUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetElementUpdateQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', item?: { __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetElementUpdateQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', item?: { __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'ElementString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type UpdateElementItemMutationVariables = Exact<{
   item: ElementInput;
@@ -1545,7 +1610,7 @@ export type DeleteFlagListMutation = { __typename?: 'Mutation', flag: { __typena
 export type GetFlagAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetFlagAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, property: { __typename?: 'Property', id: string } }> | null }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string, name?: string | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string, name?: string | null }> } };
+export type GetFlagAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string, name?: string | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string, name?: string | null }> } };
 
 export type GetFlagListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1560,7 +1625,7 @@ export type GetFlagUpdateQueryVariables = Exact<{
 }>;
 
 
-export type GetFlagUpdateQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', item?: { __typename?: 'Flag', id: string, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }>, flagList: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }> } | null, list: Array<{ __typename?: 'Flag', id: string, name?: string | null }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, property: { __typename?: 'Property', id: string } }> | null }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string, name?: string | null }> } };
+export type GetFlagUpdateQuery = { __typename?: 'Query', flag: { __typename?: 'FlagQuery', item?: { __typename?: 'Flag', id: string, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'FlagString', id: number, string: string, property: { __typename?: 'Property', id: string } }>, flagList: Array<{ __typename?: 'FlagFlag', id: number, flag: { __typename?: 'Flag', id: string } }> } | null, list: Array<{ __typename?: 'Flag', id: string, name?: string | null }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string, name?: string | null }> } };
 
 export type UpdateFlagMutationVariables = Exact<{
   item: FlagInput;
@@ -1626,7 +1691,7 @@ export type AddPropertyItemMutationVariables = Exact<{
 }>;
 
 
-export type AddPropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', add: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
+export type AddPropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', add: { __typename?: 'Property', id: string, propertyList: Array<{ __typename?: 'PropertyString', string: string, property: { __typename?: 'Property', id: string } }> } } };
 
 export type DeletePropertyListMutationVariables = Exact<{
   id: Array<Scalars['String']> | Scalars['String'];
@@ -1635,12 +1700,10 @@ export type DeletePropertyListMutationVariables = Exact<{
 
 export type DeletePropertyListMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', delete: Array<string> } };
 
-export type GetPropertyEditQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
+export type GetPropertyAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPropertyEditQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }>, item?: { __typename?: 'Property', id: string, created_at: string, updated_at: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, value: string, property: { __typename?: 'Property', id: string } }> | null } | null } };
+export type GetPropertyAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type GetPropertyIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1653,14 +1716,21 @@ export type GetPropertyListQueryVariables = Exact<{
 }>;
 
 
-export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', count: number, list: Array<{ __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', id: string, value: string, property: { __typename?: 'Property', id: string } }> | null }> } };
+export type GetPropertyListQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', count: number, list: Array<{ __typename?: 'Property', id: string, propertyList: Array<{ __typename?: 'PropertyString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+
+export type GetPropertyUpdateQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetPropertyUpdateQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }>, item?: { __typename?: 'Property', id: string, created_at: string, updated_at: string, propertyList: Array<{ __typename?: 'PropertyString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type UpdatePropertyItemMutationVariables = Exact<{
   item: PropertyInput;
 }>;
 
 
-export type UpdatePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', update: { __typename?: 'Property', id: string, property?: Array<{ __typename?: 'PropertyProperty', value: string, property: { __typename?: 'Property', id: string } }> | null } } };
+export type UpdatePropertyItemMutation = { __typename?: 'Mutation', property: { __typename?: 'PropertyMutation', update: { __typename?: 'Property', id: string } } };
 
 export type AddSectionItemMutationVariables = Exact<{
   item: SectionInput;
@@ -1924,38 +1994,6 @@ export const AddBlockItemDocument = gql`
       super(apollo);
     }
   }
-export const GetBlockListDocument = gql`
-    query GetBlockList($limit: Int, $offset: Int) {
-  block {
-    list(limit: $limit, offset: $offset) {
-      id
-      created_at
-      updated_at
-      version
-      name: propertyString(id: "NAME")
-      propertyList {
-        id
-        string
-        property {
-          id
-        }
-      }
-    }
-    count
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetBlockListGQL extends Apollo.Query<GetBlockListQuery, GetBlockListQueryVariables> {
-    document = GetBlockListDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const DeleteBlockListDocument = gql`
     mutation DeleteBlockList($id: [Int!]!) {
   block {
@@ -1999,6 +2037,44 @@ export const GetBlockAdditionDocument = gql`
   })
   export class GetBlockAdditionGQL extends Apollo.Query<GetBlockAdditionQuery, GetBlockAdditionQueryVariables> {
     document = GetBlockAdditionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetBlockListDocument = gql`
+    query GetBlockList($limit: Int, $offset: Int) {
+  block {
+    list(limit: $limit, offset: $offset) {
+      id
+      created_at
+      updated_at
+      version
+      name: propertyString(id: "NAME")
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+      flagString
+    }
+    count
+  }
+  flag {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetBlockListGQL extends Apollo.Query<GetBlockListQuery, GetBlockListQueryVariables> {
+    document = GetBlockListDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2050,6 +2126,26 @@ export const GetBlockUpdateDocument = gql`
   })
   export class GetBlockUpdateGQL extends Apollo.Query<GetBlockUpdateQuery, GetBlockUpdateQueryVariables> {
     document = GetBlockUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ToggleBlockFlagDocument = gql`
+    mutation ToggleBlockFlag($id: Int!, $flag: String!) {
+  block {
+    toggleFlag(id: $id, flag: $flag) {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ToggleBlockFlagGQL extends Apollo.Mutation<ToggleBlockFlagMutation, ToggleBlockFlagMutationVariables> {
+    document = ToggleBlockFlagDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2491,12 +2587,6 @@ export const GetFlagAdditionDocument = gql`
   property {
     list {
       id
-      property {
-        id
-        property {
-          id
-        }
-      }
     }
   }
   flag {
@@ -2585,12 +2675,6 @@ export const GetFlagUpdateDocument = gql`
   property {
     list {
       id
-      property {
-        id
-        property {
-          id
-        }
-      }
     }
   }
   flag {
@@ -2847,8 +2931,8 @@ export const AddPropertyItemDocument = gql`
   property {
     add(item: $item) {
       id
-      property {
-        value
+      propertyList {
+        string
         property {
           id
         }
@@ -2886,23 +2970,21 @@ export const DeletePropertyListDocument = gql`
       super(apollo);
     }
   }
-export const GetPropertyEditDocument = gql`
-    query GetPropertyEdit($id: String!) {
+export const GetPropertyAdditionDocument = gql`
+    query GetPropertyAddition {
   property {
     list {
       id
     }
-    item(id: $id) {
+  }
+  flag {
+    list {
       id
-      created_at
-      updated_at
-      property {
-        id
-        value
-        property {
-          id
-        }
-      }
+    }
+  }
+  lang {
+    list {
+      id
     }
   }
 }
@@ -2911,8 +2993,8 @@ export const GetPropertyEditDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class GetPropertyEditGQL extends Apollo.Query<GetPropertyEditQuery, GetPropertyEditQueryVariables> {
-    document = GetPropertyEditDocument;
+  export class GetPropertyAdditionGQL extends Apollo.Query<GetPropertyAdditionQuery, GetPropertyAdditionQueryVariables> {
+    document = GetPropertyAdditionDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2943,9 +3025,9 @@ export const GetPropertyListDocument = gql`
   property {
     list(limit: $limit, offset: $offset) {
       id
-      property {
+      propertyList {
         id
-        value
+        string
         property {
           id
         }
@@ -2966,17 +3048,53 @@ export const GetPropertyListDocument = gql`
       super(apollo);
     }
   }
+export const GetPropertyUpdateDocument = gql`
+    query GetPropertyUpdate($id: String!) {
+  property {
+    list {
+      id
+    }
+    item(id: $id) {
+      id
+      created_at
+      updated_at
+      propertyList {
+        id
+        string
+        property {
+          id
+        }
+      }
+    }
+  }
+  flag {
+    list {
+      id
+    }
+  }
+  lang {
+    list {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPropertyUpdateGQL extends Apollo.Query<GetPropertyUpdateQuery, GetPropertyUpdateQueryVariables> {
+    document = GetPropertyUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UpdatePropertyItemDocument = gql`
     mutation UpdatePropertyItem($item: PropertyInput!) {
   property {
     update(item: $item) {
       id
-      property {
-        value
-        property {
-          id
-        }
-      }
     }
   }
 }

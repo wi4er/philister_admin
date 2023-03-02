@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   AddPropertyItemGQL,
-  GetPropertyEditGQL,
-  GetPropertyIdGQL, GetValueEditGQL, GetValueEditQuery,
+  GetPropertyIdGQL, GetValueEditGQL,
   Property, PropertyInput, PropertyPropertyInput,
   UpdatePropertyItemGQL, Value
 } from "../../../graph/types";
@@ -70,11 +69,12 @@ export class ValueFormComponent implements OnInit {
     const addition: PropertyInput = {
       id: this.id,
       property: [],
+      flag: [],
     } as PropertyInput;
 
     for (const key in this.editValues) {
       addition.property?.push({
-        value: this.editValues[key],
+        string: this.editValues[key],
         property: key
       } as PropertyPropertyInput);
     }
