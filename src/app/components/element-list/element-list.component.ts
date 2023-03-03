@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   DeleteElementListGQL, Element,
   GetElementListGQL,
-  GetPropertyListGQL,
+  GetPropertyListGQL, ToggleElementFlagGQL,
 } from '../../../graph/types';
 import { ElementFormComponent } from '../element-form/element-form.component';
 import { CommonList } from '../../common/common-list/common-list';
@@ -19,14 +19,10 @@ import { CommonList } from '../../common/common-list/common-list';
 export class ElementListComponent extends CommonList implements OnInit {
 
   list: { [key: string]: string }[] = [];
+  activeFlags: { [key: string]: string[] } = {};
   columns: string[] = [];
-  properties: string[] = [];
-  selection = new SelectionModel<{ [key: string]: string }>(true, []);
-
-  pageEvent?: PageEvent;
-  totalCount: number = 0;
-  pageSize: number = 10;
-  currentPage: number = 0;
+  propertyList: string[] = [];
+  flagList: string[] = [];
 
   @ViewChild(MatTable)
   table?: MatTable<any>;
@@ -36,6 +32,7 @@ export class ElementListComponent extends CommonList implements OnInit {
     private getPropertyListQuery: GetPropertyListGQL,
     private getListQuery: GetElementListGQL,
     private deleteListMutation: DeleteElementListGQL,
+    private toggleFlagMutation: ToggleElementFlagGQL,
   ) {
     super();
   }
@@ -45,22 +42,29 @@ export class ElementListComponent extends CommonList implements OnInit {
 
   formatData(data: Element[]) {
     const col = new Set<string>();
-    const list = [];
+    this.activeFlags = {};
+    this.list = [];
 
     for (const item of data) {
       const line: { [key: string]: string } = { 'id': String(item.id) };
 
-      for (const prop of item?.propertyList ?? []) {
+      for (const prop of item.propertyList ?? []) {
         col.add('property_' + prop.property.id);
         line['property_' + prop.property.id] = prop.string;
       }
 
-      list.push(line);
+      for (const fl of item.flagString) {
+        col.add('flag_' + fl);
+        line['flag_' + fl] = fl;
+      }
+
+      this.activeFlags[item.id] = item.flagString;
+
+      this.list.push(line);
     }
 
-    this.properties = [ ...col ];
+    this.propertyList = [ ...col ];
     this.columns = [ 'select', 'action', 'id', ...col ];
-    this.list = list;
   }
 
   ngOnInit(): void {
@@ -80,6 +84,7 @@ export class ElementListComponent extends CommonList implements OnInit {
     })
       .subscribe(res => {
         this.formatData(res.data.element.list as unknown as Element[]);
+        this.flagList = res.data.flag.list.map(it => it.id);
         this.totalCount = res.data.element.count;
 
         this.selection.clear();
@@ -111,6 +116,11 @@ export class ElementListComponent extends CommonList implements OnInit {
     );
 
     dialog.afterClosed()
+      .subscribe(() => this.fetchList());
+  }
+
+  toggleFlag(id: number, flag: string) {
+    this.toggleFlagMutation.mutate({ id, flag })
       .subscribe(() => this.fetchList());
   }
 

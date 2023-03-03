@@ -1,0 +1,8 @@
+mutation ToggleElementFlag($id: Int!, $flag: String!) {
+  element {
+    toggleFlag(id: $id, flag: $flag) {
+      id
+      flagString
+    }
+  }
+}

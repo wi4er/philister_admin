@@ -15,7 +15,14 @@ query GetSectionList($limit: Int, $offset: Int) {
           id
         }
       }
+      flagString
     }
     count
+  }
+
+  flag {
+    list {
+      id
+    }
   }
 }

@@ -1589,7 +1589,7 @@ export type GetElementListQueryVariables = Exact<{
 }>;
 
 
-export type GetElementListQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', count: number, list: Array<{ __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, propertyList: Array<{ __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetElementListQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', count: number, list: Array<{ __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
 
 export type GetElementUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -1597,6 +1597,14 @@ export type GetElementUpdateQueryVariables = Exact<{
 
 
 export type GetElementUpdateQuery = { __typename?: 'Query', element: { __typename?: 'ElementQuery', item?: { __typename?: 'Element', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'ElementString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type ToggleElementFlagMutationVariables = Exact<{
+  id: Scalars['Int'];
+  flag: Scalars['String'];
+}>;
+
+
+export type ToggleElementFlagMutation = { __typename?: 'Mutation', element: { __typename?: 'ElementMutation', toggleFlag: { __typename?: 'Element', id: number, flagString: Array<string> } } };
 
 export type UpdateElementItemMutationVariables = Exact<{
   item: ElementInput;
@@ -1769,7 +1777,7 @@ export type GetSectionListQueryVariables = Exact<{
 }>;
 
 
-export type GetSectionListQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', count: number, list: Array<{ __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, parent?: { __typename?: 'Section', id: number } | null, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> } };
+export type GetSectionListQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', count: number, list: Array<{ __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, parent?: { __typename?: 'Section', id: number } | null, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
 
 export type GetSectionUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -1777,6 +1785,14 @@ export type GetSectionUpdateQueryVariables = Exact<{
 
 
 export type GetSectionUpdateQuery = { __typename?: 'Query', section: { __typename?: 'SectionQuery', item?: { __typename?: 'Section', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, parent?: { __typename?: 'Section', id: number } | null, block: { __typename?: 'Block', id: number }, propertyList: Array<{ __typename?: 'SectionString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null, list: Array<{ __typename?: 'Section', id: number }> }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+
+export type ToggleSectionFlagMutationVariables = Exact<{
+  id: Scalars['Int'];
+  flag: Scalars['String'];
+}>;
+
+
+export type ToggleSectionFlagMutation = { __typename?: 'Mutation', section: { __typename?: 'SectionMutation', toggleFlag: { __typename?: 'Section', id: number, flagString: Array<string> } } };
 
 export type UpdateSectionItemMutationVariables = Exact<{
   item: SectionInput;
@@ -2466,8 +2482,14 @@ export const GetElementListDocument = gql`
           id
         }
       }
+      flagString
     }
     count(filter: $filter)
+  }
+  flag {
+    list {
+      id
+    }
   }
 }
     `;
@@ -2531,6 +2553,27 @@ export const GetElementUpdateDocument = gql`
   })
   export class GetElementUpdateGQL extends Apollo.Query<GetElementUpdateQuery, GetElementUpdateQueryVariables> {
     document = GetElementUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ToggleElementFlagDocument = gql`
+    mutation ToggleElementFlag($id: Int!, $flag: String!) {
+  element {
+    toggleFlag(id: $id, flag: $flag) {
+      id
+      flagString
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ToggleElementFlagGQL extends Apollo.Mutation<ToggleElementFlagMutation, ToggleElementFlagMutationVariables> {
+    document = ToggleElementFlagDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -3213,8 +3256,14 @@ export const GetSectionListDocument = gql`
           id
         }
       }
+      flagString
     }
     count
+  }
+  flag {
+    list {
+      id
+    }
   }
 }
     `;
@@ -3286,6 +3335,27 @@ export const GetSectionUpdateDocument = gql`
   })
   export class GetSectionUpdateGQL extends Apollo.Query<GetSectionUpdateQuery, GetSectionUpdateQueryVariables> {
     document = GetSectionUpdateDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ToggleSectionFlagDocument = gql`
+    mutation ToggleSectionFlag($id: Int!, $flag: String!) {
+  section {
+    toggleFlag(id: $id, flag: $flag) {
+      id
+      flagString
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ToggleSectionFlagGQL extends Apollo.Mutation<ToggleSectionFlagMutation, ToggleSectionFlagMutationVariables> {
+    document = ToggleSectionFlagDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

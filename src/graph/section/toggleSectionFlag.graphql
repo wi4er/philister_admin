@@ -1,0 +1,8 @@
+mutation ToggleSectionFlag($id: Int!, $flag: String!) {
+  section {
+    toggleFlag(id: $id, flag: $flag) {
+      id
+      flagString
+    }
+  }
+}

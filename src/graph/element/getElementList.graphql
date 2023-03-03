@@ -12,7 +12,14 @@ query getElementList($limit: Int, $offset: Int, $filter: [ElementFilter!]) {
           id
         }
       }
+      flagString
     }
     count(filter: $filter)
+  }
+
+  flag {
+    list {
+      id
+    }
   }
 }
