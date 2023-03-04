@@ -12,7 +12,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-block-form',
   templateUrl: './block-form.component.html',
-  styleUrls: [ './block-form.component.css' ]
+  styleUrls: [ './block-form.component.css' ],
 })
 export class BlockFormComponent implements OnInit {
 
@@ -24,7 +24,9 @@ export class BlockFormComponent implements OnInit {
   langList: Lang[] = [];
   flagList: Flag[] = [];
 
-  editProperties: { [property: string]: { [lang: string]: string } } = {};
+  editProperties: {
+    [property: string]: { [lang: string]: { value: string, error?: string }[] }
+  } = {};
   editFlags: { [field: string]: boolean } = {};
 
   constructor(
@@ -42,7 +44,7 @@ export class BlockFormComponent implements OnInit {
     if (this.data?.id) {
       this.getUpdateQuery.fetch(
         { id: +this.data.id },
-        { fetchPolicy: 'no-cache' }
+        { fetchPolicy: 'no-cache' },
       ).subscribe(res => {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
@@ -54,7 +56,7 @@ export class BlockFormComponent implements OnInit {
     } else {
       this.getAdditionQuery.fetch(
         {},
-        { fetchPolicy: 'no-cache' }
+        { fetchPolicy: 'no-cache' },
       ).subscribe(res => {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
@@ -76,7 +78,7 @@ export class BlockFormComponent implements OnInit {
       this.editProperties[prop.id] = {};
 
       for (const lang of this.langList) {
-        this.editProperties[prop.id][lang.id] = '';
+        this.editProperties[prop.id][lang.id] = [];
       }
     }
 
@@ -96,9 +98,21 @@ export class BlockFormComponent implements OnInit {
         const strProp = prop as BlockString;
 
         if (!strProp?.lang?.id) {
-          this.editProperties[strProp.property.id][''] = prop.string;
+          if (Array.isArray(this.editProperties[strProp.property.id][''])) {
+            this.editProperties[strProp.property.id][''].push({ value: prop.string });
+          } else {
+            this.editProperties[strProp.property.id][''] = [ {
+              value: prop.string,
+            } ];
+          }
         } else {
-          this.editProperties[strProp.property.id][strProp.lang.id] = prop.string;
+          const lang: string = strProp?.lang?.id
+
+          if (Array.isArray(this.editProperties[strProp.property.id][lang])) {
+            this.editProperties[strProp.property.id][lang].push({ value: prop.string });
+          } else {
+            this.editProperties[strProp.property.id][lang] = [ { value: prop.string } ];
+          }
         }
       }
     }
@@ -117,15 +131,17 @@ export class BlockFormComponent implements OnInit {
 
     for (const prop in this.editProperties) {
       for (const lang in this.editProperties[prop]) {
-        if (!this.editProperties[prop][lang]) {
-          continue;
-        }
+        for (const item of this.editProperties[prop][lang]) {
+          if (!this.editProperties[prop][lang]) {
+            continue;
+          }
 
-        input.property?.push({
-          string: this.editProperties[prop][lang],
-          property: prop,
-          lang: lang
-        } as BlockPropertyInput);
+          input.property?.push({
+            string: item.value,
+            property: prop,
+            lang: lang,
+          } as BlockPropertyInput);
+        }
       }
     }
 

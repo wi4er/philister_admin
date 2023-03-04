@@ -1,17 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Lang, Property } from "../../../graph/types";
+import { Component, Input } from '@angular/core';
+import { Lang, Property } from '../../../graph/types';
 
 @Component({
   selector: 'app-property-edit',
   templateUrl: './property-edit.component.html',
-  styleUrls: [ './property-edit.component.css' ]
+  styleUrls: [ './property-edit.component.css' ],
 })
-export class PropertyEditComponent implements OnInit {
+export class PropertyEditComponent {
 
   constructor() {
-  }
-
-  ngOnInit(): void {
   }
 
   @Input()
@@ -21,6 +18,19 @@ export class PropertyEditComponent implements OnInit {
   lang: Lang[] = [];
 
   @Input()
-  edit: { [property: string]: { [lang: string]: string } } = {};
+  edit: { [property: string]: { [lang: string]: { value: string, error?: string }[] } } = {};
+
+  addEdit(id: string, lang: string) {
+
+    console.log(id, lang);
+    this.edit[id][lang].push({
+      value: '',
+      error: '',
+    });
+  }
+
+  clearEdit(id: string, lang: string, index: number) {
+    this.edit[id][lang].splice(index, 1);
+  }
 
 }
