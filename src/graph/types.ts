@@ -47,14 +47,14 @@ export type AuthMutationRegisterByLoginArgs = {
 export type Block = Content & {
   __typename?: 'Block';
   created_at: Scalars['String'];
-  element: Array<Element>;
+  element: BlockElement;
   flagList: Array<Flag>;
   flagString: Array<Scalars['String']>;
   id: Scalars['Int'];
   propertyItem?: Maybe<BlockProperty>;
-  propertyList: Array<ContentProperty>;
+  propertyList: Array<BlockProperty>;
   propertyString?: Maybe<Scalars['String']>;
-  section: Array<Section>;
+  section: BlockSection;
   updated_at: Scalars['String'];
   version: Scalars['Int'];
 };
@@ -67,6 +67,12 @@ export type BlockPropertyItemArgs = {
 
 export type BlockPropertyStringArgs = {
   id: Scalars['String'];
+};
+
+export type BlockElement = {
+  __typename?: 'BlockElement';
+  count: Scalars['Float'];
+  list: Array<Element>;
 };
 
 export type BlockInput = {
@@ -145,6 +151,12 @@ export type BlockQueryItemArgs = {
 export type BlockQueryListArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+export type BlockSection = {
+  __typename?: 'BlockSection';
+  count: Scalars['Float'];
+  list: Array<Section>;
 };
 
 export type BlockString = BlockProperty & ContentProperty & {
@@ -1489,14 +1501,14 @@ export type GetBlockListQueryVariables = Exact<{
 }>;
 
 
-export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
+export type GetBlockListQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', count: number, list: Array<{ __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, name?: string | null, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, property: { __typename?: 'Property', id: string } }>, section: { __typename?: 'BlockSection', count: number }, element: { __typename?: 'BlockElement', count: number } }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> } };
 
 export type GetBlockUpdateQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } } | { __typename?: 'ElementString', id: number, string: string, property: { __typename?: 'Property', id: string } } | { __typename?: 'SectionString', id: number, string: string, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
 
 export type ToggleBlockFlagMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -2087,6 +2099,12 @@ export const GetBlockListDocument = gql`
         }
       }
       flagString
+      section {
+        count
+      }
+      element {
+        count
+      }
     }
     count
   }

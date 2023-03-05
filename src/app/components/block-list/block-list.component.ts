@@ -42,7 +42,11 @@ export class BlockListComponent extends CommonList implements OnInit {
     this.list = [];
 
     for (const item of data) {
-      const line: { [key: string]: string } = { 'id': String(item.id) };
+      const line: { [key: string]: string } = {
+        'id': String(item.id),
+        'section': String(item.section.count),
+        'element': String(item.element.count),
+      };
 
       for (const prop of item.propertyList ?? []) {
         col.add('property_' + prop.property.id);
@@ -60,7 +64,7 @@ export class BlockListComponent extends CommonList implements OnInit {
     }
 
     this.propertyList = [ ...col ];
-    this.columns = [ 'select', 'action', 'id', ...col ];
+    this.columns = [ 'select', 'action', 'id', ...col, 'section', 'element' ];
   }
 
   ngOnInit(): void {
@@ -102,6 +106,7 @@ export class BlockListComponent extends CommonList implements OnInit {
       BlockFormComponent,
       {
         width: '1000px',
+        panelClass: 'wrapper',
         data: { id },
       },
     );

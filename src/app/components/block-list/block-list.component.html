@@ -102,6 +102,24 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="section">
+    <th mat-header-cell *matHeaderCellDef>
+      <span> Sections </span>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{element.section}}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="element">
+    <th mat-header-cell *matHeaderCellDef>
+      <span> Elements </span>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{element.element}}</span>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="columns"></tr>
   <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 </table>
