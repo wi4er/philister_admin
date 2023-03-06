@@ -1493,7 +1493,7 @@ export type DeleteBlockListMutation = { __typename?: 'Mutation', block: { __type
 export type GetBlockAdditionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBlockAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetBlockAdditionQuery = { __typename?: 'Query', property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> }, userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number }> } };
 
 export type GetBlockListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -1508,7 +1508,7 @@ export type GetBlockUpdateQueryVariables = Exact<{
 }>;
 
 
-export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> } };
+export type GetBlockUpdateQuery = { __typename?: 'Query', block: { __typename?: 'BlockQuery', item?: { __typename?: 'Block', id: number, created_at: string, updated_at: string, version: number, flagString: Array<string>, propertyList: Array<{ __typename?: 'BlockString', id: number, string: string, lang?: { __typename?: 'Lang', id: string } | null, property: { __typename?: 'Property', id: string } }> } | null }, property: { __typename?: 'PropertyQuery', list: Array<{ __typename?: 'Property', id: string }> }, flag: { __typename?: 'FlagQuery', list: Array<{ __typename?: 'Flag', id: string }> }, lang: { __typename?: 'LangQuery', list: Array<{ __typename?: 'Lang', id: string }> }, userGroup: { __typename?: 'UserGroupQuery', list: Array<{ __typename?: 'UserGroup', id: number }> } };
 
 export type ToggleBlockFlagMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -2069,6 +2069,11 @@ export const GetBlockAdditionDocument = gql`
       id
     }
   }
+  userGroup {
+    list {
+      id
+    }
+  }
 }
     `;
 
@@ -2160,6 +2165,11 @@ export const GetBlockUpdateDocument = gql`
     }
   }
   lang {
+    list {
+      id
+    }
+  }
+  userGroup {
     list {
       id
     }

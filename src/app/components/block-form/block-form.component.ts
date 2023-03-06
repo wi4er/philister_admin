@@ -5,9 +5,10 @@ import {
   Flag, GetBlockAdditionGQL, GetBlockUpdateGQL,
   GetPropertyIdGQL,
   Lang,
-  Property, UpdateBlockItemGQL,
+  Property, UpdateBlockItemGQL, UserGroup,
 } from '../../../graph/types';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-block-form',
@@ -23,6 +24,7 @@ export class BlockFormComponent implements OnInit {
   propertyList: Property[] = [];
   langList: Lang[] = [];
   flagList: Flag[] = [];
+  groupList: UserGroup[] = [];
 
   editProperties: {
     [property: string]: { [lang: string]: { value: string, error?: string }[] }
@@ -49,6 +51,7 @@ export class BlockFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
+        this.groupList = res.data.userGroup.list as UserGroup[];
 
         this.initEditValues();
         this.toEdit(res.data.block.item as unknown as Block);
@@ -61,6 +64,7 @@ export class BlockFormComponent implements OnInit {
         this.propertyList = res.data.property.list as Property[];
         this.langList = res.data.lang.list as Lang[];
         this.flagList = res.data.flag.list as Flag[];
+        this.groupList = res.data.userGroup.list as UserGroup[];
 
         this.initEditValues();
       });
@@ -106,7 +110,7 @@ export class BlockFormComponent implements OnInit {
             } ];
           }
         } else {
-          const lang: string = strProp?.lang?.id
+          const lang: string = strProp?.lang?.id;
 
           if (Array.isArray(this.editProperties[strProp.property.id][lang])) {
             this.editProperties[strProp.property.id][lang].push({ value: prop.string });
@@ -162,6 +166,10 @@ export class BlockFormComponent implements OnInit {
       this.addItemMutation.mutate({ item: this.toInput() })
         .subscribe(() => this.dialogRef.close());
     }
+  }
+
+  handlePermission(selected: MatListOption[]) {
+    console.log(selected);
   }
 
 }

@@ -17,4 +17,10 @@ query GetBlockAddition {
       id
     }
   }
+
+  userGroup {
+    list {
+      id
+    }
+  }
 }

@@ -40,4 +40,10 @@ query GetBlockUpdate($id: Int!) {
       id
     }
   }
+
+  userGroup {
+    list {
+      id
+    }
+  }
 }

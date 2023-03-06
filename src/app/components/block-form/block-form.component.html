@@ -45,7 +45,6 @@
     </mat-form-field>
   </div>
 
-
   <mat-tab-group dynamicHeight>
     <mat-tab
       [label]="'Properties ( ' + getPropertyCount() + ' )'"
@@ -66,6 +65,24 @@
         [list]="flagList"
         [edit]="editFlags"
       ></app-flag-edit>
+    </mat-tab>
+
+    <mat-tab
+      label="Permission"
+      *ngIf="flagList.length"
+    >
+      <mat-selection-list
+        [multiple]="true"
+        (selectionChange)="handlePermission($event.source.selectedOptions.selected)"
+      >
+        <mat-list-option
+          *ngFor="let item of groupList"
+          [value]="item.id"
+          [selected]=""
+        >
+          {{item.id}}
+        </mat-list-option>
+      </mat-selection-list>
     </mat-tab>
   </mat-tab-group>
 
